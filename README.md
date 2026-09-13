@@ -36,6 +36,28 @@ Thrust is flap-style: every tap is a fixed kick of velocity and gravity takes it
 
 Steering aims the engine. It does not stop sideways motion by itself: tilt against your drift, burn, then straighten up before you touch down.
 
+## Weather
+
+Earth has weather, and it is never calm. It is rolled fresh for every launch and every reentry (a retry rolls again). The Moon has no air, so the landing and lunar ascent are untouched.
+
+| Tier | Chance | Wind | What it adds | Return score |
+|---|---|---|---|---|
+| Breezy | 25% | 6-12 m/s | Light gusts | x1.0 |
+| Gale | 30% | 14-24 m/s | Gust slams, drafts | x1.25 |
+| Thunderstorm | 30% | 20-32 m/s | Lightning, wind shear, heavy rain | x1.6 |
+| Hurricane | 15% | 32-46 m/s | All of it, constantly, 6 m swell | x2.2 |
+
+What the weather does:
+
+- **Wind** drags you sideways and turns the rocket's nose into it. Leave the controls alone and it thrusts itself out of the corridor in seconds.
+- **Turbulence and gust slams** twist the rocket and shove it sideways without warning.
+- **Downdrafts and updrafts** push you down or up for a few seconds. A downdraft under a parachute can make a soft splashdown too fast.
+- **Wind shear** (storms and hurricanes) flips the wind between 1,000 and 1,600 m on the way up.
+- **Lightning** that hits you flames out the engine, or scorches a deployed chute so it holds less air.
+- **Swell** moves the waterline and rocks the recovery ship.
+
+Under the parachute you drift with the wind, so get upwind of the ship before you pull. Cadet feels the weather at 90% strength. The launch corridor is 520 m either side.
+
 ## Coming home
 
 After a landing, LIFT OFF FOR HOME starts the return:
@@ -67,7 +89,9 @@ MoonboundTest.setShip({x, y, vx, vy, angle, fuel})
 MoonboundTest.tap()                  // one thrust tap (input('thrust', true) also taps)
 MoonboundTest.input('left', true)    // hold a steering control
 MoonboundTest.startAscent() / startReentry() / chute()
-MoonboundTest.advance(seconds)       // step the fixed-rate simulation
+MoonboundTest.advance(seconds, quiet) // step the fixed-rate simulation (quiet skips rendering)
+MoonboundTest.setWeather(id, dir)    // breezy | gale | storm | hurricane, dir -1 or 1
+MoonboundTest.weather()              // current weather state
 MoonboundTest.forget()               // clear saved records and discoveries
 MoonboundTest.SITES / SHAFT / ROOFS / terrain / groundAt / floorBelow / roofHit / limitsFor
 ```
@@ -83,6 +107,7 @@ Simulation runs at a fixed 120 Hz and is separate from rendering, so frame rate 
 
 ## History
 
+- **1.4** Earth weather on the launch and the return: four tiers from breezy to hurricane, wind drag and weathervaning, gust slams, drafts, wind shear, lightning, rain, cloud layers and ocean swell. Return score multiplies by the weather. Launch corridor narrowed to 520 m, more air drag on the climb.
 - **1.3** Tap-to-thrust on every stage. Marius Tube, a lava tube landing site with a mouth, a pinch point and a skylight. The return trip: lunar ascent off the descent stage, transearth coast, and an Earth reentry with a parachute window, recovery ship and nerve bonus. Launch checkpoint lowered to 2,400 m.
 
 - **1.2** Four landing sites with per-site limits and score multipliers, one of them hidden in a crater. Fixed: the deploy briefing trapped you with no way back to the menu; clipping a pad while climbing counted as a perfect landing; the win screen never took keyboard focus.
