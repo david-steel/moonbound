@@ -65,7 +65,7 @@
   <p id="boot-instructions">On a phone, open the <strong>hosted game address in Safari or Chrome</strong>. A downloaded HTML attachment is not a live game link.</p>
   <pre id="boot-detail" style="display:none"></pre>
   <button id="boot-reload" type="button">Try loading again</button>
-  <p class="boot-foot">Already opening a website? Share the address and a screenshot of this message to troubleshoot it.<br>Build 1.4 / Startup diagnostics / No external downloads</p>
+  <p class="boot-foot">Already opening a website? Share the address and a screenshot of this message to troubleshoot it.<br>Build 1.5 / Startup diagnostics / No external downloads</p>
  </div>
 </section>
 <script>
@@ -123,14 +123,14 @@
  <div class="hud-cell"><div class="label" id="mission-label">FLIGHT IN PROGRESS</div><div class="stage-name"><span class="stage-number" id="stage-number">01 /</span><span id="stage-name">EARTH ASCENT</span></div></div>
  <div class="hud-cell"><div class="label" id="altitude-label">ALTITUDE</div><div class="metric"><span id="altitude-value">0</span><small>M</small></div></div>
  <div class="hud-cell"><div class="label" id="velocity-label">VERTICAL SPEED</div><div class="metric"><span id="velocity-value">0.0</span><small>M/S</small></div></div>
- <div class="hud-cell fuel"><div class="label">PROPELLANT</div><div class="metric"><span id="fuel-value">100</span><small>%</small></div><div class="fuel-meter"><span id="fuel-fill"></span></div></div>
+ <div class="hud-cell fuel"><div class="label" id="fuel-label">PROPELLANT</div><div class="metric"><span id="fuel-value">100</span><small>%</small></div><div class="fuel-meter"><span id="fuel-fill"></span></div></div>
 </section>
 <aside id="flight-note" class="hidden"><div class="eyebrow" id="objective-title">MISSION OBJECTIVE</div><p id="objective-copy"></p></aside>
 <aside id="landing-checks" class="hidden" aria-label="Safe landing limits"><div class="check-site" id="check-site"></div><div class="check" id="check-vertical"></div><div class="check" id="check-drift"></div><div class="check" id="check-angle"></div><div class="check" id="check-weather"></div></aside>
 <div id="toast" aria-live="polite"></div>
 <footer id="bottom-deck" class="hidden">
- <div class="readouts"><div class="readout"><div class="label">LATERAL DRIFT</div><div class="readout-value" id="drift-value">0.0 M/S</div></div><div class="readout"><div class="label">ATTITUDE</div><div class="readout-value" id="angle-value">0.0 DEG</div></div><div class="readout"><div class="label">MISSION TIME</div><div class="readout-value" id="time-value">00:00</div></div></div>
- <div class="controls" aria-label="Flight controls"><button class="control" id="left-control" aria-label="Hold to tilt left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7M8 12h12"/></svg><small>LEFT / A</small></button><button class="control" id="right-control" aria-label="Hold to tilt right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7M16 12H4"/></svg><small>RIGHT / D</small></button><button class="control chute hidden" id="chute-control" aria-label="Deploy parachute"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 0 1 18 0Z"/><path d="m3 11 9 9 9-9M8 11l4 9 4-9"/></svg><small>CHUTE / E</small></button><button class="control burn" id="thrust-control" aria-label="Tap to fire main engine"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C9 7 5 9 5 14a7 7 0 0 0 14 0c0-3-2-6-4-8 0 3-2 4-2 4s0-5-1-8Z"/><path d="M12 13c-1 2-3 3-3 5a3 3 0 0 0 6 0c0-2-2-3-3-5Z"/></svg><span class="burn-text">THRUST<small>TAP / SPACE / UP</small></span></button></div>
+ <div class="readouts"><div class="readout"><div class="label">LATERAL DRIFT</div><div class="readout-value" id="drift-value">0.0 M/S</div></div><div class="readout"><div class="label">ATTITUDE</div><div class="readout-value" id="angle-value">0.0 DEG</div></div><div class="readout"><div class="label" id="hull-label">HULL</div><div class="readout-value" id="hull-value">100%</div></div><div class="readout"><div class="label">MISSION TIME</div><div class="readout-value" id="time-value">00:00</div></div></div>
+ <div class="controls" aria-label="Flight controls"><button class="control" id="left-control" aria-label="Hold to tilt left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7M8 12h12"/></svg><small>LEFT / A</small></button><button class="control" id="right-control" aria-label="Hold to tilt right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7M16 12H4"/></svg><small>RIGHT / D</small></button><button class="control chute hidden" id="chute-control" aria-label="Deploy parachute"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 0 1 18 0Z"/><path d="m3 11 9 9 9-9M8 11l4 9 4-9"/></svg><small id="chute-text">CHUTE / E</small></button><button class="control burn" id="thrust-control" aria-label="Tap to fire main engine"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C9 7 5 9 5 14a7 7 0 0 0 14 0c0-3-2-6-4-8 0 3-2 4-2 4s0-5-1-8Z"/><path d="M12 13c-1 2-3 3-3 5a3 3 0 0 0 6 0c0-2-2-3-3-5Z"/></svg><span class="burn-text">THRUST<small>TAP / SPACE / UP</small></span></button></div>
 </footer>
 <div id="overlay" role="dialog" aria-modal="true" aria-label="Mission briefing"></div>
 </main>
@@ -153,10 +153,24 @@ const config = {
 };
 // Thrust is tapped, not held. Each tap is a short burn that delivers a fixed kick of velocity.
 const PULSE=.14;
-function tapParams(){if(scene==='launch')return{dv:16,fuel:1.4};if(scene==='moonup')return{dv:3,fuel:.6};if(scene==='earth')return{dv:3,fuel:8};const c=config[difficulty];return{dv:c.tapDv,fuel:c.tapFuel};}
+function tapParams(){if(scene==='launch')return{dv:16,fuel:1.4};if(scene==='dock')return{dv:1.1,fuel:1.3};if(scene==='moonup')return{dv:3,fuel:.6};if(scene==='earth')return{dv:3,fuel:8};const c=config[difficulty];return{dv:c.tapDv,fuel:c.tapFuel};}
 // Return trip: climb off the descent stage to orbit, coast home, then time the parachute over the ocean.
 const ORBIT_Y=1150,RECOVERY_X=0,COAST_X=1100,CHUTE_ARM=450,CHUTE_MAX=110;
 const ASCENT_HULL=[{x:-12,y:1},{x:12,y:1},{x:-12,y:13},{x:12,y:13},{x:0,y:21}];
+// A cracked heat shield (integrity under 35%) lowers the speed the chute can survive.
+const chuteMax=()=>integrity<35?Math.round(CHUTE_MAX*.8):CHUTE_MAX;
+// Docking: the command module waits in orbit and drifts a little. Bring the top hatch to the port slowly and straight.
+const DOCK={portDx:4,cadet:{speed:1.6,angle:14,drift:16},pilot:{speed:1,angle:9,drift:34},bounds:{x:300,y0:-80,y1:340}};
+// Launch debris. band is the altitude window, dmg the hull cost, r the on-screen radius, rate the spawns per second inside the band.
+// cross kinds fly in from the side, fall kinds drop from above. wxMin is the weather level that brings them out.
+const DEBRIS_KINDS=[
+ {id:'bird',name:'BIRD STRIKE',band:[60,900],dmg:9,r:5,rate:.3,cross:true,speed:[55,80]},
+ {id:'sheet',name:'WIND-BORNE DEBRIS',band:[80,1500],dmg:17,r:8,rate:.22,cross:true,speed:[45,75],wxMin:2},
+ {id:'hail',name:'HAIL',band:[300,2000],dmg:6,r:3.5,rate:.5,fall:true,speed:[110,160],wxMin:3},
+ {id:'junk',name:'RANGE DEBRIS',band:[850,2600],dmg:32,r:12,rate:.7,fall:true,speed:[150,220]}
+];
+// Surface EVA: the rover. Lunar gravity, an exaggerated slope pull so hills mean something, and a hop that clears a rock or a rille.
+const ROVER={g:1.62,accel:{cadet:7.5,pilot:7},maxSpeed:{cadet:17,pilot:19},hop:{cadet:3.4,pilot:3.1},impact:8,rollover:40};
 // Earth weather. Rolled fresh for every launch and every reentry. There is no calm day.
 // burstRate is drafts per second, slam is sudden gust shoves per second, lightning is strikes per second, swell is wave height in meters.
 const WEATHER=[
@@ -224,6 +238,8 @@ let camera={x:910,scale:1,lift:0,originY:80},lastFrame=0,accumulator=0,hudClock=
 let keys=new Set(),pointers=new Map(),soundOn=false,audio=null,engineGain=null,engineOsc=null;
 let best=0,found=new Set(),siteBest={};
 let descentStage=null,homeward=false,earthCam={x:0,scale:.3};
+let integrity=100,hitGrace=0,debrisField=[],shake=0;
+let rover=null,course=null,roverCam={x:0,y:0,scale:1},roverResult=null,csm=null,dockResult=null,dockClock=0,dockFuel=60;
 try{best=Number(localStorage.getItem('moonbound-best-v2'))||0;}catch(e){}
 try{const saved=JSON.parse(localStorage.getItem('moonbound-sites-v2')||'{}');if(saved&&typeof saved==='object'){siteBest=saved.best||{};found=new Set(saved.found||[]);}}catch(e){}
 function saveRecords(){try{localStorage.setItem('moonbound-best-v2',String(best));localStorage.setItem('moonbound-sites-v2',JSON.stringify({best:siteBest,found:[...found]}));}catch(e){}}
@@ -277,31 +293,34 @@ function groundAt(x){
  return terrain[terrain.length-1].y;
 }
 function worldPoint(local){const c=Math.cos(ship.angle),s=Math.sin(ship.angle);return{x:ship.x+local.x*c+local.y*s,y:ship.y-local.x*s+local.y*c};}
-function altitude(){if(!ship)return 0;if(scene==='launch')return Math.max(0,ship.y-38);if(scene==='earth')return Math.max(0,ship.y-10);const pts=scene==='moonup'?ASCENT_HULL.slice(0,2):feet;return Math.max(0,Math.min(...pts.map(p=>{const q=worldPoint(p);return q.y-floorBelow(q.x,q.y);})));}
+function altitude(){if(!ship)return 0;if(scene==='launch')return Math.max(0,ship.y-38);if(scene==='rover')return Math.max(0,ship.y-courseAt(ship.x));if(scene==='dock'){const p=dockProbe(),q=dockPort();return Math.hypot(p.x-q.x,p.y-q.y);}if(scene==='earth')return Math.max(0,ship.y-10);const pts=scene==='moonup'?ASCENT_HULL.slice(0,2):feet;return Math.max(0,Math.min(...pts.map(p=>{const q=worldPoint(p);return q.y-floorBelow(q.x,q.y);})));}
 function clearInput(){keys.clear();pointers.clear();for(const id of ['left-control','right-control','thrust-control'])$(id).classList.remove('held');}
 function held(action){const codes={left:['ArrowLeft','KeyA'],right:['ArrowRight','KeyD']};return codes[action].some(c=>keys.has(c))||[...pointers.values()].includes(action);}
-const FLYING=['launch','land','moonup','earth'];
+const FLYING=['launch','land','moonup','earth','rover','dock'];
 function canFly(){return !paused&&FLYING.includes(mode);}
 function burning(){return canFly()&&!!ship&&ship.pulse>0;}
 // One tap, one burn. Taps landing during a burn stack up to two pulses, so mashing costs fuel for little gain.
-function tapThrust(){if(!canFly()||!ship||ship.fuel<=0)return;if(wx&&wx.cut>0&&(scene==='launch'||scene==='earth')){tone(90,.06,.03);return;}const t=tapParams(),use=Math.min(t.fuel,ship.fuel);ship.fuel-=use;ship.pulse=Math.min(PULSE*2,(ship.pulse||0)+PULSE);ship.power=t.dv/PULSE*(use/t.fuel);}
+function tapThrust(){if(!canFly()||!ship)return;if(scene==='rover'){roverHop();return;}if(ship.fuel<=0)return;if(wx&&wx.cut>0&&(scene==='launch'||scene==='earth')){tone(90,.06,.03);return;}const t=tapParams(),use=Math.min(t.fuel,ship.fuel);ship.fuel-=use;ship.pulse=Math.min(PULSE*2,(ship.pulse||0)+PULSE);ship.power=t.dv/PULSE*(use/t.fuel);}
 function deployChute(){
+ if(scene==='dock'){rcsBrake();return;}if(scene==='rover'){roverBrake();return;}
  if(scene!=='earth'||!canFly()||!ship||ship.chuteOpen||ship.chuteTorn)return;
  const alt=ship.y-10,speed=-ship.vy;
  if(alt>CHUTE_ARM){showToast(`MAIN CHUTE LOCKED ABOVE ${CHUTE_ARM} M`,1.6);tone(200,.12,.04);return;}
  ship.deployAlt=alt;ship.deploySpeed=speed;
- if(speed>CHUTE_MAX){ship.chuteTorn=true;showToast(`CHUTE TORN AT ${Math.round(speed)} M/S`,2.5);tone(90,.4,.07);}
+ if(speed>chuteMax()){ship.chuteTorn=true;showToast(`CHUTE TORN AT ${Math.round(speed)} M/S`,2.5);tone(90,.4,.07);}
  else{ship.chuteOpen=true;showToast('MAIN CHUTE OUT',1.6);tone(620,.18,.05);}
  $('chute-control').disabled=true;
 }
-function resize(){W=window.innerWidth;H=window.innerHeight;DPR=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);if(onMoon()&&ship)updateCamera(1,true);if(scene==='earth'&&ship)updateEarthCamera(1,true);document.querySelector('.help-short').classList.toggle('hidden',W>620);}
+function resize(){W=window.innerWidth;H=window.innerHeight;DPR=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);if(onMoon()&&ship)updateCamera(1,true);if(scene==='earth'&&ship)updateEarthCamera(1,true);if(scene==='rover'&&rover)updateRoverCamera(1,true);document.querySelector('.help-short').classList.toggle('hidden',W>620);}
 window.addEventListener('resize',resize);
 function showToast(message,time=2.5){$('toast').textContent=message;$('toast').classList.add('visible');toastTimer=time;}
-function showHUD(show){for(const id of ['hud','flight-note','bottom-deck','pause-button'])$(id).classList.toggle('hidden',!show);$('landing-checks').classList.toggle('hidden',!show||!['land','earth','launch'].includes(scene));$('check-weather').classList.toggle('hidden',scene==='land');$('chute-control').classList.toggle('hidden',scene!=='earth');}
+function showHUD(show){for(const id of ['hud','flight-note','bottom-deck','pause-button'])$(id).classList.toggle('hidden',!show);$('landing-checks').classList.toggle('hidden',!show||!['land','earth','launch','rover','dock'].includes(scene));$('check-weather').classList.toggle('hidden',scene==='land');
+ const brake=scene==='dock'||scene==='rover';$('chute-control').classList.toggle('hidden',scene!=='earth'&&!brake);$('chute-text').textContent=brake?'BRAKE / E':'CHUTE / E';$('chute-control').setAttribute('aria-label',brake?'Brake':'Deploy parachute');
+ $('fuel-label').textContent=scene==='rover'?'OXYGEN':scene==='dock'?'RCS PROPELLANT':'PROPELLANT';$('hull-label').textContent=scene==='rover'?'ROVER':'HULL';}
 const onMoon=()=>scene==='land'||scene==='moonup';
 function showOverlay(html,kind='dialog'){$('overlay').innerHTML=html;$('overlay').classList.remove('hidden');$('overlay').classList.toggle('compact',kind!=='welcome');overlayKind=kind;clearInput();setEngine(false);}
 function hideOverlay(){$('overlay').classList.add('hidden');overlayKind='';}
-function restoreFocus(){const b=$('overlay').querySelector('[data-action="resume"], [data-action="ascend"], [data-action="reenter"], [data-action="start"], [data-action="deploy"], [data-action="retry"]');if(b)b.focus({preventScroll:true});}
+function restoreFocus(){const b=$('overlay').querySelector('[data-action="resume"], [data-action="rover"], [data-action="undock"], [data-action="ascend"], [data-action="reenter"], [data-action="start"], [data-action="deploy"], [data-action="retry"]');if(b)b.focus({preventScroll:true});}
 function siteRoster(){
  return SITES.map(t=>{const known=siteKnown(t),rec=siteBest[t.id];
   return `<div class="site-row${known?'':' locked'}"><span class="site-tier">${known?t.tier:'\u2014\u2014\u2014'}</span><div class="site-main"><div class="site-name">${known?t.name:'UNSURVEYED'}</div><div class="site-blurb">${t.blurb}</div></div><span class="site-mult">${known?'\u00d7'+t.mult.toFixed(1):'???'}</span><span class="site-best">${rec?rec.toLocaleString():'\u2014'}</span></div>`;
@@ -309,16 +328,16 @@ function siteRoster(){
 }
 function welcome(){
  clearInput();mode='menu';scene='menu';paused=false;ship=null;particles=[];debris=[];showHUD(false);$('toast').classList.remove('visible');
- showOverlay(`<div class="welcome"><div><div class="eyebrow">INDEPENDENT FLIGHT PROGRAM / MISSION 001</div><h1>ONE ROCKET.<br>ONE MOON.<br><span>ONE WAY HOME.</span></h1><p class="intro-text">Getting there is only half the mission. Tap your way off Earth, put a lander down somewhere on the Moon, fly the ascent stage back to orbit, and pull the parachute over the ocean. Late enough to be brave. Not too late.</p><div class="start-actions"><button class="button-primary" data-action="start">LAUNCH MISSION <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="practice-link" data-action="practice">Practice landing</button></div><div class="key-legend"><kbd>&larr;</kbd><kbd>&rarr;</kbd> ROTATE &nbsp; <kbd>SPACE</kbd> TAP TO THRUST &nbsp; <kbd>E</kbd> CHUTE &nbsp; <kbd>P</kbd> PAUSE<br>Every tap is a short burn. Gravity takes it back. Keep tapping.</div><div class="mobile-legend">TAP THRUST TO BURN. HOLD THE ARROWS TO STEER.</div></div><div class="briefing"><div class="briefing-top"><span class="eyebrow">YOUR FLIGHT PLAN</span><span class="serial">MB / 001</span></div><div class="mission-step"><span class="step-num">01</span><div><div class="step-title">Leave Earth behind.</div><div class="step-copy">Tap thrust in bursts and lean into the weather. It is never calm.</div></div></div><div class="mission-step"><span class="step-num">02</span><div><div class="step-title">Separate. Descend. Commit.</div><div class="step-copy">Every tap slows your fall a little. Your engine is your only brake.</div></div></div><div class="mission-step"><span class="step-num">03</span><div><div class="step-title">Pick a site. Land on it.</div><div class="step-copy">One site is inside a lava tube. One is not on the map. The harder and the further, the bigger the score.</div></div></div><div class="mission-step"><span class="step-num">04</span><div><div class="step-title">Come home. Pull the chute.</div><div class="step-copy">Lift off, then ride the storm down to the recovery ship.</div></div></div><div class="site-list">${siteRoster()}</div><div class="site-legend">TIER / SITE / MULTIPLIER / YOUR BEST<br>THE LANDER DEPLOYS EAST OF TRANQUILITY. EVERYTHING ELSE COSTS FUEL TO REACH.</div><div class="difficulty"><div class="difficulty-label">SELECT FLIGHT DIFFICULTY</div><div class="difficulty-options"><button class="difficulty-button ${difficulty==='cadet'?'selected':''}" data-difficulty="cadet" aria-pressed="${difficulty==='cadet'}"><strong>CADET</strong><small>More forgiving landings</small></button><button class="difficulty-button ${difficulty==='pilot'?'selected':''}" data-difficulty="pilot" aria-pressed="${difficulty==='pilot'}"><strong>PILOT</strong><small>Precision required</small></button></div></div><div class="briefing-footer">${best?`PERSONAL BEST: ${best.toLocaleString()} POINTS`:'FLIGHT RECORD: A CLEAN SLATE.'}<br>SITES FOUND: ${found.size} OF ${SITES.length}. ARCADE PHYSICS, REAL CONSEQUENCES.</div></div></div><div class="version"><span>MOONBOUND / PROTOTYPE 1.4</span><span class="version-note">BUILT FOR A STEADY HAND.</span><span>EARTH &rarr; MOON &rarr; EARTH</span></div>`,'welcome');
+ showOverlay(`<div class="welcome"><div><div class="eyebrow">INDEPENDENT FLIGHT PROGRAM / MISSION 001</div><h1>ONE ROCKET.<br>ONE MOON.<br><span>ONE WAY HOME.</span></h1><p class="intro-text">Getting there is only half the mission. Tap your way off Earth through whatever the sky throws at you, put a lander down somewhere on the Moon, drive the rover out and back, dock with the command module, and pull the parachute over the ocean. Late enough to be brave. Not too late.</p><div class="start-actions"><button class="button-primary" data-action="start">LAUNCH MISSION <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="practice-link" data-action="practice">Practice landing</button></div><div class="key-legend"><kbd>&larr;</kbd><kbd>&rarr;</kbd> ROTATE &nbsp; <kbd>SPACE</kbd> TAP TO THRUST &nbsp; <kbd>E</kbd> CHUTE &nbsp; <kbd>P</kbd> PAUSE<br>Every tap is a short burn. Gravity takes it back. Keep tapping.</div><div class="mobile-legend">TAP THRUST TO BURN. HOLD THE ARROWS TO STEER.</div></div><div class="briefing"><div class="briefing-top"><span class="eyebrow">YOUR FLIGHT PLAN</span><span class="serial">MB / 001</span></div><div class="mission-step"><span class="step-num">01</span><div><div class="step-title">Leave Earth behind.</div><div class="step-copy">Tap thrust in bursts, lean into the weather, and dodge the debris. The hull only takes so much.</div></div></div><div class="mission-step"><span class="step-num">02</span><div><div class="step-title">Separate. Descend. Commit.</div><div class="step-copy">Every tap slows your fall a little. Your engine is your only brake.</div></div></div><div class="mission-step"><span class="step-num">03</span><div><div class="step-title">Land. Then drive.</div><div class="step-copy">Pick a site, then take two astronauts out on the rover, bag the samples and get back before the oxygen runs out.</div></div></div><div class="mission-step"><span class="step-num">04</span><div><div class="step-title">Dock. Then come home.</div><div class="step-copy">Fly the ascent stage to the command module and dock it gently, then ride the storm down to the recovery ship.</div></div></div><div class="site-list">${siteRoster()}</div><div class="site-legend">TIER / SITE / MULTIPLIER / YOUR BEST<br>THE LANDER DEPLOYS EAST OF TRANQUILITY. EVERYTHING ELSE COSTS FUEL TO REACH.</div><div class="difficulty"><div class="difficulty-label">SELECT FLIGHT DIFFICULTY</div><div class="difficulty-options"><button class="difficulty-button ${difficulty==='cadet'?'selected':''}" data-difficulty="cadet" aria-pressed="${difficulty==='cadet'}"><strong>CADET</strong><small>More forgiving landings</small></button><button class="difficulty-button ${difficulty==='pilot'?'selected':''}" data-difficulty="pilot" aria-pressed="${difficulty==='pilot'}"><strong>PILOT</strong><small>Precision required</small></button></div></div><div class="briefing-footer">${best?`PERSONAL BEST: ${best.toLocaleString()} POINTS`:'FLIGHT RECORD: A CLEAN SLATE.'}<br>SITES FOUND: ${found.size} OF ${SITES.length}. ARCADE PHYSICS, REAL CONSEQUENCES.</div></div></div><div class="version"><span>MOONBOUND / PROTOTYPE 1.5</span><span class="version-note">BUILT FOR A STEADY HAND.</span><span>EARTH &rarr; MOON &rarr; EARTH</span></div>`,'welcome');
 }
 function startLaunch(){
  clearInput();mode='launch';scene='launch';paused=false;fullMission=true;elapsed=0;launchTime=0;transitTime=0;coastReady=false;landingResult=null;crashReason='';particles=[];debris=[];fuelWarning=false;lowWarning=false;
- ship={x:0,y:38,vx:0,vy:0,angle:0,omega:0,fuel:100,pulse:0,power:0,launched:false};rollWeather('launch');hideOverlay();showHUD(true);$('pause-button').textContent='PAUSE';
- $('objective-title').textContent='CLEAR THE ASCENT CHECKPOINT';$('objective-copy').textContent=`Tap thrust in short bursts. Each tap is a kick and gravity takes it back. Keep the nose up and reach ${launchTarget.toLocaleString()} m. Today: ${wx.name.toLowerCase()}, wind ${Math.round(wx.base)} m/s from the ${wx.dir>0?'west':'east'}. Lean into it.`;
+ ship={x:0,y:38,vx:0,vy:0,angle:0,omega:0,fuel:100,pulse:0,power:0,launched:false};integrity=100;hitGrace=0;debrisField=[];shake=0;roverResult=null;dockResult=null;rollWeather('launch');hideOverlay();showHUD(true);$('pause-button').textContent='PAUSE';
+ $('objective-title').textContent='CLEAR THE ASCENT CHECKPOINT';$('objective-copy').textContent=`Tap thrust in short bursts. Each tap is a kick and gravity takes it back. Keep the nose up and reach ${launchTarget.toLocaleString()} m. Today: ${wx.name.toLowerCase()}, wind ${Math.round(wx.base)} m/s from the ${wx.dir>0?'west':'east'}. Lean into it, and steer around anything that is falling or flying. The hull only takes so much.`;
  showToast(`FORECAST: ${wx.name} / WIND ${windArrow(wx.dir)} ${Math.round(wx.base)} M/S`,3);updateHUD();tone(260,.12,.06);
 }
 function startLanding(practice=false){
- clearInput();fullMission=!practice;mode='land';scene='land';paused=false;elapsed=fullMission?launchTime:0;particles=[];debris=[];fuelWarning=false;lowWarning=false;landingResult=null;crashReason='';
+ clearInput();fullMission=!practice;if(practice){integrity=100;roverResult=null;dockResult=null;}mode='land';scene='land';paused=false;elapsed=fullMission?launchTime:0;particles=[];debris=[];fuelWarning=false;lowWarning=false;landingResult=null;crashReason='';
  ship={x:820,y:760,vx:8.5,vy:-11,angle:0,omega:0,fuel:100,pulse:0,power:0,launched:true};camera={x:885,scale:1,lift:0,originY:SITES[0].y};updateCamera(1,true);hideOverlay();showHUD(true);$('pause-button').textContent='PAUSE';
  $('objective-title').textContent='CHOOSE A SITE AND LAND ON IT';$('objective-copy').textContent='Each tap is a short burn that slows your fall. Tilt against drift, straighten up for touchdown. Far to the east, a lava tube runs under the plain.';
  showToast(practice?'LUNAR LANDING PRACTICE':'LUNAR MODULE DEPLOYED',2.5);updateHUD();tone(520,.16,.05);
@@ -334,17 +353,18 @@ function startAscent(){
  updateCamera(1,true);hideOverlay();showHUD(true);$('pause-button').textContent='PAUSE';
  $('objective-title').textContent='CLIMB BACK TO ORBIT';
  const where=from.site.id==='tube'?'You are underground. Stay low, drift west to the skylight, then climb.':from.site.id==='hollow'?'You are at the bottom of a shaft. Climb straight and keep off the walls.':'Watch the ridgelines if you drift.';
- $('objective-copy').textContent=`Tap to lift off the descent stage and climb past ${ORBIT_Y.toLocaleString()} m. ${where}`;
+ $('objective-copy').textContent=`Tap to lift off the descent stage and climb past ${ORBIT_Y.toLocaleString()} m, where the command module is waiting. ${where}`;
  showToast('ASCENT STAGE ARMED / TAP TO LIFT OFF',2.5);updateHUD();tone(480,.16,.05);
 }
 function beginReturn(){homeward=true;mode='transit';scene='transit';transitTime=0;coastReady=false;particles=[];clearInput();setEngine(false);$('bottom-deck').classList.add('hidden');$('landing-checks').classList.add('hidden');$('objective-title').textContent='TRANSEARTH COAST';$('objective-copy').textContent='Orbit reached. The trip home is compressed in this prototype. Get ready to fall.';showToast('ORBIT REACHED / COURSE SET FOR EARTH',3);tone(440,.25,.06);}
-function reentryBriefing(){coastReady=true;$('pause-button').classList.add('hidden');const c=config[difficulty];rollWeather('earth');showOverlay(`<div class="dialog"><div class="eyebrow">04 / ENTRY INTERFACE / FORECAST: ${wx.name}</div><h2>PULL IT LATE.<br>NOT TOO LATE.</h2><p class="help-tip">WEATHER OVER THE RECOVERY ZONE: ${wx.name}. WIND ${windArrow(wx.dir)} ${Math.round(wx.base)} M/S, GUSTS \u00b1${wx.gust}, SWELL ${wx.swell} M${wx.lightning?', LIGHTNING':''}. RETURN SCORE \u00d7${wx.mult}.</p><p>The capsule is falling toward the ocean. Steer left and right toward the recovery ship. The main chute stays locked above ${CHUTE_ARM} m and tears if you pull it faster than ${CHUTE_MAX} m/s. The lower you pull it, the bigger the nerve bonus. The canopy drifts with the wind, so get upwind of the ship before you pull.</p><div class="result-stats"><div><span class="label">CHUTE ARMS</span><strong>${CHUTE_ARM} <small style="font-size:11px">m</small></strong></div><div><span class="label">CHUTE TEARS ABOVE</span><strong>${CHUTE_MAX} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">SPLASHDOWN</span><strong>≤ ${c.splash} <small style="font-size:11px">m/s</small></strong></div></div><p class="help-tip">Chute: E, S or DOWN, or the CHUTE button. Tap thrust to fire the retro rockets. Do not land on the ship.</p><div class="dialog-actions"><button class="button-primary" data-action="reenter">BEGIN REENTRY <span class="arrow" aria-hidden="true">&#8595;</span></button><button class="practice-link" data-action="home">Abort to main menu</button></div></div>`,'deploy');restoreFocus();}
+function reentryBriefing(){coastReady=true;$('pause-button').classList.add('hidden');const c=config[difficulty];rollWeather('earth');showOverlay(`<div class="dialog"><div class="eyebrow">06 / ENTRY INTERFACE / FORECAST: ${wx.name}</div><h2>PULL IT LATE.<br>NOT TOO LATE.</h2><p class="help-tip">WEATHER OVER THE RECOVERY ZONE: ${wx.name}. WIND ${windArrow(wx.dir)} ${Math.round(wx.base)} M/S, GUSTS \u00b1${wx.gust}, SWELL ${wx.swell} M${wx.lightning?', LIGHTNING':''}. RETURN SCORE \u00d7${wx.mult}.</p><p>The capsule is falling toward the ocean. Steer left and right toward the recovery ship. The main chute stays locked above ${CHUTE_ARM} m and tears if you pull it faster than ${chuteMax()} m/s. The lower you pull it, the bigger the nerve bonus. The canopy drifts with the wind, so get upwind of the ship before you pull.</p><div class="result-stats"><div><span class="label">CHUTE ARMS</span><strong>${CHUTE_ARM} <small style="font-size:11px">m</small></strong></div><div><span class="label">CHUTE TEARS ABOVE</span><strong>${chuteMax()} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">SPLASHDOWN</span><strong>≤ ${c.splash} <small style="font-size:11px">m/s</small></strong></div></div><p class="help-tip">Chute: E, S or DOWN, or the CHUTE button. Tap thrust to fire the retro rockets. Do not land on the ship.</p><div class="dialog-actions"><button class="button-primary" data-action="reenter">BEGIN REENTRY <span class="arrow" aria-hidden="true">&#8595;</span></button><button class="practice-link" data-action="home">Abort to main menu</button></div></div>`,'deploy');restoreFocus();}
 function startReentry(){
  clearInput();mode='earth';scene='earth';paused=false;particles=[];debris=[];fuelWarning=false;lowWarning=false;crashReason='';
  if(!wx||wx.stage!=='earth'||wx.spent)rollWeather('earth');wx.spent=true;
  ship={x:-560,y:1600,vx:9,vy:-128,angle:0,omega:0,fuel:100,pulse:0,power:0,chute:0,chuteOpen:false,chuteTorn:false,chuteDamage:0,armed:false,deployAlt:0,deploySpeed:0};
  $('chute-control').disabled=false;updateEarthCamera(1,true);hideOverlay();showHUD(true);$('pause-button').textContent='PAUSE';
- $('objective-title').textContent='SPLASH DOWN NEAR THE SHIP';$('objective-copy').textContent=`Steer toward the recovery ship. Pull the chute below ${CHUTE_ARM} m, slower than ${CHUTE_MAX} m/s. Later pulls score more.`;
+ if(integrity<35)setTimeout(()=>{if(scene==='earth')showToast(`HEAT SHIELD CRACKED / CHUTE TEARS ABOVE ${chuteMax()} M/S`,2.6);},3200);
+ $('objective-title').textContent='SPLASH DOWN NEAR THE SHIP';$('objective-copy').textContent=`Steer toward the recovery ship. Pull the chute below ${CHUTE_ARM} m, slower than ${chuteMax()} m/s. Later pulls score more.`;
  showToast(`${wx.name} / WIND ${windArrow(wx.dir)} ${Math.round(wx.base)} M/S / STEER FOR THE SHIP`,2.8);updateHUD();tone(300,.2,.05);
 }
 // Zoomed out while high so the ship is on screen; zoomed in near the water so the splash is readable.
@@ -352,7 +372,7 @@ function updateEarthCamera(dt,snap=false){
  if(!ship)return;const want=clamp((H*.44)/(ship.y+140),.2,1.25),w=.3*(1-clamp((want-.2)/.6,0,1));
  const t=snap?1:1-Math.exp(-dt*3);earthCam.scale=mix(earthCam.scale,want,t);earthCam.x=mix(earthCam.x,mix(ship.x,RECOVERY_X,w),t);
 }
-function retryStage(){if(scene==='land')startLanding(!fullMission);else if(scene==='moonup')startAscent();else if(scene==='earth')startReentry();else startLaunch();}
+function retryStage(){if(scene==='land')startLanding(!fullMission);else if(scene==='moonup')startAscent();else if(scene==='rover')startRover();else if(scene==='dock')startDock();else if(scene==='earth')startReentry();else startLaunch();}
 function togglePause(){
  if(![...FLYING,'transit'].includes(mode)||coastReady&&scene==='transit')return;
  if(paused){paused=false;hideOverlay();clearInput();$('pause-button').textContent='PAUSE';return;}
@@ -361,7 +381,7 @@ function togglePause(){
 function showHelp(){
  if(overlayKind==='help'){closeHelp();return;}
  const previous=$('overlay').innerHTML,wasHidden=$('overlay').classList.contains('hidden'),previousKind=overlayKind,previousPaused=paused;
- paused=true;showOverlay(`<div class="dialog"><div class="eyebrow">FLIGHT MANUAL / ${config[difficulty].name}</div><h2>LESS PANIC.<br>MORE CONTROL.</h2><div class="help-row"><span>Tap main engine (each tap is one burn)</span><span><kbd class="help-key">SPACE</kbd><kbd class="help-key">&uarr; / W</kbd></span></div><div class="help-row"><span>Tilt left / right</span><span><kbd class="help-key">&larr; / A</kbd><kbd class="help-key">&rarr; / D</kbd></span></div><div class="help-row"><span>Deploy parachute (Earth return)</span><span><kbd class="help-key">E</kbd><kbd class="help-key">&darr; / S</kbd></span></div><div class="help-row"><span>Pause / restart this stage</span><span><kbd class="help-key">P / ESC</kbd><kbd class="help-key">R</kbd></span></div><p class="help-tip">Thrust works like a flap: tap, and the engine fires a short burst. Holding it down does nothing. On a phone, tap THRUST with one thumb and hold a steering button with the other.</p><p>Launch: reach 2,400 m without straying beyond the flight corridor. Landing: both feet inside one pad, coming down, within that site's limits. The checks panel on the right updates to whichever site you are nearest to, so fly toward one and read it.</p><p class="help-tip">Earth has weather, rolled fresh every launch and every reentry: breezy, gale, thunderstorm or hurricane. Wind drags you and twists the rocket, drafts shove you up or down, and lightning can flame out your engine or scorch your parachute. Worse weather multiplies the return score.</p><p class="help-tip">Harder sites are narrower, further away and stricter, and they multiply your score. Tranquility is \u00d71.0. Marius Tube is underground. One site is not on the map.</p><p>After you land, lift the ascent stage back to orbit (if you landed inside something, fly out first). Over Earth, the chute arms below 450 m and tears above 110 m/s. The later you pull it, the bigger the bonus.</p><div class="dialog-actions"><button class="button-primary" data-action="close-help">GOT IT <span class="arrow" aria-hidden="true">&#8594;</span></button></div></div>`,'help');
+ paused=true;showOverlay(`<div class="dialog"><div class="eyebrow">FLIGHT MANUAL / ${config[difficulty].name}</div><h2>LESS PANIC.<br>MORE CONTROL.</h2><div class="help-row"><span>Tap main engine (each tap is one burn)</span><span><kbd class="help-key">SPACE</kbd><kbd class="help-key">&uarr; / W</kbd></span></div><div class="help-row"><span>Tilt left / right</span><span><kbd class="help-key">&larr; / A</kbd><kbd class="help-key">&rarr; / D</kbd></span></div><div class="help-row"><span>Deploy parachute (Earth return) / brake (rover, docking)</span><span><kbd class="help-key">E</kbd><kbd class="help-key">&darr; / S</kbd></span></div><div class="help-row"><span>Rover: hold the arrows to drive, tap thrust to hop</span><span><kbd class="help-key">&larr; / &rarr;</kbd><kbd class="help-key">SPACE</kbd></span></div><div class="help-row"><span>Pause / restart this stage</span><span><kbd class="help-key">P / ESC</kbd><kbd class="help-key">R</kbd></span></div><p class="help-tip">Thrust works like a flap: tap, and the engine fires a short burst. Holding it down does nothing. On a phone, tap THRUST with one thumb and hold a steering button with the other.</p><p>Launch: reach 2,400 m without straying beyond the flight corridor. Landing: both feet inside one pad, coming down, within that site's limits. The checks panel on the right updates to whichever site you are nearest to, so fly toward one and read it.</p><p class="help-tip">Earth has weather, rolled fresh every launch and every reentry: breezy, gale, thunderstorm or hurricane. Wind drags you and twists the rocket, drafts shove you up or down, and lightning can flame out your engine or scorch your parachute. Worse weather multiplies the return score.</p><p class="help-tip">Harder sites are narrower, further away and stricter, and they multiply your score. Tranquility is \u00d71.0. Marius Tube is underground. One site is not on the map.</p><p class="help-tip">The launch has debris in it: birds low down, wind-borne junk in a gale, hail in a storm, and heavy range debris above 1,100 m. Every hit costs hull and kicks the rocket. At zero the rocket comes apart. Hull carries through to docking and reentry.</p><p>After you land, deploy the rover. Hold the arrows to drive, tap thrust to hop rocks and rilles, and use the arrows in the air to level the wheels before you come down. Bag the three samples, touch the survey marker, and get back to the lander before the oxygen runs out.</p><p>Then lift the ascent stage to orbit (if you landed inside something, fly out first) and dock with the command module: close slowly, centred and upright, and use BRAKE to kill your speed. Over Earth, the chute arms below 450 m and tears above 110 m/s, or less if the heat shield is cracked. The later you pull it, the bigger the bonus.</p><div class="dialog-actions"><button class="button-primary" data-action="close-help">GOT IT <span class="arrow" aria-hidden="true">&#8594;</span></button></div></div>`,'help');
  helpReturn={previous,wasHidden,previousKind,previousPaused};
 }
 let helpReturn=null;
@@ -370,7 +390,7 @@ function homeRequest(){if(overlayKind==='deploy'){welcome();return;}if(canFly()|
 $('overlay').addEventListener('click',e=>{
  const difficultyButton=e.target.closest('[data-difficulty]');if(difficultyButton){difficulty=difficultyButton.dataset.difficulty;welcome();return;}
  const b=e.target.closest('[data-action]');if(!b)return;
- switch(b.dataset.action){case'start':startLaunch();break;case'practice':startLanding(true);break;case'deploy':startLanding(false);break;case'ascend':startAscent();break;case'reenter':startReentry();break;case'resume':togglePause();break;case'retry':retryStage();break;case'home':welcome();break;case'close-help':closeHelp();break;}
+ switch(b.dataset.action){case'start':startLaunch();break;case'practice':startLanding(true);break;case'deploy':startLanding(false);break;case'ascend':startAscent();break;case'rover':startRover();break;case'undock':beginReturn();break;case'reenter':startReentry();break;case'resume':togglePause();break;case'retry':retryStage();break;case'home':welcome();break;case'close-help':closeHelp();break;}
 });
 $('home-button').addEventListener('click',homeRequest);$('pause-button').addEventListener('click',()=>{if(overlayKind==='help')closeHelp();else togglePause();});$('help-button').addEventListener('click',showHelp);
 for(const [id,action]of[['left-control','left'],['right-control','right']]){
@@ -431,15 +451,17 @@ function updateCamera(dt,snap=false){
 }
 function setCheck(id,text,pass){const e=$(id);e.textContent=text;e.className='check '+(pass?'pass':'warn');}
 function updateHUD(){
- if(!ship)return;const c=config[difficulty],land=scene==='land',up=scene==='moonup',earth=scene==='earth',transfer=scene==='transit';
- $('stage-number').textContent=earth?'04 /':up||transfer&&homeward?'03 /':land||transfer?'02 /':'01 /';
- $('stage-name').textContent=land?'LUNAR DESCENT':up?'LUNAR ASCENT':earth?'EARTH RETURN':transfer?(homeward?'RETURN TRANSFER':'LUNAR TRANSFER'):'EARTH ASCENT';
+ if(!ship)return;const c=config[difficulty],land=scene==='land',up=scene==='moonup',earth=scene==='earth',transfer=scene==='transit',eva=scene==='rover',dock=scene==='dock';
+ $('stage-number').textContent=(earth?'06':dock?'05':up||transfer&&homeward?'04':eva?'03':land||transfer?'02':'01')+' /';
+ $('stage-name').textContent=land?'LUNAR DESCENT':eva?'SURFACE EVA':up?'LUNAR ASCENT':dock?'ORBITAL DOCKING':earth?'EARTH RETURN':transfer?(homeward?'RETURN TRANSFER':'LUNAR TRANSFER'):'EARTH ASCENT';
  $('mission-label').textContent=fullMission?'FLIGHT IN PROGRESS':'LANDING PRACTICE';
- $('altitude-label').textContent=land||up?'RADAR ALTITUDE':'ALTITUDE';$('altitude-value').textContent=transfer?'--':Math.round(altitude()).toLocaleString();
+ const toGo=eva?(rover.phase==='out'?course.beacon.x-rover.x:rover.x):0;
+ $('altitude-label').textContent=eva?(rover.phase==='out'?'TO THE MARKER':'TO THE LANDER'):dock?'RANGE TO PORT':land||up?'RADAR ALTITUDE':'ALTITUDE';$('altitude-value').textContent=transfer?'--':Math.round(eva?Math.max(0,Math.abs(toGo)):altitude()).toLocaleString();
  const descending=land||earth;
- $('velocity-label').textContent=descending?'DESCENT SPEED':up?'CLIMB RATE':'VERTICAL SPEED';$('velocity-value').textContent=transfer?'--':(descending?-ship.vy:ship.vy).toFixed(1);
+ $('velocity-label').textContent=eva?'GROUND SPEED':dock?'CLOSING SPEED':descending?'DESCENT SPEED':up?'CLIMB RATE':'VERTICAL SPEED';$('velocity-value').textContent=transfer?'--':(eva?Math.abs(ship.vx):dock?Math.hypot(ship.vx-csm.vx,ship.vy):descending?-ship.vy:ship.vy).toFixed(1);
+ const hp=eva?rover.hull:integrity;$('hull-value').textContent=Math.round(hp)+'%';$('hull-value').style.color=hp<35?'var(--red)':hp<60?'var(--amber)':'';
  const site=land?nearestSite():null,L=site?limitsFor(site):null;
- $('velocity-value').style.color=land&&altitude()<150&&-ship.vy>L.vertical||earth&&(ship.chuteOpen?-ship.vy>c.splash:(!ship.chuteTorn&&ship.y-10<=CHUTE_ARM&&-ship.vy>CHUTE_MAX))?'var(--amber)':'';
+ $('velocity-value').style.color=dock&&Math.hypot(ship.vx-csm.vx,ship.vy)>DOCK[difficulty].speed&&altitude()<40||land&&altitude()<150&&-ship.vy>L.vertical||earth&&(ship.chuteOpen?-ship.vy>c.splash:(!ship.chuteTorn&&ship.y-10<=CHUTE_ARM&&-ship.vy>chuteMax()))?'var(--amber)':'';
  $('fuel-value').textContent=transfer?'100':Math.ceil(ship.fuel);$('fuel-fill').style.width=(transfer?100:ship.fuel)+'%';$('fuel-fill').style.background=ship.fuel<20?'var(--red)':'var(--amber)';
  const vx=Math.abs(ship.vx)<.05?0:ship.vx,angle=normalizeAngle(ship.angle)*DEG;
  $('drift-value').textContent=`${vx<-.05?'← ':vx>.05?'→ ':''}${Math.abs(vx).toFixed(1)} M/S`;$('angle-value').textContent=`${Math.abs(angle).toFixed(1)}° ${angle<-.1?'L':angle>.1?'R':''}`;
@@ -451,7 +473,7 @@ function updateHUD(){
   setCheck('check-angle',`TILT ≤ ${L.angle}°`,Math.abs(angle)<=L.angle);
  }else if(scene==='launch'&&wx){
   const w=wx.windNow;
-  $('check-site').innerHTML=`${wx.name} <b>SEVERITY ${wx.level} OF ${WEATHER.length}</b>`;
+  $('check-site').innerHTML=`${wx.name} <b>SEVERITY ${wx.level} OF ${WEATHER.length} / HULL ${Math.round(integrity)}%</b>`;
   setCheck('check-vertical',`WIND ${windArrow(w)} ${Math.abs(w).toFixed(0)} M/S`,Math.abs(w)<15);
   setCheck('check-drift',wx.burstT>0?(wx.burstPow<0?'DOWNDRAFT':'UPDRAFT'):`GUSTS \u00b1${wx.gust} M/S`,wx.burstT<=0);
   setCheck('check-angle',`CORRIDOR ${Math.max(0,Math.round(CORRIDOR-Math.abs(ship.x)))} M LEFT`,Math.abs(ship.x)<CORRIDOR*.6);
@@ -460,14 +482,29 @@ function updateHUD(){
   const d=ship.x-RECOVERY_X,sp=-ship.vy,alt=ship.y-10,w=wx?wx.windNow:0;
   if(wx)setCheck('check-weather',wx.cut>0?'RETROS OFFLINE':wx.burstT>0?(wx.burstPow<0?'DOWNDRAFT':'UPDRAFT'):`${wx.name} / WIND ${windArrow(w)} ${Math.abs(w).toFixed(0)}`,wx.cut<=0&&wx.burstT<=0&&Math.abs(w)<15);
   $('check-site').innerHTML=`RECOVERY SHIP <b>${Math.abs(d)<5?'DIRECTLY BELOW':Math.round(Math.abs(d))+' M '+(d<0?'EAST':'WEST')}</b>`;
-  setCheck('check-drift',ship.chuteTorn?'CHUTE TORN':ship.chuteOpen?(ship.chuteDamage?'CHUTE SCORCHED':'CHUTE OPEN'):alt>CHUTE_ARM?`CHUTE LOCKED ABOVE ${CHUTE_ARM} M`:`PULL CHUTE ≤ ${CHUTE_MAX} M/S`,ship.chuteOpen||!ship.chuteTorn&&alt<=CHUTE_ARM&&sp<=CHUTE_MAX);
+  setCheck('check-drift',ship.chuteTorn?'CHUTE TORN':ship.chuteOpen?(ship.chuteDamage?'CHUTE SCORCHED':'CHUTE OPEN'):alt>CHUTE_ARM?`CHUTE LOCKED ABOVE ${CHUTE_ARM} M`:`PULL CHUTE ≤ ${chuteMax()} M/S`,ship.chuteOpen||!ship.chuteTorn&&alt<=CHUTE_ARM&&sp<=chuteMax());
   setCheck('check-vertical',`SPLASH ≤ ${c.splash} M/S`,sp<=c.splash);
   setCheck('check-angle',`SHIP ≤ 150 M`,Math.abs(d)<=150);
+ }else if(eva){
+  const r=rover,tilt=Math.abs(normalizeAngle(r.angle-courseSlope(r.x)))*DEG;
+  $('check-site').innerHTML=`${r.phase==='out'?'TRAVERSE OUT':'RETURN LEG'} <b>${course.site.name} / ${course.len} M EACH WAY</b>`;
+  setCheck('check-vertical',`SAMPLES ${r.samples} OF ${course.samples.length}`,r.samples===course.samples.length);
+  setCheck('check-drift',`OXYGEN ${fmtTime(r.o2)}`,r.o2>45);
+  setCheck('check-angle',`ROVER ${Math.round(r.hull)}%`,r.hull>35);
+  setCheck('check-weather',r.grounded?`SLOPE ${Math.round(r.slopeDeg)}°`:`AIRBORNE / WHEELS ${Math.round(tilt)}° OFF`,r.grounded||tilt<ROVER.rollover*.6);
+ }else if(dock){
+  const D=DOCK[difficulty],p=dockProbe(),port=dockPort(),dx=p.x-port.x,rel=Math.hypot(ship.vx-csm.vx,ship.vy),ang=Math.abs(normalizeAngle(ship.angle))*DEG;
+  $('check-site').innerHTML=`COMMAND MODULE <b>PORT ${Math.abs(dx)<1?'DEAD AHEAD':Math.round(Math.abs(dx))+' M '+(dx<0?'EAST':'WEST')} / HULL ${Math.round(integrity)}%</b>`;
+  setCheck('check-vertical',`CLOSING ≤ ${D.speed} M/S`,rel<=D.speed);
+  setCheck('check-drift',`CENTRE ≤ ${DOCK.portDx} M`,Math.abs(dx)<=DOCK.portDx);
+  setCheck('check-angle',`TILT ≤ ${D.angle}°`,ang<=D.angle);
+  setCheck('check-weather',`DRIFT ${csm.vx<-.05?'← ':csm.vx>.05?'→ ':''}${Math.abs(csm.vx).toFixed(1)} M/S`,Math.abs(csm.vx)<1);
  }
 }
 function step(dt){
  if(paused)return;
  if(toastTimer>0){toastTimer-=dt;if(toastTimer<=0)$('toast').classList.remove('visible');}
+ if(shake>0)shake=Math.max(0,shake-dt*2.5);
  if(mode==='transit'){if(!coastReady){transitTime+=dt;elapsed+=dt;if(transitTime>=4.2){if(homeward)reentryBriefing();else deployBriefing();}}return;}
  if(mode==='crash'){if(wx){wx.flash=Math.max(0,wx.flash-dt*2.5);wx.bolt=null;}failureAge+=dt;updateParticles(dt);if(failureAge>1.15&&overlayKind!=='result')showFailure();return;}
  if(mode==='win'){updateParticles(dt);return;}
@@ -478,6 +515,9 @@ function step(dt){
  const isBurn=burning(),power=isBurn?ship.power:0;
  if(ship.pulse>0)ship.pulse=Math.max(0,ship.pulse-dt);
  if(scene==='earth'){stepEarth(dt,turn,power);if(isBurn)emitExhaust(dt);updateParticles(dt);return;}
+ if(scene==='rover'){stepRover(dt,turn);updateParticles(dt);return;}
+ if(scene==='dock'){stepDock(dt,turn,power);if(isBurn)emitExhaust(dt);updateParticles(dt);return;}
+ if(scene==='launch'&&ship.launched){stepDebris(dt);if(mode!=='launch')return;}
  ship.omega+=turn*c.turnAccel*dt;
  ship.omega*=Math.exp(-c.damping*dt);
  ship.angle=normalizeAngle(ship.angle+ship.omega*dt);
@@ -517,7 +557,7 @@ function step(dt){
      if(roof){crash(roof==='roof'?'The ascent stage hit the roof of the lava tube. Stay low, drift to the skylight, then climb through it.':'The ascent stage came down on top of the lava tube.');return;}
      if(pts.some(p=>p.y<=groundAt(p.x))){crash(inShaft()?'The ascent stage clipped the crater wall. Climb straight up the middle of the shaft.':'The ascent stage struck the surface. Build height before you drift sideways.');return;}
    }
-   if(ship.y>=ORBIT_Y){beginReturn();return;}
+   if(ship.y>=ORBIT_Y){dockFuel=Math.max(40,ship.fuel);startDock();return;}
    if(!fuelWarning&&ship.fuel<20){fuelWarning=true;showToast('ASCENT FUEL BELOW 20%');tone(180,.25,.06);}
    updateCamera(dt);
  }else{
@@ -572,21 +612,21 @@ function resolveLanding(){
  const newBest=score>best;best=Math.max(best,score);saveRecords();
  tone(660,.35,.07);setTimeout(()=>tone(880,.45,.04),150);
  updateHUD();
- showOverlay(`<div class="dialog"><div class="eyebrow">${firstFind?'NEW SITE DISCOVERED':(fullMission?'MISSION COMPLETE':'PRACTICE COMPLETE')} / ${site.name}</div><h2>${firstFind?'NOBODY HAS<br>BEEN HERE.':'THE EAGLE<br>HAS LEGS.'}</h2><p>${firstFind?'You found the crater floor and put the lander down on it. The Hollow is on your map from now on.':'Engine off. Landing gear intact. You made it to the Moon, and the Moon let you stay.'}</p><p class="help-tip">${site.tier} SITE / SCORE MULTIPLIER \u00d7${site.mult.toFixed(1)}${siteRecord?' / SITE RECORD':''}</p><div class="result-stats"><div><span class="label">TOUCHDOWN</span><strong>${vertical.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">SIDEWAYS DRIFT</span><strong>${drift.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">FUEL REMAINING</span><strong>${Math.round(ship.fuel)}%</strong></div></div><div class="result-score"><span>${newBest?'NEW PERSONAL BEST':'MISSION SCORE'}${difficulty==='pilot'?' / PILOT':''}</span><strong>${score.toLocaleString()}</strong></div><p class="help-tip">THE MISSION IS NOT OVER. Fly the ascent stage back to orbit and bring the capsule home for a return bonus.</p><div class="dialog-actions"><button class="button-primary" data-action="ascend">LIFT OFF FOR HOME <span class="arrow" aria-hidden="true">&#8593;</span></button><button class="button-secondary" data-action="practice">LAND AGAIN</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
+ showOverlay(`<div class="dialog"><div class="eyebrow">${firstFind?'NEW SITE DISCOVERED':(fullMission?'MISSION COMPLETE':'PRACTICE COMPLETE')} / ${site.name}</div><h2>${firstFind?'NOBODY HAS<br>BEEN HERE.':'THE EAGLE<br>HAS LEGS.'}</h2><p>${firstFind?'You found the crater floor and put the lander down on it. The Hollow is on your map from now on.':'Engine off. Landing gear intact. You made it to the Moon, and the Moon let you stay.'}</p><p class="help-tip">${site.tier} SITE / SCORE MULTIPLIER \u00d7${site.mult.toFixed(1)}${siteRecord?' / SITE RECORD':''}</p><div class="result-stats"><div><span class="label">TOUCHDOWN</span><strong>${vertical.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">SIDEWAYS DRIFT</span><strong>${drift.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">FUEL REMAINING</span><strong>${Math.round(ship.fuel)}%</strong></div></div><div class="result-score"><span>${newBest?'NEW PERSONAL BEST':'MISSION SCORE'}${difficulty==='pilot'?' / PILOT':''}</span><strong>${score.toLocaleString()}</strong></div><p class="help-tip">THE MISSION IS NOT OVER. Two astronauts and a rover are folded into the descent stage. Drive the traverse and bring the samples back, then fly the ascent stage up to the command module.</p><div class="dialog-actions"><button class="button-primary" data-action="rover">DEPLOY THE ROVER <span class="arrow" aria-hidden="true">&#8594;</span></button><button class="button-secondary" data-action="practice">LAND AGAIN</button><button class="practice-link" data-action="ascend">Skip the EVA and lift off</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
 }
 function resolveSplashdown(){
  const c=config[difficulty],speed=-ship.vy,d=Math.abs(ship.x-RECOVERY_X);
  if(ship.x>=COAST_X){crash('You came down on the rocks past the shoreline. The capsule is built for water. Steer west while you are still falling fast.');return;}
- if(ship.chuteTorn){crash(`The parachute tore when you pulled it at ${ship.deploySpeed.toFixed(0)} m/s. It holds up to ${CHUTE_MAX} m/s. Let the air slow you before you pull.`);return;}
+ if(ship.chuteTorn){crash(`The parachute tore when you pulled it at ${ship.deploySpeed.toFixed(0)} m/s. It holds up to ${chuteMax()} m/s. Let the air slow you before you pull.`);return;}
  if(!ship.chuteOpen){crash(`No parachute. The capsule hit the ocean at ${speed.toFixed(0)} m/s. The chute arms below ${CHUTE_ARM} m: pull it before the water does.`);return;}
  if(speed>c.splash){crash(`Splashdown at ${speed.toFixed(1)} m/s is too hard. The limit is ${c.splash} m/s. Pull a little higher so the chute can fully open, or tap the retro rockets just before the water.`);return;}
  const near=clamp(1-Math.max(0,d-60)/900,0,1),nerve=Math.max(0,Math.round((CHUTE_ARM-ship.deployAlt)*3));
- const ret=Math.round((600+1400*near+nerve+ship.fuel*3+300*(1-speed/c.splash))*(difficulty==='pilot'?1.25:1)*wx.mult);
- const landed=landingResult?landingResult.score:0,total=landed+ret,newBest=total>best;best=Math.max(best,total);saveRecords();
+ const hullBonus=Math.round(integrity*4),ret=Math.round((600+1400*near+nerve+ship.fuel*3+300*(1-speed/c.splash))*(difficulty==='pilot'?1.25:1)*wx.mult)+hullBonus;
+ const landed=landingResult?landingResult.score:0,eva=roverResult?roverResult.score:0,docked=dockResult?dockResult.score:0,total=landed+eva+docked+ret,newBest=total>best;best=Math.max(best,total);saveRecords();
  mode='win';ship.y=10+waterAt(ship.x);ship.vx=0;ship.vy=0;clearInput();setEngine(false);$('pause-button').classList.add('hidden');$('toast').classList.remove('visible');
  for(let i=0;i<30;i++){const a=PI*(.15+Math.random()*.7),v=6+Math.random()*22;particles.push({x:ship.x,y:2,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.5+Math.random()*.9,max:1.4,size:2+Math.random()*4,kind:'splash'});}
  tone(660,.35,.07);setTimeout(()=>tone(880,.45,.04),150);setTimeout(()=>tone(990,.5,.04),320);updateHUD();
- showOverlay(`<div class="dialog"><div class="eyebrow">ROUND TRIP COMPLETE${landingResult?' / '+landingResult.site.name+' AND BACK':''}</div><h2>WELCOME<br>HOME.</h2><p>The capsule is in the water ${Math.round(d)} m from the recovery ship${d<=150?', close enough to wave at':''}. ${landingResult?`Your flag is still standing at ${landingResult.site.name}.`:''}</p><div class="result-stats"><div><span class="label">SPLASHDOWN</span><strong>${speed.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">CHUTE PULLED AT</span><strong>${Math.round(ship.deployAlt)} <small style="font-size:11px">m</small></strong></div><div><span class="label">TO THE SHIP</span><strong>${Math.round(d)} <small style="font-size:11px">m</small></strong></div></div><p class="help-tip">LANDING ${landed.toLocaleString()} + RETURN ${ret.toLocaleString()} (${wx.name} \u00d7${wx.mult}${nerve?', NERVE BONUS '+nerve.toLocaleString():''})</p><div class="result-score"><span>${newBest?'NEW PERSONAL BEST':'TOTAL SCORE'}${difficulty==='pilot'?' / PILOT':''}</span><strong>${total.toLocaleString()}</strong></div><div class="dialog-actions"><button class="button-primary" data-action="start">FLY IT AGAIN <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="button-secondary" data-action="practice">PRACTICE LANDING</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
+ showOverlay(`<div class="dialog"><div class="eyebrow">ROUND TRIP COMPLETE${landingResult?' / '+landingResult.site.name+' AND BACK':''}</div><h2>WELCOME<br>HOME.</h2><p>The capsule is in the water ${Math.round(d)} m from the recovery ship${d<=150?', close enough to wave at':''}. ${roverResult?`${roverResult.samples} sample${roverResult.samples===1?'':'s'} from ${roverResult.site.name} came home with the crew. `:''}${landingResult?`Your flag is still standing at ${landingResult.site.name}.`:''}</p><div class="result-stats"><div><span class="label">SPLASHDOWN</span><strong>${speed.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">CHUTE PULLED AT</span><strong>${Math.round(ship.deployAlt)} <small style="font-size:11px">m</small></strong></div><div><span class="label">TO THE SHIP</span><strong>${Math.round(d)} <small style="font-size:11px">m</small></strong></div></div><p class="help-tip">LANDING ${landed.toLocaleString()}${eva?' + EVA '+eva.toLocaleString():''}${docked?' + DOCKING '+docked.toLocaleString():''} + RETURN ${ret.toLocaleString()} (${wx.name} \u00d7${wx.mult}${nerve?', NERVE BONUS '+nerve.toLocaleString():''}, HULL ${Math.round(integrity)}% +${hullBonus})</p><div class="result-score"><span>${newBest?'NEW PERSONAL BEST':'TOTAL SCORE'}${difficulty==='pilot'?' / PILOT':''}</span><strong>${total.toLocaleString()}</strong></div><div class="dialog-actions"><button class="button-primary" data-action="start">FLY IT AGAIN <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="button-secondary" data-action="practice">PRACTICE LANDING</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
 }
 function crash(reason){
  mode='crash';crashReason=reason;failureAge=0;clearInput();setEngine(false);$('pause-button').classList.add('hidden');$('toast').classList.remove('visible');tone(70,.55,.08);
@@ -594,21 +634,341 @@ function crash(reason){
  for(let i=0;i<11;i++){debris.push({x:ship.x,y:ship.y,vx:(Math.random()-.5)*55,vy:Math.random()*45,angle:Math.random()*TAU,spin:(Math.random()-.5)*8,size:3+Math.random()*7,life:5});}
 }
 function showFailure(){
- const stage={launch:['EARTH ASCENT','RETRY LAUNCH','The next rocket is on the pad. Give it another shot.'],land:['LUNAR DESCENT','RETRY LANDING','A steady hand beats a long burn. Your next lander is ready.'],moonup:['LUNAR ASCENT','RETRY LIFTOFF','The descent stage is still on the pad. Try the climb again.'],earth:['EARTH RETURN','RETRY REENTRY','So close to home. The capsule is back at the top of the sky.']}[scene]||['FLIGHT','RETRY','Try again.'];
+ const stage={launch:['EARTH ASCENT','RETRY LAUNCH','The next rocket is on the pad. Give it another shot.'],land:['LUNAR DESCENT','RETRY LANDING','A steady hand beats a long burn. Your next lander is ready.'],moonup:['LUNAR ASCENT','RETRY LIFTOFF','The descent stage is still on the pad. Try the climb again.'],earth:['EARTH RETURN','RETRY REENTRY','So close to home. The capsule is back at the top of the sky.'],rover:['SURFACE EVA','DRIVE IT AGAIN','Both astronauts are back at the lander with the spare rover. Try the traverse again.'],dock:['ORBITAL DOCKING','RETRY THE APPROACH','The ascent stage is back at the start of the approach. Slow down early this time.']}[scene]||['FLIGHT','RETRY','Try again.'];
  showOverlay(`<div class="dialog"><div class="eyebrow">FLIGHT RECORD / ${stage[0]}</div><h2 class="danger-title">GRAVITY WINS.<br>THIS TIME.</h2><p>${crashReason}</p><p>${stage[2]}</p><div class="dialog-actions"><button class="button-primary" data-action="retry">${stage[1]} <span class="arrow" aria-hidden="true">&#8635;</span></button><button class="button-secondary" data-action="${scene==='launch'?'practice':'start'}">${scene==='launch'?'PRACTICE LANDING':'FULL MISSION'}</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
 }
+// ---- Launch debris. Everything here is a threat you can see coming and steer around. ----
+function spawnDebris(kind,view){
+ const S=view.scale,xl=(-W*.44)/S,xr=(W*.56)/S,topY=38+view.cameraY+(view.base-42)/S+140;
+ const sp=mix(kind.speed[0],kind.speed[1],Math.random());
+ const d={kind,r:kind.r,dmg:kind.dmg,spin:(Math.random()-.5)*6,angle:Math.random()*TAU,age:0,life:40,flock:0};
+ if(kind.fall){
+  // Most fallers start over the rocket's column so they are a real threat, the rest are scenery.
+  d.x=Math.random()<.75?ship.x+(Math.random()-.5)*260:mix(xl,xr,Math.random());
+  d.y=topY;d.vx=(wx?wx.windNow*.3:0)+(Math.random()-.5)*30;d.vy=-sp;
+ }else{
+  const dir=kind.id==='sheet'&&wx?(Math.sign(wx.windNow)||1):(Math.random()<.5?1:-1);
+  d.x=dir>0?xl-60:xr+60;d.vx=dir*sp;d.vy=kind.id==='bird'?0:-6-Math.random()*8;
+  d.y=ship.y+mix(-150,650,Math.random());
+ }
+ debrisField.push(d);
+ if(kind.id==='bird'){const n=3+Math.floor(Math.random()*3);for(let i=1;i<n;i++)debrisField.push({...d,x:d.x-Math.sign(d.vx)*i*26,y:d.y+(i%2?9:-7)*i,flock:i});}
+}
+function stepDebris(dt){
+ const view=launchView(),alt=altitude(),S=view.scale,lvl=wx?wx.level:1;
+ for(const k of DEBRIS_KINDS){
+  if(alt<k.band[0]||alt>k.band[1])continue;
+  if(k.wxMin&&lvl<k.wxMin)continue;
+  const rate=k.rate*(k.wxMin?1+(lvl-k.wxMin)*.6:1)*(difficulty==='pilot'?1.25:1);
+  if(Math.random()<rate*dt)spawnDebris(k,view);
+ }
+ const xl=(-W*.44)/S-260,xr=(W*.56)/S+260;
+ for(const d of debrisField){
+  d.age+=dt;d.x+=d.vx*dt;d.y+=d.vy*dt;d.angle+=d.spin*dt;
+  if(d.kind.id==='bird')d.y+=Math.sin(d.age*6+d.flock)*8*dt;
+  if(d.y<ship.y-900||d.x<xl||d.x>xr||d.age>d.life)d.dead=true;
+ }
+ debrisField=debrisField.filter(d=>!d.dead);
+ if(hitGrace>0){hitGrace-=dt;return;}
+ // The rocket's hit box is an ellipse in screen space, turned with the rocket.
+ const sx=view.x(ship.x),sy=view.y(ship.y),cs=Math.cos(ship.angle),sn=Math.sin(ship.angle);
+ for(const d of debrisField){
+  const dx=view.x(d.x)-sx,dy=view.y(d.y)-sy,lx=dx*cs+dy*sn,ly=-dx*sn+dy*cs,hw=13+d.r,hh=42+d.r;
+  if((lx*lx)/(hw*hw)+(ly*ly)/(hh*hh)<1){debrisHit(d);break;}
+ }
+}
+function debrisHit(d){
+ const dmg=Math.round(d.dmg*(difficulty==='pilot'?1:.8)),name=d.kind.name.charAt(0)+d.kind.name.slice(1).toLowerCase();
+ integrity=Math.max(0,integrity-dmg);hitGrace=.5;shake=1;d.dead=true;
+ ship.omega+=(d.vx>0?1:-1)*(.35+dmg*.025);ship.vx+=Math.sign(d.vx||1)*dmg*.45;
+ for(let i=0;i<10;i++){const a=Math.random()*TAU,s=20+Math.random()*60;particles.push({x:d.x,y:d.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.3+Math.random()*.5,max:.8,size:2+Math.random()*4,kind:'fire'});}
+ tone(60,.3,.09);
+ if(integrity<=0){crash(`${name} finished the hull at ${Math.round(altitude()).toLocaleString()} m and the rocket came apart. It only takes so much: tilt away from what is coming, and take the small hits over the big ones.`);return;}
+ showToast(`${d.kind.name} / HULL ${Math.round(integrity)}%`,1.6);
+ if(integrity<=30&&!ship.hullWarned){ship.hullWarned=true;setTimeout(()=>{if(scene==='launch'&&mode==='launch')showToast('STRUCTURE CRITICAL / ONE MORE BIG HIT ENDS IT',2.2);},1700);}
+}
+function drawDebrisField(view){
+ for(const d of debrisField){
+  const x=view.x(d.x),y=view.y(d.y);
+  if(y<-20){
+   // Fallers still above the frame get a marker under the instrument panel so you can move first.
+   if(d.kind.fall&&d.kind.id!=='hail'&&x>10&&x<W-10){ctx.save();ctx.globalAlpha=reduceMotion?.8:.55+.45*Math.sin(visualTime*12);ctx.fillStyle='#ff887a';ctx.beginPath();ctx.moveTo(x,214);ctx.lineTo(x-6,204);ctx.lineTo(x+6,204);ctx.fill();ctx.restore();drawLabel(x,223,'DEBRIS','#ff887a',7);}
+   continue;
+  }
+  if(x<-40||x>W+40||y>H+40)continue;
+  const k=d.kind.id,r=d.r;
+  ctx.save();ctx.translate(x,y);
+  if(k==='bird'){const f=Math.sin(visualTime*14+d.flock)*3,dir=Math.sign(d.vx)||1;ctx.strokeStyle='#1a242c';ctx.lineWidth=1.7;ctx.beginPath();ctx.moveTo(-r,f);ctx.quadraticCurveTo(-r*.5,-r*.7,0,0);ctx.quadraticCurveTo(r*.5,-r*.7,r,f);ctx.stroke();ctx.fillStyle='#1a242c';ctx.beginPath();ctx.arc(dir*1.5,.5,1.4,0,TAU);ctx.fill();}
+  else if(k==='hail'){ctx.fillStyle='#dfeaf2';ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();}
+  else if(k==='sheet'){ctx.rotate(d.angle);ctx.fillStyle='#5b6a74';ctx.strokeStyle='#9aacb6';ctx.lineWidth=1;ctx.fillRect(-r*1.4,-r*.5,r*2.8,r);ctx.strokeRect(-r*1.4,-r*.5,r*2.8,r);}
+  else{ctx.rotate(d.angle);ctx.fillStyle='#6b5a48';ctx.strokeStyle='#b39a7a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-r,-r*.4);ctx.lineTo(-r*.3,-r);ctx.lineTo(r*.9,-r*.5);ctx.lineTo(r,r*.5);ctx.lineTo(0,r);ctx.lineTo(-r*.8,r*.5);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='rgba(255,170,90,.55)';ctx.beginPath();ctx.moveTo(-r*.5,r*.3);ctx.lineTo(0,r*2.4);ctx.lineTo(r*.5,r*.3);ctx.fill();}
+  ctx.restore();
+ }
+}
+// ---- Surface EVA. A generated traverse per site: rolling ground, craters, rilles, scarps and rocks. ----
+function courseAt(x){return course?polyAt(course.pts,x):0;}
+function courseSlope(x){const a=courseAt(x-2),b=courseAt(x+2);return Math.atan2(b-a,4);}
+function fmtTime(s){s=Math.max(0,Math.round(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function buildCourse(site){
+ let seed=[...site.id].reduce((a,c)=>(Math.imul(a,31)+c.charCodeAt(0))>>>0,7);const rnd=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+ const hard=clamp((site.mult-1)/2.5,0,1);
+ const len=Math.round(mix(600,1200,hard)),pts=[],rocks=[],samples=[],craters=[],rilles=[],scarps=[];
+ let x=150;
+ while(x<len-130){
+  const roll=rnd();
+  if(roll<.5){const w=mix(30,70,rnd()),d=Math.min(w*.28,mix(5,14,rnd())*(1+hard*.4));craters.push({x:x+w/2,w,d});x+=w;}
+  else if(roll<.5+.22*(.5+hard)){const w=mix(12,26,rnd())*(1+hard*.5);rilles.push({x:x+w/2,w});x+=w;}
+  else{scarps.push({x,h:mix(1.8,2.8,rnd())});x+=10;}
+  x+=mix(55,140,rnd());
+ }
+ const ph=[rnd()*TAU,rnd()*TAU,rnd()*TAU];
+ for(let px=-260;px<=len+320;px+=4){
+  let y=12*Math.sin(px*.011+ph[0])+6*Math.sin(px*.029+ph[1])+2.5*Math.sin(px*.083+ph[2]);
+  y*=clamp((Math.abs(px)-70)/60,0,1)*clamp((Math.abs(px-len)-70)/60,0,1);
+  for(const c of craters){const u=(px-c.x)/(c.w/2);if(Math.abs(u)<1)y-=c.d*Math.pow(1-u*u,1.5);}
+  for(const r of rilles){const u=(px-r.x)/(r.w/2);if(Math.abs(u)<1)y-=34*(1-Math.pow(Math.abs(u),14));}
+  for(const sc of scarps)y+=sc.h*clamp((px-sc.x)/3,0,1)*clamp(1-(px-sc.x-3)/90,0,1);
+  pts.push([px,y]);
+ }
+ let rx=100;
+ while(rx<len-80){
+  const near=craters.some(c=>Math.abs(rx-c.x)<c.w/2+10)||rilles.some(r=>Math.abs(rx-r.x)<r.w/2+12)||scarps.some(sc=>rx>sc.x-8&&rx<sc.x+16);
+  if(!near)rocks.push({x:Math.round(rx),r:mix(2.5,6,rnd())});
+  rx+=mix(40,110,rnd())*(1.2-hard*.4);
+ }
+ for(const f of [.3,.55,.8]){let sx=Math.round(len*f);while(rilles.some(r=>Math.abs(sx-r.x)<r.w/2+6))sx+=8;samples.push({x:sx,taken:false});}
+ return {site,len,pts,rocks,samples,craters,rilles,scarps,beacon:{x:len},o2:Math.round(55+len*.3)};
+}
+function startRover(){
+ if(!landingResult)return;
+ course=buildCourse(landingResult.site);
+ clearInput();mode='rover';scene='rover';paused=false;particles=[];debris=[];fuelWarning=false;lowWarning=false;crashReason='';roverResult=null;
+ rover={x:-30,y:0,vx:0,vy:0,angle:0,omega:0,grounded:true,slopeDeg:0,hull:100,o2:course.o2,o2max:course.o2,samples:0,phase:'out',fuel:100,pulse:0,power:0,hopCd:0,braking:0,bounce:0,t:0,launched:true};
+ rover.y=courseAt(rover.x);ship=rover;
+ for(const s of course.samples)s.taken=false;for(const r of course.rocks)r.hit=false;
+ updateRoverCamera(1,true);hideOverlay();showHUD(true);$('pause-button').textContent='PAUSE';
+ $('objective-title').textContent='DRIVE TO THE SURVEY MARKER AND BACK';
+ $('objective-copy').textContent=`Hold LEFT or RIGHT to drive, tap thrust to hop, BRAKE to stop. Bag the ${course.samples.length} samples on the way out, touch the marker ${course.len} m east, and get both astronauts back to the lander before the oxygen runs out. Rocks and crater walls cost hull. Rilles are deep: hop them.`;
+ showToast(`EVA / ${fmtTime(course.o2)} OF OXYGEN / MARKER ${course.len} M EAST`,3);updateHUD();tone(520,.16,.05);
+}
+function roverHop(){
+ if(!rover||!canFly()||!rover.grounded||rover.hopCd>0)return;
+ rover.grounded=false;rover.vy=ROVER.hop[difficulty];rover.hopCd=.4;rover.omega=0;tone(340,.08,.03);
+ for(let i=0;i<8;i++)particles.push({x:rover.x+(Math.random()-.5)*10,y:rover.y+1,vx:(Math.random()-.5)*20,vy:2+Math.random()*5,life:.3+Math.random()*.5,max:.8,size:1+Math.random()*2.5,kind:'dust'});
+}
+function roverBrake(){if(!rover||!canFly()||!rover.grounded)return;rover.braking=.4;}
+function roverDamage(amount,why){
+ rover.hull=Math.max(0,rover.hull-Math.round(amount));shake=1;rover.bounce=1;tone(70,.25,.08);
+ for(let i=0;i<8;i++)particles.push({x:rover.x,y:rover.y+2,vx:(Math.random()-.5)*30,vy:4+Math.random()*10,life:.3+Math.random()*.6,max:.9,size:1.5+Math.random()*3,kind:'dust'});
+ if(rover.hull<=0){crash(`${why} That was the last of the rover. Both astronauts are fine, and walking. Hop the rocks, brake before crater walls, and level the wheels before you come down.`);return true;}
+ showToast(`${why.toUpperCase().replace(/\.$/,'')} / ROVER ${Math.round(rover.hull)}%`,1.6);return false;
+}
+function stepRover(dt,turn){
+ const r=rover,c=ROVER,max=c.maxSpeed[difficulty];
+ r.t+=dt;r.o2-=dt;r.fuel=r.o2/r.o2max*100;if(r.hopCd>0)r.hopCd-=dt;if(r.bounce>0)r.bounce=Math.max(0,r.bounce-dt*3);
+ if(r.o2<=0){crash('The oxygen ran out on the traverse. Drive faster on the flats, hop the craters instead of climbing out of them, and turn for home the moment the marker is touched.');return;}
+ if(!fuelWarning&&r.o2<45){fuelWarning=true;showToast('OXYGEN 45 SECONDS / HEAD FOR THE LANDER',2.2);tone(180,.25,.06);}
+ const slope=courseSlope(r.x);r.slopeDeg=slope*DEG;
+ if(r.grounded){
+  r.vx+=turn*c.accel[difficulty]*dt;
+  r.vx-=Math.sin(slope)*6*dt;
+  if(!turn)r.vx*=Math.exp(-.7*dt);
+  if(r.braking>0){r.braking-=dt;r.vx*=Math.exp(-6*dt);}
+  r.vx=clamp(r.vx,-max,max);
+  const x0=r.x,y0=r.y;r.x+=r.vx*dt;
+  const gy=courseAt(r.x),rise=gy-y0,dir=Math.sign(r.vx)||1,ahead=courseSlope(r.x+dir*3)*DEG*dir;
+  if(ahead>50&&Math.abs(r.vx)>2.5){
+   // A wall. Fast is a hit, slow is a crawl.
+   const sp=Math.abs(r.vx);r.x=x0;r.vx=-r.vx*.25;if(sp>5&&roverDamage(6+sp*2.4,'Hit a wall.'))return;
+  }else if(rise<-Math.abs(r.vx)*dt*.85-.02&&Math.abs(r.vx)>3){r.grounded=false;r.vy=Math.max(rise/dt,-2);r.omega=0;}
+  else{r.y=gy;r.vy=0;}
+  r.angle=mix(r.angle,slope,1-Math.exp(-dt*10));
+  for(const rock of course.rocks){
+   if(rock.hit||Math.abs(r.x-rock.x)>rock.r+4)continue;
+   rock.hit=true;const sp=Math.abs(r.vx);
+   if(sp>5){r.vx*=.3;if(roverDamage(6+sp*1.2,'Hit a rock.'))return;}else{r.vy=1.2;r.grounded=false;}
+  }
+  if(Math.abs(r.vx)>1&&Math.random()<.6)particles.push({x:r.x-Math.sign(r.vx)*8,y:r.y+1,vx:-r.vx*.4+(Math.random()-.5)*6,vy:2+Math.random()*5,life:.3+Math.random()*.5,max:.8,size:1+Math.random()*2.5,kind:'dust'});
+ }else{
+  // In the air the arrows nudge the tilt and the rover settles toward the ground beneath it, so a held throttle never flips it.
+  const below=courseSlope(r.x+r.vx*.25);r.omega+=turn*.7*dt+normalizeAngle(below-r.angle)*2*dt;r.omega*=Math.exp(-3*dt);r.angle=normalizeAngle(r.angle+r.omega*dt);
+  r.vy-=c.g*dt;r.x+=r.vx*dt;r.y+=r.vy*dt;
+  const gy=courseAt(r.x);
+  if(r.y<=gy){
+   const impact=-r.vy,tilt=Math.abs(normalizeAngle(r.angle-slope))*DEG;
+   r.y=gy;r.vy=0;r.grounded=true;r.omega=0;
+   if(course.rilles.some(rl=>Math.abs(r.x-rl.x)<rl.w/2-1)){crash('The rover dropped into the rille. It is thirty metres deep and nobody is driving out of it. Hit rilles at speed and hop just before the edge.');return;}
+   if(tilt>c.rollover){crash(`The rover came down ${Math.round(tilt)} degrees off the slope and rolled. Both astronauts crawled out. Use the arrows in the air to level the wheels with the ground before you land.`);return;}
+   if(impact>c.impact){if(roverDamage((impact-c.impact)*5+4,'Hard landing.'))return;}
+   else if(impact>3)r.bounce=.6;
+   for(let i=0;i<6;i++)particles.push({x:r.x+(Math.random()-.5)*14,y:r.y+1,vx:(Math.random()-.5)*24,vy:2+Math.random()*6,life:.3+Math.random()*.5,max:.8,size:1+Math.random()*2.5,kind:'dust'});
+  }
+ }
+ for(const rock of course.rocks)if(rock.hit&&Math.abs(r.x-rock.x)>rock.r+12)rock.hit=false;
+ if(r.x<-230){r.x=-230;r.vx=0;}if(r.x>course.len+280){r.x=course.len+280;r.vx=0;}
+ for(const s of course.samples){if(!s.taken&&Math.abs(r.x-s.x)<9&&r.grounded){s.taken=true;r.samples++;showToast(`SAMPLE ${r.samples} OF ${course.samples.length} BAGGED`,1.6);tone(720,.15,.05);}}
+ if(r.phase==='out'&&r.x>=course.beacon.x-6){
+  r.phase='back';const missed=r.samples<course.samples.length;
+  showToast(missed?'MARKER REACHED / SAMPLES STILL OUT THERE / HEAD BACK':'MARKER REACHED / HEAD BACK TO THE LANDER',2.6);tone(560,.2,.05);
+  $('objective-title').textContent='RETURN TO THE LANDER';$('objective-copy').textContent=`Turn around. The lander is ${course.len} m west${missed?', and the samples you passed are still on the way':''}. Stop beside the descent stage with oxygen still on the gauge.`;
+ }
+ if(r.phase==='back'&&Math.abs(r.x)<40&&r.grounded&&Math.abs(r.vx)<4){resolveRover();return;}
+ updateRoverCamera(dt);
+}
+function resolveRover(){
+ const r=rover,c=course,all=r.samples===c.samples.length;
+ const score=Math.round((350+r.samples*250+(all?300:0)+r.o2*2+r.hull*3+(fullMission?200:0))*(difficulty==='pilot'?1.3:1)*c.site.mult*.6);
+ roverResult={score,samples:r.samples,total:c.samples.length,hull:r.hull,o2:r.o2,time:r.t,site:c.site};
+ mode='win';r.vx=0;clearInput();setEngine(false);$('pause-button').classList.add('hidden');$('toast').classList.remove('visible');
+ tone(660,.35,.07);setTimeout(()=>tone(880,.45,.04),150);updateHUD();
+ showOverlay(`<div class="dialog"><div class="eyebrow">03 / EVA COMPLETE / ${c.site.name}</div><h2>${all?'EVERY SAMPLE.<br>EVERYBODY BACK.':'BACK AT<br>THE LANDER.'}</h2><p>${all?'Three bags of the Moon and two astronauts with dust on their visors, back at the descent stage with oxygen to spare.':`The crew is back with ${r.samples} of ${c.samples.length} samples. The ones you missed stay on the Moon.`}</p><div class="result-stats"><div><span class="label">SAMPLES</span><strong>${r.samples} <small style="font-size:11px">of ${c.samples.length}</small></strong></div><div><span class="label">TRAVERSE TIME</span><strong>${fmtTime(r.t)}</strong></div><div><span class="label">ROVER LEFT</span><strong>${Math.round(r.hull)}%</strong></div></div><div class="result-score"><span>EVA SCORE${difficulty==='pilot'?' / PILOT':''}</span><strong>${score.toLocaleString()}</strong></div><p class="help-tip">NEXT: fly the ascent stage to orbit and dock with the command module. The descent stage stays here with your flag.</p><div class="dialog-actions"><button class="button-primary" data-action="ascend">LIFT OFF FOR HOME <span class="arrow" aria-hidden="true">&#8593;</span></button><button class="button-secondary" data-action="rover">DRIVE IT AGAIN</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
+}
+function updateRoverCamera(dt,snap=false){
+ if(!rover)return;const mobile=W<=620;
+ const scale=clamp(W/(mobile?420:760),1,2.2),look=clamp(rover.vx*6,-90,90),g=courseAt(rover.x);
+ const x=rover.x+look,y=g+(rover.grounded?0:(rover.y-g)*.5);
+ const t=snap?1:1-Math.exp(-dt*3);
+ roverCam.x=mix(roverCam.x,x,t);roverCam.y=mix(roverCam.y,y,t);roverCam.scale=mix(roverCam.scale,scale,t);
+}
+function roverView(){const s=roverCam.scale,groundY=H*(W<=620?.6:.64);return{scale:s,x:x=>W*.5+(x-roverCam.x)*s,y:y=>groundY-(y-roverCam.y)*s};}
+function drawRover(){
+ drawStars();const v=roverView(),s=v.scale,r=rover,pts=course.pts;
+ drawEarth(W*.15,H*.3,Math.min(W*.045,31),.92);
+ const horizon=v.y(roverCam.y-10);
+ ctx.beginPath();ctx.moveTo(0,H+60);for(let x=-50;x<=W+60;x+=45){const world=x+roverCam.x*.2;ctx.lineTo(x,horizon-70-Math.sin(world*.006)*38-Math.sin(world*.02)*18);}ctx.lineTo(W+60,H+60);ctx.closePath();ctx.fillStyle='#1a2733';ctx.fill();ctx.strokeStyle='rgba(91,111,128,.3)';ctx.lineWidth=1;ctx.stroke();
+ ctx.beginPath();ctx.moveTo(v.x(pts[0][0]),H+400);for(const [x,y] of pts)ctx.lineTo(v.x(x),v.y(y));ctx.lineTo(v.x(pts[pts.length-1][0]),H+400);ctx.closePath();
+ const ground=ctx.createLinearGradient(0,Math.max(0,horizon-140),0,H);ground.addColorStop(0,'#36424b');ground.addColorStop(.4,'#26323d');ground.addColorStop(1,'#0f1924');ctx.fillStyle=ground;ctx.fill();
+ ctx.beginPath();pts.forEach(([x,y],i)=>i?ctx.lineTo(v.x(x),v.y(y)):ctx.moveTo(v.x(x),v.y(y)));ctx.strokeStyle='#65717a';ctx.lineWidth=1.1;ctx.stroke();
+ ctx.save();ctx.strokeStyle='rgba(109,124,135,.11)';ctx.lineWidth=.8;for(let j=1;j<=4;j++){ctx.beginPath();pts.forEach(([x,y],i)=>{const px=v.x(x),py=v.y(y-j*9-Math.sin(x*.05+j)*2);i?ctx.lineTo(px,py):ctx.moveTo(px,py);});ctx.stroke();}ctx.restore();
+ for(const rl of course.rilles){const l=v.x(rl.x-rl.w/2),rr=v.x(rl.x+rl.w/2);if(rr<-40||l>W+40)continue;const top=v.y(courseAt(rl.x-rl.w/2-3));const g=ctx.createLinearGradient(0,top,0,top+34*s);g.addColorStop(0,'rgba(4,8,14,.96)');g.addColorStop(1,'rgba(4,8,14,.15)');ctx.fillStyle=g;ctx.fillRect(l,top,rr-l,34*s);drawLabel((l+rr)/2,top-16,'RILLE / HOP IT','#ff887a',W<=620?7:8);}
+ for(const rock of course.rocks){const x=v.x(rock.x);if(x<-40||x>W+40)continue;const y=v.y(courseAt(rock.x)),rr=rock.r*s;ctx.fillStyle='#4e5962';ctx.strokeStyle='#8794a0';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x-rr,y);ctx.lineTo(x-rr*.7,y-rr*.9);ctx.lineTo(x-rr*.1,y-rr*1.25);ctx.lineTo(x+rr*.6,y-rr*1.05);ctx.lineTo(x+rr,y-rr*.3);ctx.lineTo(x+rr*.9,y);ctx.closePath();ctx.fill();ctx.stroke();}
+ for(const sm of course.samples){const x=v.x(sm.x);if(x<-40||x>W+40)continue;const y=v.y(courseAt(sm.x));ctx.save();ctx.globalAlpha=sm.taken?.25:1;const pulse=reduceMotion?.7:.6+.4*Math.sin(visualTime*4+sm.x);ctx.strokeStyle='#7fd8b0';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y-26*s);ctx.stroke();ctx.fillStyle=`rgba(155,229,192,${pulse})`;ctx.beginPath();ctx.arc(x,y-30*s,Math.max(2.5,4*s),0,TAU);ctx.fill();if(!sm.taken)drawLabel(x,y-42*s,'SAMPLE','#7fd8b0',W<=620?7:8);ctx.restore();}
+ {const x=v.x(course.beacon.x);if(x>-60&&x<W+60){const y=v.y(courseAt(course.beacon.x));ctx.strokeStyle='#f4bb66';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y-46*s);ctx.stroke();ctx.fillStyle=reduceMotion||Math.sin(visualTime*6)>0?'#ffd693':'#8c6a3a';ctx.beginPath();ctx.arc(x,y-50*s,Math.max(2.5,4*s),0,TAU);ctx.fill();drawLabel(x,y+18,'SURVEY MARKER','#c5aa80',W<=620?8:10);drawLabel(x,y+32,course.len+' M','#72838e',W<=620?6:8);}}
+ {const x=v.x(0);if(x>-140&&x<W+140){const gy=courseAt(0);drawLander(x,v.y(gy+23),0,false,s,'descent');drawFlag(v.x(40),v.y(gy),s);drawLabel(x,v.y(gy)+18,'LANDER / '+landingResult.site.name,'#c5aa80',W<=620?8:10);}}
+ // Off-screen pointers to whichever way the mission goes next.
+ {const tx=r.phase==='out'?course.beacon.x:0,px=v.x(tx),name=r.phase==='out'?'MARKER':'LANDER',d=Math.round(Math.abs(tx-r.x));if(px>W-20)drawLabel(W-18,horizon-30,`${name} ${d} M →`,'#f4bb66',W<=620?8:10,'right');else if(px<20)drawLabel(18,horizon-30,`← ${name} ${d} M`,'#f4bb66',W<=620?8:10,'left');}
+ if(mode!=='crash'){
+  const sx=v.x(r.x),sy=v.y(r.y);
+  if(!r.grounded){const gy=v.y(courseAt(r.x));ctx.save();ctx.strokeStyle='rgba(159,182,197,.3)';ctx.setLineDash([2,6]);ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx,gy);ctx.stroke();ctx.restore();ctx.fillStyle='rgba(0,0,0,.3)';ctx.beginPath();ctx.ellipse(sx,gy+1,9*s,2*s,0,0,TAU);ctx.fill();}
+  drawRoverBody(sx,sy,r.angle,s,r);
+ }
+ drawParticles(p=>({x:v.x(p.x),y:v.y(p.y)}),s);
+}
+function drawRoverBody(x,y,a,s,r){
+ ctx.save();ctx.translate(x,y);ctx.rotate(-a);ctx.scale(s,s);
+ const b=r.bounce*Math.sin(visualTime*30)*1.2,spin=r.x*.5;
+ for(const wx of [-6,6]){ctx.strokeStyle='#c9d1d1';ctx.lineWidth=1.2;ctx.fillStyle='#1b2630';ctx.beginPath();ctx.arc(wx,-3,3,0,TAU);ctx.fill();ctx.stroke();ctx.strokeStyle='rgba(201,209,209,.55)';ctx.lineWidth=.6;for(let i=0;i<4;i++){const ang=spin+i*PI/4;ctx.beginPath();ctx.moveTo(wx+Math.cos(ang)*3,-3+Math.sin(ang)*3);ctx.lineTo(wx-Math.cos(ang)*3,-3-Math.sin(ang)*3);ctx.stroke();}}
+ ctx.strokeStyle='#8fa3ae';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(-6,-3);ctx.lineTo(-7,-6+b);ctx.moveTo(6,-3);ctx.lineTo(7,-6+b);ctx.stroke();
+ ctx.fillStyle='#c9a45a';ctx.strokeStyle='#e7c68d';ctx.lineWidth=.8;ctx.fillRect(-9,-7.5+b,18,2);ctx.strokeRect(-9,-7.5+b,18,2);
+ ctx.fillStyle='#8a7a5a';ctx.fillRect(-8.5,-9.5+b,3.5,2);ctx.fillStyle='#364b5a';ctx.fillRect(5,-10+b,3.5,2.5);
+ ctx.strokeStyle='#d9e1e3';ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(7.5,-7.5+b);ctx.lineTo(7.5,-13+b);ctx.stroke();ctx.beginPath();ctx.arc(7.5,-14.5+b,2.6,PI*.1,PI*.9,true);ctx.stroke();
+ for(const ax of [-4.5,.5]){
+  const bob=b+(r.grounded?Math.sin(visualTime*9+ax)*.3:.9);
+  ctx.fillStyle='#e8eef0';ctx.strokeStyle='#9fb0ba';ctx.lineWidth=.5;ctx.fillRect(ax-1.6,-13.5+bob,3.2,6);ctx.strokeRect(ax-1.6,-13.5+bob,3.2,6);
+  ctx.fillStyle='#b8c4cb';ctx.fillRect(ax-2.7,-13+bob,1.1,4.5);
+  ctx.fillStyle='#f2f5f6';ctx.beginPath();ctx.arc(ax,-15.6+bob,2.1,0,TAU);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#f4bb66';ctx.beginPath();ctx.arc(ax+.6,-15.6+bob,1.3,-1,1);ctx.fill();
+  ctx.strokeStyle='#e8eef0';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(ax+1,-11+bob);ctx.lineTo(ax+3.4,-9.2+bob);ctx.moveTo(ax-.4,-7.6+bob);ctx.lineTo(ax+2.6,-7.6+bob);ctx.stroke();
+ }
+ ctx.restore();
+}
+// ---- Orbital docking. No gravity, a drifting target, and a hatch that has to meet a port. ----
+function dockPort(){return{x:csm.x,y:csm.y-20};}
+function dockProbe(){return worldPoint({x:0,y:21});}
+function startDock(){
+ clearInput();mode='dock';scene='dock';paused=false;particles=[];debris=[];fuelWarning=false;lowWarning=false;crashReason='';dockClock=0;dockResult=null;
+ const D=DOCK[difficulty];
+ csm={x:0,y:230,vx:0,drift:D.drift,ph:Math.random()*TAU,t:0};
+ ship={x:-120,y:60,vx:2.6,vy:1.4,angle:0,omega:0,fuel:dockFuel,pulse:0,power:0,launched:true,stuck:0};
+ hideOverlay();showHUD(true);$('pause-button').textContent='PAUSE';
+ $('objective-title').textContent='DOCK WITH THE COMMAND MODULE';
+ $('objective-copy').textContent=`Nothing pulls you anywhere up here. Tilt and tap to translate, and use BRAKE (E) to kill your speed. Bring the top hatch to the port under ${D.speed} m/s, within ${DOCK.portDx} m of centre and ${D.angle} degrees of upright. The command module drifts, so keep correcting.`;
+ showToast('ORBIT / COMMAND MODULE IN SIGHT / CLOSE SLOWLY',2.8);updateHUD();tone(480,.16,.05);
+}
+function rcsBrake(){
+ if(scene!=='dock'||!canFly()||!ship||ship.fuel<=0)return;
+ const use=Math.min(2.5,ship.fuel);ship.fuel-=use;const k=1-.45*(use/2.5);
+ ship.vx=csm.vx+(ship.vx-csm.vx)*k;ship.vy*=k;ship.omega*=.5;tone(260,.08,.04);
+ for(let i=0;i<6;i++){const a=Math.random()*TAU;particles.push({x:ship.x+Math.cos(a)*12,y:ship.y+8+Math.sin(a)*12,vx:Math.cos(a)*18,vy:Math.sin(a)*18,life:.2+Math.random()*.2,max:.4,size:1.5+Math.random()*2,kind:'exhaust'});}
+}
+function stepDock(dt,turn,power){
+ const c=config[difficulty],D=DOCK[difficulty];dockClock+=dt;
+ csm.t+=dt;csm.vx=csm.drift*.08*Math.cos(csm.t*.08+csm.ph);csm.x=Math.sin(csm.t*.08+csm.ph)*csm.drift;
+ ship.omega+=turn*c.turnAccel*dt;ship.omega*=Math.exp(-c.damping*dt);ship.angle=normalizeAngle(ship.angle+ship.omega*dt);
+ ship.vx+=Math.sin(ship.angle)*power*dt;ship.vy+=Math.cos(ship.angle)*power*dt;
+ ship.x+=ship.vx*dt;ship.y+=ship.vy*dt;
+ if(Math.abs(ship.x)>DOCK.bounds.x||ship.y<DOCK.bounds.y0||ship.y>DOCK.bounds.y1){crash('The ascent stage drifted out of range of the command module. Every burn up here has to be undone by another burn. Small taps, and brake early.');return;}
+ const p=dockProbe(),port=dockPort(),dx=p.x-port.x,dy=p.y-port.y,rel=Math.hypot(ship.vx-csm.vx,ship.vy),ang=Math.abs(normalizeAngle(ship.angle))*DEG;
+ if(Math.abs(dx)<DOCK.portDx+3&&dy>=-1&&dy<=2.5&&ship.vy>-.5){
+  if(rel<=D.speed&&Math.abs(dx)<=DOCK.portDx&&ang<=D.angle){resolveDock(rel,dx,ang);return;}
+  dockBump(rel,rel>D.speed?`Closing at ${rel.toFixed(1)} m/s, over the ${D.speed} m/s limit.`:Math.abs(dx)>DOCK.portDx?`${Math.abs(dx).toFixed(1)} m off the centreline.`:`${ang.toFixed(0)} degrees off upright.`);return;
+ }
+ const pts=ASCENT_HULL.map(worldPoint);
+ if(pts.some(q=>Math.abs(q.x-csm.x)<15&&q.y>csm.y-19&&q.y<csm.y+44)){dockBump(rel,'Hit the command module beside the port.');return;}
+ if(!fuelWarning&&ship.fuel<15){fuelWarning=true;showToast('RCS PROPELLANT BELOW 15%',2);tone(180,.25,.06);}
+ if(ship.fuel<=0){ship.stuck+=dt;if(ship.stuck>5&&rel<.3){crash('Out of propellant, going nowhere. The command module can wait, but not for ever. Brake less, and aim before you burn.');return;}}
+}
+function dockBump(rel,why){
+ if(rel>3.4){crash(`${why} The ascent stage hit the command module at ${rel.toFixed(1)} m/s and both went dark. Brake before the last 20 m and creep in.`);return;}
+ const dmg=Math.round(8+rel*9);integrity=Math.max(0,integrity-dmg);shake=1;tone(70,.25,.08);
+ ship.vy=-Math.abs(ship.vy)*.45-.4;ship.vx=csm.vx-(ship.vx-csm.vx)*.3;ship.omega+=(Math.random()<.5?-1:1)*.8;ship.y-=1.5;
+ for(let i=0;i<8;i++){const a=Math.random()*TAU;particles.push({x:ship.x,y:ship.y+21,vx:Math.cos(a)*25,vy:Math.sin(a)*25,life:.3+Math.random()*.4,max:.7,size:1.5+Math.random()*3,kind:'fire'});}
+ if(integrity<=0){crash(`${why} One bump too many: the hull gave out. Line up first, then close.`);return;}
+ showToast(`HARD CONTACT / ${why.toUpperCase().replace(/\.$/,'')} / HULL ${Math.round(integrity)}%`,2.2);
+}
+function resolveDock(rel,dx,ang){
+ const D=DOCK[difficulty];
+ const score=Math.round((400+500*(1-rel/D.speed)+250*(1-Math.abs(dx)/DOCK.portDx)+150*(1-ang/D.angle)+ship.fuel*2+Math.max(0,90-dockClock)*3)*(difficulty==='pilot'?1.3:1));
+ dockResult={score,rel,dx,ang,fuel:ship.fuel,time:dockClock};
+ mode='win';ship.x=csm.x;ship.y=csm.y-41;ship.vx=csm.vx;ship.vy=0;ship.angle=0;ship.omega=0;ship.docked=true;clearInput();setEngine(false);$('pause-button').classList.add('hidden');$('toast').classList.remove('visible');
+ tone(660,.35,.07);setTimeout(()=>tone(880,.45,.04),150);updateHUD();
+ showOverlay(`<div class="dialog"><div class="eyebrow">05 / HARD DOCK / CAPTURE LATCHES ENGAGED</div><h2>CONTACT.<br>AND CAPTURE.</h2><p>The hatch met the port at ${rel.toFixed(2)} m/s. The crew and the samples move across to the command module, and the ascent stage gets left in lunar orbit.</p><div class="result-stats"><div><span class="label">CLOSING SPEED</span><strong>${rel.toFixed(2)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">OFF CENTRE</span><strong>${Math.abs(dx).toFixed(1)} <small style="font-size:11px">m</small></strong></div><div><span class="label">HULL</span><strong>${Math.round(integrity)}%</strong></div></div><div class="result-score"><span>DOCKING SCORE${difficulty==='pilot'?' / PILOT':''}</span><strong>${score.toLocaleString()}</strong></div><p class="help-tip">NEXT: the burn for home, then the reentry.${integrity<35?' The hull is under 35%: expect a cracked heat shield and a weaker chute.':''}</p><div class="dialog-actions"><button class="button-primary" data-action="undock">JETTISON AND HEAD HOME <span class="arrow" aria-hidden="true">&#8594;</span></button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
+}
+function dockView(){const s=clamp(Math.min(W/700,(H-260)/420),.8,2),cx=ship?mix(ship.x,csm.x,.5):0,cy=ship?mix(ship.y,csm.y,.5):150;return{scale:s,x:x=>W*.5+(x-cx)*s,y:y=>H*.55-(y-cy)*s};}
+function drawDock(){
+ drawStars();const v=dockView(),s=v.scale;
+ drawEarth(W*.12,H*.24,Math.min(W*.04,26),.9);
+ const R=Math.max(W,H)*1.2;drawMoon(W*.5,H*.985+R,R,.95);
+ ctx.save();ctx.strokeStyle='rgba(160,187,202,.14)';ctx.setLineDash([3,10]);ctx.strokeRect(v.x(-DOCK.bounds.x),v.y(DOCK.bounds.y1),DOCK.bounds.x*2*s,(DOCK.bounds.y1-DOCK.bounds.y0)*s);ctx.setLineDash([]);ctx.restore();
+ drawCSM(v.x(csm.x),v.y(csm.y),s);
+ if(ship&&mode!=='crash'){
+  const port=dockPort(),p=dockProbe();
+  if(mode!=='win'){
+   ctx.save();ctx.strokeStyle='rgba(155,229,192,.2)';ctx.setLineDash([4,8]);for(const d of [-DOCK.portDx,DOCK.portDx]){ctx.beginPath();ctx.moveTo(v.x(port.x+d),v.y(port.y));ctx.lineTo(v.x(port.x+d),v.y(port.y-150));ctx.stroke();}ctx.setLineDash([]);
+   ctx.strokeStyle='rgba(155,229,192,.3)';ctx.setLineDash([2,7]);ctx.beginPath();ctx.moveTo(v.x(p.x),v.y(p.y));ctx.lineTo(v.x(port.x),v.y(port.y));ctx.stroke();ctx.restore();
+   drawLabel(v.x(ship.x)+30*s,v.y(ship.y),Math.round(Math.hypot(p.x-port.x,p.y-port.y))+' M','#718899',9,'left');
+  }
+  drawLander(v.x(ship.x),v.y(ship.y),ship.angle,burning(),s,'ascent');
+ }
+ drawParticles(p=>({x:v.x(p.x),y:v.y(p.y)}),s);
+}
+function drawCSM(x,y,s){
+ ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+ const body=ctx.createLinearGradient(-14,0,14,0);body.addColorStop(0,'#6f8592');body.addColorStop(.45,'#d8e0e3');body.addColorStop(1,'#5d707c');
+ ctx.fillStyle=body;ctx.strokeStyle='#a9b9c0';ctx.lineWidth=.8;ctx.beginPath();ctx.rect(-14,-44,28,46);ctx.fill();ctx.stroke();
+ ctx.fillStyle='#243644';ctx.fillRect(-14,-30,28,3);ctx.fillRect(-14,-12,28,2);ctx.fillStyle='#f4bb66';ctx.fillRect(-14,-38,28,2);
+ ctx.strokeStyle='#8fa3ae';ctx.lineWidth=.6;for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(-14,-26+i*3);ctx.lineTo(-6,-26+i*3);ctx.stroke();}
+ ctx.fillStyle='#2b3945';ctx.strokeStyle='#7d8f9a';ctx.beginPath();ctx.moveTo(-7,-44);ctx.lineTo(-11,-58);ctx.lineTo(11,-58);ctx.lineTo(7,-44);ctx.closePath();ctx.fill();ctx.stroke();
+ const cone=ctx.createLinearGradient(-14,0,14,0);cone.addColorStop(0,'#8d9aa3');cone.addColorStop(.45,'#e6ebed');cone.addColorStop(1,'#77878f');
+ ctx.fillStyle=cone;ctx.strokeStyle='#c2cdd2';ctx.beginPath();ctx.moveTo(-14,2);ctx.lineTo(14,2);ctx.lineTo(5,18);ctx.lineTo(-5,18);ctx.closePath();ctx.fill();ctx.stroke();
+ ctx.fillStyle='#172733';ctx.beginPath();ctx.arc(-6,8,1.8,0,TAU);ctx.fill();ctx.beginPath();ctx.arc(6,8,1.8,0,TAU);ctx.fill();
+ ctx.fillStyle='#2d2620';ctx.fillRect(-5,18,10,2);ctx.strokeStyle='#9be5c0';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(-4,20);ctx.lineTo(4,20);ctx.moveTo(0,17);ctx.lineTo(0,23);ctx.stroke();
+ ctx.restore();
+ drawLabel(x,y-66*s,'COMMAND MODULE','#d7e3e6',W<=620?7:9);
+ drawLabel(x+22*s,y+21*s,'PORT','#9be5c0',W<=620?7:8,'left');
+}
 function emitExhaust(dt){
- const count=reduceMotion?1:2,off=scene==='moonup'?1:scene==='earth'?10:18;
+ const count=reduceMotion?1:2,off=scene==='moonup'||scene==='dock'?1:scene==='earth'?10:18;
  for(let i=0;i<count;i++){const s=Math.sin(ship.angle),c=Math.cos(ship.angle),speed=scene==='launch'?110:scene==='earth'?60:42;
  particles.push({x:ship.x-s*off+(Math.random()-.5)*4,y:ship.y-c*off,vx:ship.vx-s*speed+(Math.random()-.5)*10,vy:ship.vy-c*speed,life:.22+Math.random()*.3,max:.6,size:2+Math.random()*4,kind:'exhaust'});}
  if(onMoon()&&altitude()<70&&Math.random()<.45){const gy=floorBelow(ship.x,ship.y);particles.push({x:ship.x+(Math.random()-.5)*30,y:gy+2,vx:(Math.random()-.5)*65,vy:3+Math.random()*8,life:.3+Math.random()*.8,max:1.1,size:1+Math.random()*3,kind:'dust'});}
  if(particles.length>350)particles.splice(0,particles.length-350);
 }
 function updateParticles(dt){
- const g=scene==='launch'||scene==='earth'?9.81:1.62;
+ const g=scene==='launch'||scene==='earth'?9.81:scene==='dock'?0:1.62,gAt=scene==='rover'?courseAt:groundAt;
  for(const p of particles){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.kind==='fire'||p.kind==='dust')p.vy-=2*dt;if(p.kind==='splash')p.vy-=g*dt;}
  particles=particles.filter(p=>p.life>0);
- for(const p of debris){p.life-=dt;p.vy-=g*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.angle+=p.spin*dt;if(onMoon()&&p.y<groundAt(p.x)){p.y=groundAt(p.x);p.vy=0;p.vx*=.9;p.spin*=.8;}if(scene==='earth'&&p.y<0){p.life=Math.min(p.life,.3);p.vy*=.2;}}
+ for(const p of debris){p.life-=dt;p.vy-=g*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.angle+=p.spin*dt;if((onMoon()||scene==='rover')&&p.y<gAt(p.x)){p.y=gAt(p.x);p.vy=0;p.vx*=.9;p.spin*=.8;}if(scene==='earth'&&p.y<0){p.life=Math.min(p.life,.3);p.vy*=.2;}}
  debris=debris.filter(p=>p.life>0);
 }
 // Rendering is separate from simulation, so display frame rate cannot change gravity.
@@ -670,7 +1030,8 @@ function drawLaunch(){
  }
  // Corridor guides are a visual cue, not invisible failure boundaries.
  const corridorAlpha=.1+clamp(altitude()/1500,0,.13);ctx.strokeStyle=`rgba(160,187,202,${corridorAlpha})`;ctx.setLineDash([3,10]);for(const x of [-CORRIDOR,CORRIDOR]){ctx.beginPath();ctx.moveTo(view.x(x),205);ctx.lineTo(view.x(x),H-130);ctx.stroke();}ctx.setLineDash([]);
- const y=view.y(ship.y);if(mode!=='crash')drawRocket(view.x(ship.x),y,ship.angle,burning(),.95);
+ const y=view.y(ship.y),jx=shake>0&&!reduceMotion?(Math.random()-.5)*shake*9:0,jy=shake>0&&!reduceMotion?(Math.random()-.5)*shake*9:0;if(mode!=='crash')drawRocket(view.x(ship.x)+jx,y+jy,ship.angle,burning(),.95);
+ drawDebrisField(view);
  drawParticles(p=>({x:view.x(p.x),y:view.y(p.y)}),s);
  if(wx){for(const alt of [800,1800])drawCloudBand(view.y(38+alt+260),view.y(38+alt-260),wx.cloud*.6,wx.t*wx.windNow*5+alt);drawWeatherFx(p=>({x:view.x(p.x),y:view.y(p.y)}));}
  const progress=clamp(altitude()/launchTarget,0,1),railX=W-45,railTop=H*.43,railH=Math.min(H*.29,200);
@@ -853,14 +1214,15 @@ function drawParticles(project,scale){
  for(const p of debris){const q=project(p);ctx.save();ctx.translate(q.x,q.y);ctx.rotate(p.angle);ctx.globalAlpha=clamp(p.life,0,1);ctx.fillStyle='#ab956e';ctx.fillRect(-p.size*scale/2,-p.size*scale/2,p.size*scale,p.size*.6*scale);ctx.restore();}
 }
 function drawLabel(x,y,text,color='#8ca0af',size=10,align='center'){ctx.save();ctx.font=`${size}px ui-monospace, SFMono-Regular, Consolas, monospace`;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillStyle=color;ctx.fillText(text,x,y);ctx.restore();}
-function render(){ctx.setTransform(DPR,0,0,DPR,0,0);if(scene==='launch')drawLaunch();else if(onMoon())drawLanding();else if(scene==='transit')drawTransit();else if(scene==='earth')drawEarthReturn();else drawMenu();}
+function render(){ctx.setTransform(DPR,0,0,DPR,0,0);if(scene==='launch')drawLaunch();else if(scene==='rover')drawRover();else if(scene==='dock')drawDock();else if(onMoon())drawLanding();else if(scene==='transit')drawTransit();else if(scene==='earth')drawEarthReturn();else drawMenu();}
 function frame(now){if(window.MoonboundBoot.failed)return;const dt=Math.min((now-lastFrame)/1000||0,.05);lastFrame=now;visualTime+=dt;accumulator+=dt;let steps=0;while(accumulator>=1/120&&steps<8){step(1/120);accumulator-=1/120;steps++;}if(steps===8)accumulator=0;setEngine(burning());$('thrust-control').classList.toggle('held',burning());hudClock+=dt;if(hudClock>.08){hudClock=0;if(mode!=='menu')updateHUD();}render();window.MoonboundBoot.ready();requestAnimationFrame(frame);}
 resize();welcome();requestAnimationFrame(frame);
 // QA hooks are opt-in and inert in normal play: append ?test=1 to the local URL.
 if(new URLSearchParams(location.search).has('test'))window.MoonboundTest={
  setWeather:(id,dir)=>{rollWeather(scene==='earth'?'earth':'launch',id);if(dir)wx.dir=dir;wx.spent=true;},weather:()=>wx&&{...wx},
  getState:()=>({homeward,descentStage,mode,scene,paused,difficulty,fullMission,elapsed,ship:ship?{...ship}:null,sites:SITES.map(t=>({...t})),shaft:{...SHAFT},inShaft:inShaft(),target:nearestSite().id,found:[...found],siteBest:{...siteBest},altitude:ship?altitude():0,result:landingResult,overlay:overlayKind,crashReason}),
- startLaunch,startLanding,startAscent,startReentry,tap:tapThrust,chute:deployChute,setDifficulty:d=>{if(config[d])difficulty=d;},
+ startLaunch,startLanding,startAscent,startReentry,startRover,startDock,tap:tapThrust,chute:deployChute,setDifficulty:d=>{if(config[d])difficulty=d;},
+ hull:()=>integrity,setHull:v=>{integrity=v;},debris:()=>debrisField.map(d=>({...d,kind:d.kind.id})),rover:()=>rover&&{...rover},course:()=>course,csm:()=>csm&&{...csm},results:()=>({landing:landingResult,rover:roverResult,dock:dockResult}),
  setShip:changes=>{if(ship)Object.assign(ship,changes);},
  input:(action,on)=>{if(action==='thrust'){if(on)tapThrust();return;}const key={left:'ArrowLeft',right:'ArrowRight'}[action];if(key){on?keys.add(key):keys.delete(key);syncButtons();}},
  advance:(seconds,quiet)=>{const count=Math.round(seconds*120);for(let i=0;i<count;i++)step(1/120);if(!quiet){updateHUD();render();}},

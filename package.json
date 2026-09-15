@@ -1,8 +1,8 @@
 {
   "name": "moonbound",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
-  "description": "MOONBOUND - a lunar landing game. Launch from Earth, pick a landing site, put it down gently.",
+  "description": "MOONBOUND - a lunar landing game. Launch through the debris, land, drive the rover, dock, and bring the crew home.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
