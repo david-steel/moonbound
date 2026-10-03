@@ -4,6 +4,21 @@ A lunar landing game that runs in one HTML file. No dependencies, no build step,
 
 Tap a rocket off Earth through whatever the sky throws at it, coast to the Moon, put a lander down on the surface, drive two astronauts out on the rover and back, fly the ascent stage up to the command module and dock with it, then bring the capsule home under a parachute. Where you land on the Moon is the score. The EVA, the docking and how late you pull the chute are the bonuses.
 
+## What it is for
+
+Fun first, retro on purpose, and underneath it a lesson: the same tensor math that flies a lander runs AI.
+
+Press `T` (or TENSORS, top right) on any stage and the flight computer shows what it actually computes. These are the simulation's real values, not a separate model of them:
+
+- **State vector, rank 1, shape (6):** x, y, vx, vy, attitude, propellant. The whole lander is six numbers.
+- **Thrust, rank 2, shape (2, 2):** a rotation matrix R(θ) turns the engine's push [0, p] into sideways and upward acceleration. Tilt and watch the matrix change.
+- **The update, every 1/120 s:** s' = A·s + B·a + g. Position picks up velocity × dt; gravity is 1.62 m/s² on the Moon and 9.81 on Earth.
+- **Flight log, rank 2, shape (T, 6):** one row every tenth of a second. Every landing in a session stacks into a rank-3 tensor, (flights, time, 6), and the result screen says so: that stack is what training data looks like.
+
+`y = W·x + b` is one step of this lander, and it is also one layer of a neural network. That is the bridge the game is built on.
+
+**The autopilot.** On the lunar descent, press `G` (or ENGAGE AUTOPILOT in the panel) and one dense layer flies: out = W·f + b, with f = [distance to the pad, its size, vx, vy, altitude], 10 weights and 2 biases. Row one is the throttle (burn when positive), row two is the attitude to hold. A step and a clamp are its activations, and like Apollo it cuts the engine at the contact light. The weights were found by flying hundreds of simulated landings and keeping the ones that landed: it puts down 75 of 80 random starts. Its landings score nothing. Any flight key takes control back.
+
 ## The five landing sites
 
 The lander deploys east of Tranquility with a full tank. Everything else costs fuel to reach, and the harder sites are narrower, further out and stricter about how you arrive. Each one multiplies your score.
@@ -29,6 +44,8 @@ The checks panel on the right always shows the limits for whichever site you are
 | Thrust | Tap `SPACE`, `UP`, `W`, or the on-screen button. Each tap is one short burn; holding does nothing. On the rover a tap is a hop |
 | Parachute / brake | `E`, `S`, `DOWN`, or the CHUTE button on the Earth return. The same key is BRAKE on the rover and during docking |
 | Rotate / drive | `LEFT`/`RIGHT`, `A`/`D`. Hold them to drive the rover |
+| Tensor view | `T` or the TENSORS button |
+| Landing autopilot | `G`, or the button in the tensor panel. Any flight key takes control back |
 | Pause | `P` or `ESC` |
 | Restart stage | `R` |
 
@@ -121,6 +138,7 @@ MoonboundTest.advance(seconds, quiet) // step the fixed-rate simulation (quiet s
 MoonboundTest.setWeather(id, dir)    // breezy | gale | storm | hurricane, dir -1 or 1
 MoonboundTest.weather()              // current weather state
 MoonboundTest.forget()               // clear saved records and discoveries
+MoonboundTest.tensor(on) / autopilot(on) / agc() / setAGC(W, b, k) / logs()
 MoonboundTest.SITES / SHAFT / ROOFS / terrain / groundAt / floorBelow / roofHit / limitsFor
 ```
 
@@ -135,6 +153,7 @@ Simulation runs at a fixed 120 Hz and is separate from rendering, so frame rate 
 
 ## History
 
+- **1.6** The flight computer. A tensor view (`T`) shows the live state vector, the rotation matrix that aims the thrust, the update matrix and the flight log's shape on every stage. A ten-weight autopilot (`G`) lands the lunar module as one neural-network layer, weights visible while it flies; its landings score nothing. Result screens show your flight log as a tensor and your session as a stack of them.
 - **1.5** The launch is a game: birds, wind-borne debris, hail and range debris in the corridor, a hull that only takes so much, and the hits kick the rocket. Surface EVA after every landing: a rover with two astronauts, a generated traverse per site with craters, rocks, scarps and rilles, three samples, a survey marker and an oxygen clock. Orbital docking with a drifting command module before the trip home, with a brake key and hard-contact damage. Hull carries through to reentry and cracks the heat shield under 35%.
 - **1.4** Earth weather on the launch and the return: four tiers from breezy to hurricane, wind drag and weathervaning, gust slams, drafts, wind shear, lightning, rain, cloud layers and ocean swell. Return score multiplies by the weather. Launch corridor narrowed to 520 m, more air drag on the climb.
 - **1.3** Tap-to-thrust on every stage. Marius Tube, a lava tube landing site with a mouth, a pinch point and a skylight. The return trip: lunar ascent off the descent stage, transearth coast, and an Earth reentry with a parachute window, recovery ship and nerve bonus. Launch checkpoint lowered to 2,400 m.
