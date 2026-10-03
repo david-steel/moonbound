@@ -40,6 +40,12 @@ const server = http.createServer((req, res) => {
 
   if (pathname === '/' || pathname === '') pathname = '/index.html';
 
+  // Hidden files and folders (.git, tool state) are never served.
+  if (pathname.split('/').some(seg => seg.startsWith('.'))) {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    return res.end('Not Found');
+  }
+
   // Resolve inside ROOT only — no path traversal.
   const filePath = path.join(ROOT, path.normalize(pathname));
   if (!filePath.startsWith(ROOT + path.sep) && filePath !== path.join(ROOT, 'index.html')) {

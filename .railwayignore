@@ -1,0 +1,4 @@
+.ijfw/
+**/.ijfw/
+.playwright-mcp/
+node_modules/
