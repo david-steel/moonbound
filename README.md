@@ -17,7 +17,13 @@ Press `T` (or TENSORS, top right) on any stage and the flight computer shows wha
 
 `y = W·x + b` is one step of this lander, and it is also one layer of a neural network. That is the bridge the game is built on.
 
-**The autopilot.** On the lunar descent, press `G` (or ENGAGE AUTOPILOT in the panel) and one dense layer flies: out = W·f + b, with f = [distance to the pad, its size, vx, vy, altitude], 10 weights and 2 biases. Row one is the throttle (burn when positive), row two is the attitude to hold. A step and a clamp are its activations, and like Apollo it cuts the engine at the contact light. The weights were found by flying hundreds of simulated landings and keeping the ones that landed: it puts down 75 of 80 random starts. Its landings score nothing. Any flight key takes control back.
+**Navigation is a Kalman filter.** On the descent the computer never sees the truth. It starts with an estimate that is off by tens of metres, predicts forward with its accelerometers (P' = A·P·Aᵀ + Q), and below 550 m the landing radar starts pinging. Each ping is blended in through the Kalman gain K = P·Hᵀ(H·P·Hᵀ + R)⁻¹. The green ellipse on screen is 2σ of the covariance P: watch it shrink at radar lock. This is how Apollo navigated (Stanley Schmidt's team at NASA Ames adapted Kalman's filter for the Apollo guidance computer). Both autopilots fly on the estimate, not on the truth.
+
+**The autopilot (`G`).** One dense layer flies: out = W·f + b, f = [distance to the pad, its size, vx, vy, altitude], 10 weights and 2 biases. Row one is the throttle (burn when positive), row two the attitude to hold. A step and a clamp are its activations, and like Apollo it cuts the engine at the contact light, which reads the real ground. The weights were found by flying hundreds of simulated landings and keeping the ones that landed. On the Kalman estimate it puts down 55 of 60 random starts.
+
+**Your pilot (`Y`).** Every hand-flown landing is recorded at 5 rows a second: X = [dx, |dx|, altitude, 1] (where the computer thought you were) and Y = [vx, vy] (how you were moving there). W = (XᵀX)⁻¹XᵀY, solved by Gaussian elimination, turns that into your flight profile, and a fixed tracker flies it. Each output is wired to its own inputs (the zeros in W): fully wired, it learned that "high up means go right", because most landings start high and to the left of the pad, a spurious correlation, and the panel says so. Trained on landings flown by the flight computer as a stand-in for a person, it lands 24 to 30 of 30 on Cadet, and 7 to 22 of 30 on Pilot, where touchdown is 3 m/s: a single linear layer cannot learn "brake harder in the last few metres". Real networks stack layers for exactly that. Your last 10 landings are kept in `localStorage`; "Forget my pilot" on the result screen clears them. Its landings score nothing.
+
+**Every stage has its own view.** The Earth ascent adds forces as vectors (thrust + wind + drag + gravity). Docking is a change of frame: a 3×3 homogeneous transform that puts the port at zero. The Earth return shows drag d = k·vy², where the parachute changes one number, k, by about 56 times. The rover shows the slope as a rotation.
 
 ## The five landing sites
 
@@ -46,6 +52,7 @@ The checks panel on the right always shows the limits for whichever site you are
 | Rotate / drive | `LEFT`/`RIGHT`, `A`/`D`. Hold them to drive the rover |
 | Tensor view | `T` or the TENSORS button |
 | Landing autopilot | `G`, or the button in the tensor panel. Any flight key takes control back |
+| Your pilot | `Y`, after at least one hand-flown landing |
 | Pause | `P` or `ESC` |
 | Restart stage | `R` |
 
@@ -138,7 +145,8 @@ MoonboundTest.advance(seconds, quiet) // step the fixed-rate simulation (quiet s
 MoonboundTest.setWeather(id, dir)    // breezy | gale | storm | hurricane, dir -1 or 1
 MoonboundTest.weather()              // current weather state
 MoonboundTest.forget()               // clear saved records and discoveries
-MoonboundTest.tensor(on) / autopilot(on) / agc() / setAGC(W, b, k) / logs()
+MoonboundTest.tensor(on) / autopilot('agc' | 'you' | false) / agc() / setAGC(W, b, k) / logs()
+MoonboundTest.nav() / pilot() / learnLast() / forgetPilot() / setMargin(v)
 MoonboundTest.SITES / SHAFT / ROOFS / terrain / groundAt / floorBelow / roofHit / limitsFor
 ```
 
@@ -153,6 +161,7 @@ Simulation runs at a fixed 120 Hz and is separate from rendering, so frame rate 
 
 ## History
 
+- **1.7** Navigation is a Kalman filter with a visible uncertainty ellipse and radar lock; both autopilots fly on the estimate. Your pilot: a least-squares model of your own flight profile, trained on your hand-flown landings, with wiring that blocks a spurious correlation. Stage-specific tensor views for the ascent (force vectors), docking (change of frame), Earth return (drag coefficient) and the rover (slope rotation).
 - **1.6** The flight computer. A tensor view (`T`) shows the live state vector, the rotation matrix that aims the thrust, the update matrix and the flight log's shape on every stage. A ten-weight autopilot (`G`) lands the lunar module as one neural-network layer, weights visible while it flies; its landings score nothing. Result screens show your flight log as a tensor and your session as a stack of them.
 - **1.5** The launch is a game: birds, wind-borne debris, hail and range debris in the corridor, a hull that only takes so much, and the hits kick the rocket. Surface EVA after every landing: a rover with two astronauts, a generated traverse per site with craters, rocks, scarps and rilles, three samples, a survey marker and an oxygen clock. Orbital docking with a drifting command module before the trip home, with a brake key and hard-contact damage. Hull carries through to reentry and cracks the heat shield under 35%.
 - **1.4** Earth weather on the launch and the return: four tiers from breezy to hurricane, wind drag and weathervaning, gust slams, drafts, wind shear, lightning, rain, cloud layers and ocean swell. Return score multiplies by the weather. Launch corridor narrowed to 520 m, more air drag on the climb.

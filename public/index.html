@@ -25,6 +25,8 @@
 #tensor-panel .agc-button{pointer-events:auto;margin-top:10px;width:100%;border:1px solid rgba(155,229,192,.45);background:rgba(155,229,192,.07);color:var(--green);border-radius:3px;padding:8px;font:10px var(--mono);letter-spacing:1.2px}
 #tensor-panel .agc-button.on{background:rgba(155,229,192,.2)}
 #tensor-panel.compact .wide{display:none}
+#tensor-panel .agc-row{display:flex;gap:6px}#tensor-panel .agc-row .agc-button{flex:1}#tensor-panel .agc-button.off{opacity:.5;border-style:dashed}
+@media(max-width:620px){#tensor-panel .agc-row{flex-direction:column;gap:0}}
 @media(max-height:530px) and (min-width:621px){#tensor-panel{top:149px;max-height:calc(100vh - 160px);overflow:hidden}}
 @media(max-width:900px){#tensor-panel{top:199px;width:330px;font-size:10px}}
 @media(max-width:620px){.top-actions{gap:4px}.top-actions .text-button{padding:8px 6px;letter-spacing:.3px}#tensor-panel{top:199px;left:18px;width:auto;max-width:150px;padding:8px 9px;font-size:9px}#tensor-panel .tp-note{display:none}#tensor-panel .tp-sec{flex-direction:column;gap:2px}#tensor-panel .vec{grid-template-columns:20px 52px}#tensor-panel .vec small{display:none}#tensor-panel .tp-note{font-size:10px}}
@@ -82,7 +84,7 @@
   <p id="boot-instructions">On a phone, open the <strong>hosted game address in Safari or Chrome</strong>. A downloaded HTML attachment is not a live game link.</p>
   <pre id="boot-detail" style="display:none"></pre>
   <button id="boot-reload" type="button">Try loading again</button>
-  <p class="boot-foot">Already opening a website? Share the address and a screenshot of this message to troubleshoot it.<br>Build 1.6 / Startup diagnostics / No external downloads</p>
+  <p class="boot-foot">Already opening a website? Share the address and a screenshot of this message to troubleshoot it.<br>Build 1.7 / Startup diagnostics / No external downloads</p>
  </div>
 </section>
 <script>
@@ -318,7 +320,7 @@ const FLYING=['launch','land','moonup','earth','rover','dock'];
 function canFly(){return !paused&&FLYING.includes(mode);}
 function burning(){return canFly()&&!!ship&&ship.pulse>0;}
 // One tap, one burn. Taps landing during a burn stack up to two pulses, so mashing costs fuel for little gain.
-function tapThrust(){if(!canFly()||!ship)return;if(scene==='rover'){roverHop();return;}if(ship.fuel<=0)return;if(wx&&wx.cut>0&&(scene==='launch'||scene==='earth')){tone(90,.06,.03);return;}const t=tapParams(),use=Math.min(t.fuel,ship.fuel);ship.fuel-=use;ship.pulse=Math.min(PULSE*2,(ship.pulse||0)+PULSE);ship.power=t.dv/PULSE*(use/t.fuel);}
+function tapThrust(){if(!canFly()||!ship)return;if(scene==='rover'){roverHop();return;}if(ship.fuel<=0)return;if(wx&&wx.cut>0&&(scene==='launch'||scene==='earth')){tone(90,.06,.03);return;}const t=tapParams(),use=Math.min(t.fuel,ship.fuel);ship.fuel-=use;ship.taps=(ship.taps||0)+1;ship.pulse=Math.min(PULSE*2,(ship.pulse||0)+PULSE);ship.power=t.dv/PULSE*(use/t.fuel);}
 function deployChute(){
  if(scene==='dock'){rcsBrake();return;}if(scene==='rover'){roverBrake();return;}
  if(scene!=='earth'||!canFly()||!ship||ship.chuteOpen||ship.chuteTorn)return;
@@ -346,7 +348,7 @@ function siteRoster(){
 }
 function welcome(){
  clearInput();mode='menu';scene='menu';paused=false;ship=null;particles=[];debris=[];showHUD(false);$('toast').classList.remove('visible');
- showOverlay(`<div class="welcome"><div><div class="eyebrow">INDEPENDENT FLIGHT PROGRAM / MISSION 001</div><h1>ONE ROCKET.<br>ONE MOON.<br><span>ONE WAY HOME.</span></h1><p class="intro-text">Getting there is only half the mission. Tap your way off Earth through whatever the sky throws at you, put a lander down somewhere on the Moon, drive the rover out and back, dock with the command module, and pull the parachute over the ocean. Late enough to be brave. Not too late.</p><p class="intro-text">Under the hood, every frame is a matrix multiply: the same tensor math that runs AI. Press <kbd>T</kbd> to watch it fly.</p><div class="start-actions"><button class="button-primary" data-action="start">LAUNCH MISSION <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="practice-link" data-action="practice">Practice landing</button></div><div class="key-legend"><kbd>&larr;</kbd><kbd>&rarr;</kbd> ROTATE &nbsp; <kbd>SPACE</kbd> TAP TO THRUST &nbsp; <kbd>E</kbd> CHUTE &nbsp; <kbd>P</kbd> PAUSE &nbsp; <kbd>T</kbd> TENSORS &nbsp; <kbd>G</kbd> AUTOPILOT<br>Every tap is a short burn. Gravity takes it back. Keep tapping.</div><div class="mobile-legend">TAP THRUST TO BURN. HOLD THE ARROWS TO STEER.</div></div><div class="briefing"><div class="briefing-top"><span class="eyebrow">YOUR FLIGHT PLAN</span><span class="serial">MB / 001</span></div><div class="mission-step"><span class="step-num">01</span><div><div class="step-title">Leave Earth behind.</div><div class="step-copy">Tap thrust in bursts, lean into the weather, and dodge the debris. The hull only takes so much.</div></div></div><div class="mission-step"><span class="step-num">02</span><div><div class="step-title">Separate. Descend. Commit.</div><div class="step-copy">Every tap slows your fall a little. Your engine is your only brake.</div></div></div><div class="mission-step"><span class="step-num">03</span><div><div class="step-title">Land. Then drive.</div><div class="step-copy">Pick a site, then take two astronauts out on the rover, bag the samples and get back before the oxygen runs out.</div></div></div><div class="mission-step"><span class="step-num">04</span><div><div class="step-title">Dock. Then come home.</div><div class="step-copy">Fly the ascent stage to the command module and dock it gently, then ride the storm down to the recovery ship.</div></div></div><div class="site-list">${siteRoster()}</div><div class="site-legend">TIER / SITE / MULTIPLIER / YOUR BEST<br>THE LANDER DEPLOYS EAST OF TRANQUILITY. EVERYTHING ELSE COSTS FUEL TO REACH.</div><div class="difficulty"><div class="difficulty-label">SELECT FLIGHT DIFFICULTY</div><div class="difficulty-options"><button class="difficulty-button ${difficulty==='cadet'?'selected':''}" data-difficulty="cadet" aria-pressed="${difficulty==='cadet'}"><strong>CADET</strong><small>More forgiving landings</small></button><button class="difficulty-button ${difficulty==='pilot'?'selected':''}" data-difficulty="pilot" aria-pressed="${difficulty==='pilot'}"><strong>PILOT</strong><small>Precision required</small></button></div></div><div class="briefing-footer">${best?`PERSONAL BEST: ${best.toLocaleString()} POINTS`:'FLIGHT RECORD: A CLEAN SLATE.'}<br>SITES FOUND: ${found.size} OF ${SITES.length}. ARCADE PHYSICS, REAL CONSEQUENCES.</div></div></div><div class="version"><span>MOONBOUND / PROTOTYPE 1.6</span><span class="version-note">BUILT FOR A STEADY HAND.</span><span>EARTH &rarr; MOON &rarr; EARTH</span></div>`,'welcome');
+ showOverlay(`<div class="welcome"><div><div class="eyebrow">INDEPENDENT FLIGHT PROGRAM / MISSION 001</div><h1>ONE ROCKET.<br>ONE MOON.<br><span>ONE WAY HOME.</span></h1><p class="intro-text">Getting there is only half the mission. Tap your way off Earth through whatever the sky throws at you, put a lander down somewhere on the Moon, drive the rover out and back, dock with the command module, and pull the parachute over the ocean. Late enough to be brave. Not too late.</p><p class="intro-text">Under the hood, every frame is a matrix multiply: the same tensor math that runs AI. Press <kbd>T</kbd> to watch it fly.</p><div class="start-actions"><button class="button-primary" data-action="start">LAUNCH MISSION <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="practice-link" data-action="practice">Practice landing</button></div><div class="key-legend"><kbd>&larr;</kbd><kbd>&rarr;</kbd> ROTATE &nbsp; <kbd>SPACE</kbd> TAP TO THRUST &nbsp; <kbd>E</kbd> CHUTE &nbsp; <kbd>P</kbd> PAUSE &nbsp; <kbd>T</kbd> TENSORS &nbsp; <kbd>G</kbd> AUTOPILOT &nbsp; <kbd>Y</kbd> YOUR PILOT<br>Every tap is a short burn. Gravity takes it back. Keep tapping.</div><div class="mobile-legend">TAP THRUST TO BURN. HOLD THE ARROWS TO STEER.</div></div><div class="briefing"><div class="briefing-top"><span class="eyebrow">YOUR FLIGHT PLAN</span><span class="serial">MB / 001</span></div><div class="mission-step"><span class="step-num">01</span><div><div class="step-title">Leave Earth behind.</div><div class="step-copy">Tap thrust in bursts, lean into the weather, and dodge the debris. The hull only takes so much.</div></div></div><div class="mission-step"><span class="step-num">02</span><div><div class="step-title">Separate. Descend. Commit.</div><div class="step-copy">Every tap slows your fall a little. Your engine is your only brake.</div></div></div><div class="mission-step"><span class="step-num">03</span><div><div class="step-title">Land. Then drive.</div><div class="step-copy">Pick a site, then take two astronauts out on the rover, bag the samples and get back before the oxygen runs out.</div></div></div><div class="mission-step"><span class="step-num">04</span><div><div class="step-title">Dock. Then come home.</div><div class="step-copy">Fly the ascent stage to the command module and dock it gently, then ride the storm down to the recovery ship.</div></div></div><div class="site-list">${siteRoster()}</div><div class="site-legend">TIER / SITE / MULTIPLIER / YOUR BEST<br>THE LANDER DEPLOYS EAST OF TRANQUILITY. EVERYTHING ELSE COSTS FUEL TO REACH.</div><div class="difficulty"><div class="difficulty-label">SELECT FLIGHT DIFFICULTY</div><div class="difficulty-options"><button class="difficulty-button ${difficulty==='cadet'?'selected':''}" data-difficulty="cadet" aria-pressed="${difficulty==='cadet'}"><strong>CADET</strong><small>More forgiving landings</small></button><button class="difficulty-button ${difficulty==='pilot'?'selected':''}" data-difficulty="pilot" aria-pressed="${difficulty==='pilot'}"><strong>PILOT</strong><small>Precision required</small></button></div></div><div class="briefing-footer">${best?`PERSONAL BEST: ${best.toLocaleString()} POINTS`:'FLIGHT RECORD: A CLEAN SLATE.'}<br>SITES FOUND: ${found.size} OF ${SITES.length}. ARCADE PHYSICS, REAL CONSEQUENCES.</div></div></div><div class="version"><span>MOONBOUND / PROTOTYPE 1.7</span><span class="version-note">BUILT FOR A STEADY HAND.</span><span>EARTH &rarr; MOON &rarr; EARTH</span></div>`,'welcome');
 }
 function startLaunch(){
  clearInput();mode='launch';scene='launch';paused=false;fullMission=true;elapsed=0;launchTime=0;transitTime=0;coastReady=false;landingResult=null;crashReason='';particles=[];debris=[];fuelWarning=false;lowWarning=false;
@@ -356,12 +358,12 @@ function startLaunch(){
 }
 function startLanding(practice=false){
  clearInput();fullMission=!practice;if(practice){integrity=100;roverResult=null;dockResult=null;}mode='land';scene='land';paused=false;elapsed=fullMission?launchTime:0;particles=[];debris=[];fuelWarning=false;lowWarning=false;landingResult=null;crashReason='';
- ship={x:820,y:760,vx:8.5,vy:-11,angle:0,omega:0,fuel:100,pulse:0,power:0,launched:true};autopilot=false;flightLog=[];logClock=0;lastLog=0;tensorClock=1;camera={x:885,scale:1,lift:0,originY:SITES[0].y};updateCamera(1,true);hideOverlay();showHUD(true);$('pause-button').textContent='PAUSE';
+ ship={x:820,y:760,vx:8.5,vy:-11,angle:0,omega:0,fuel:100,pulse:0,power:0,launched:true};autopilot=false;flightLog=[];logClock=0;lastLog=0;tensorClock=1;pilotRows=[];rowClock=0;tapAcc=0;navInit();camera={x:885,scale:1,lift:0,originY:SITES[0].y};updateCamera(1,true);hideOverlay();showHUD(true);$('pause-button').textContent='PAUSE';
  $('objective-title').textContent='CHOOSE A SITE AND LAND ON IT';$('objective-copy').textContent='Each tap is a short burn that slows your fall. Tilt against drift, straighten up for touchdown. Far to the east, a lava tube runs under the plain.';
  showToast(practice?'LUNAR LANDING PRACTICE':'LUNAR MODULE DEPLOYED',2.5);updateHUD();tone(520,.16,.05);
 }
 function beginTransit(){homeward=false;launchTime=elapsed;mode='transit';scene='transit';transitTime=0;coastReady=false;particles=[];clearInput();$('bottom-deck').classList.add('hidden');$('landing-checks').classList.add('hidden');$('objective-title').textContent='TRANSLUNAR COAST';$('objective-copy').textContent='Ascent complete. Orbital flight and the journey to the Moon are compressed in this prototype.';showToast('ASCENT COMPLETE / COURSE SET FOR THE MOON',3);tone(440,.25,.06);}
-function deployBriefing(){coastReady=true;$('pause-button').classList.add('hidden');showOverlay(`<div class="dialog"><div class="eyebrow">02 / LUNAR ORBIT ACQUIRED</div><h2>YOUR ENGINE<br>IS YOUR BRAKE.</h2><p>The coast is over. Separate your lander and choose where to put it down. You deploy just east of Tranquility with a full tank. Everything else is a burn away.</p><div class="result-stats">${SITES.filter(siteKnown).map(t=>`<div><span class="label">${t.name}</span><strong>\u00d7${t.mult.toFixed(1)} <small style="font-size:11px">${t.tier.toLowerCase()}</small></strong></div>`).join('')}</div><p>Tap to brake, a little at a time. Tilt left to slow a rightward drift, then straighten up. Keep both feet inside a pad. The panel on the right always shows the limits for the site you are nearest to.</p><p class="help-tip">FLIGHT COMPUTER: press T (or TENSORS, top right) to see the lander the way the computer does: six numbers in a vector, turned by a 2×2 matrix every 1/120 of a second. Press G and a ten-weight autopilot flies it, which is one layer of a neural network. It lands, but it scores nothing.</p><div class="dialog-actions"><button class="button-primary" data-action="deploy">DEPLOY LANDER <span class="arrow" aria-hidden="true">&#8595;</span></button><button class="practice-link" data-action="home">Abort to main menu</button></div></div>`,'deploy');restoreFocus();}
+function deployBriefing(){coastReady=true;$('pause-button').classList.add('hidden');showOverlay(`<div class="dialog"><div class="eyebrow">02 / LUNAR ORBIT ACQUIRED</div><h2>YOUR ENGINE<br>IS YOUR BRAKE.</h2><p>The coast is over. Separate your lander and choose where to put it down. You deploy just east of Tranquility with a full tank. Everything else is a burn away.</p><div class="result-stats">${SITES.filter(siteKnown).map(t=>`<div><span class="label">${t.name}</span><strong>\u00d7${t.mult.toFixed(1)} <small style="font-size:11px">${t.tier.toLowerCase()}</small></strong></div>`).join('')}</div><p>Tap to brake, a little at a time. Tilt left to slow a rightward drift, then straighten up. Keep both feet inside a pad. The panel on the right always shows the limits for the site you are nearest to.</p><p class="help-tip">FLIGHT COMPUTER: press T (or TENSORS, top right) to see the lander the way the computer does: six numbers in a vector, turned by a 2×2 matrix every 1/120 of a second. The green ellipse is where the computer thinks you are: a Kalman filter, as on Apollo, tightened by every radar ping. Press G and a ten-weight autopilot flies on that estimate. Land once yourself and Y hands over to a pilot trained on your own flying. Autopilot landings score nothing.</p><div class="dialog-actions"><button class="button-primary" data-action="deploy">DEPLOY LANDER <span class="arrow" aria-hidden="true">&#8595;</span></button><button class="practice-link" data-action="home">Abort to main menu</button></div></div>`,'deploy');restoreFocus();}
 function startAscent(){
  if(!landingResult)return;
  const from=landingResult,padY=from.site.y+23;
@@ -399,7 +401,7 @@ function togglePause(){
 function showHelp(){
  if(overlayKind==='help'){closeHelp();return;}
  const previous=$('overlay').innerHTML,wasHidden=$('overlay').classList.contains('hidden'),previousKind=overlayKind,previousPaused=paused;
- paused=true;showOverlay(`<div class="dialog"><div class="eyebrow">FLIGHT MANUAL / ${config[difficulty].name}</div><h2>LESS PANIC.<br>MORE CONTROL.</h2><div class="help-row"><span>Tap main engine (each tap is one burn)</span><span><kbd class="help-key">SPACE</kbd><kbd class="help-key">&uarr; / W</kbd></span></div><div class="help-row"><span>Tilt left / right</span><span><kbd class="help-key">&larr; / A</kbd><kbd class="help-key">&rarr; / D</kbd></span></div><div class="help-row"><span>Deploy parachute (Earth return) / brake (rover, docking)</span><span><kbd class="help-key">E</kbd><kbd class="help-key">&darr; / S</kbd></span></div><div class="help-row"><span>Rover: hold the arrows to drive, tap thrust to hop</span><span><kbd class="help-key">&larr; / &rarr;</kbd><kbd class="help-key">SPACE</kbd></span></div><div class="help-row"><span>Tensor view: what the flight computer sees</span><span><kbd class="help-key">T</kbd></span></div><div class="help-row"><span>Landing autopilot (ten weights, no score)</span><span><kbd class="help-key">G</kbd></span></div><div class="help-row"><span>Pause / restart this stage</span><span><kbd class="help-key">P / ESC</kbd><kbd class="help-key">R</kbd></span></div><p class="help-tip">Thrust works like a flap: tap, and the engine fires a short burst. Holding it down does nothing. On a phone, tap THRUST with one thumb and hold a steering button with the other.</p><p>Launch: reach 2,400 m without straying beyond the flight corridor. Landing: both feet inside one pad, coming down, within that site's limits. The checks panel on the right updates to whichever site you are nearest to, so fly toward one and read it.</p><p class="help-tip">Earth has weather, rolled fresh every launch and every reentry: breezy, gale, thunderstorm or hurricane. Wind drags you and twists the rocket, drafts shove you up or down, and lightning can flame out your engine or scorch your parachute. Worse weather multiplies the return score.</p><p class="help-tip">Harder sites are narrower, further away and stricter, and they multiply your score. Tranquility is \u00d71.0. Marius Tube is underground. One site is not on the map.</p><p class="help-tip">The launch has debris in it: birds low down, wind-borne junk in a gale, hail in a storm, and heavy range debris above 1,100 m. Every hit costs hull and kicks the rocket. At zero the rocket comes apart. Hull carries through to docking and reentry.</p><p>After you land, deploy the rover. Hold the arrows to drive, tap thrust to hop rocks and rilles, and use the arrows in the air to level the wheels before you come down. Bag the three samples, touch the survey marker, and get back to the lander before the oxygen runs out.</p><p>Then lift the ascent stage to orbit (if you landed inside something, fly out first) and dock with the command module: close slowly, centred and upright, and use BRAKE to kill your speed. Over Earth, the chute arms below 450 m and tears above 110 m/s, or less if the heat shield is cracked. The later you pull it, the bigger the bonus.</p><div class="dialog-actions"><button class="button-primary" data-action="close-help">GOT IT <span class="arrow" aria-hidden="true">&#8594;</span></button></div></div>`,'help');
+ paused=true;showOverlay(`<div class="dialog"><div class="eyebrow">FLIGHT MANUAL / ${config[difficulty].name}</div><h2>LESS PANIC.<br>MORE CONTROL.</h2><div class="help-row"><span>Tap main engine (each tap is one burn)</span><span><kbd class="help-key">SPACE</kbd><kbd class="help-key">&uarr; / W</kbd></span></div><div class="help-row"><span>Tilt left / right</span><span><kbd class="help-key">&larr; / A</kbd><kbd class="help-key">&rarr; / D</kbd></span></div><div class="help-row"><span>Deploy parachute (Earth return) / brake (rover, docking)</span><span><kbd class="help-key">E</kbd><kbd class="help-key">&darr; / S</kbd></span></div><div class="help-row"><span>Rover: hold the arrows to drive, tap thrust to hop</span><span><kbd class="help-key">&larr; / &rarr;</kbd><kbd class="help-key">SPACE</kbd></span></div><div class="help-row"><span>Tensor view: what the flight computer sees</span><span><kbd class="help-key">T</kbd></span></div><div class="help-row"><span>Landing autopilot (ten weights, no score)</span><span><kbd class="help-key">G</kbd></span></div><div class="help-row"><span>Your pilot, learned from your own landings (no score)</span><span><kbd class="help-key">Y</kbd></span></div><div class="help-row"><span>Pause / restart this stage</span><span><kbd class="help-key">P / ESC</kbd><kbd class="help-key">R</kbd></span></div><p class="help-tip">Thrust works like a flap: tap, and the engine fires a short burst. Holding it down does nothing. On a phone, tap THRUST with one thumb and hold a steering button with the other.</p><p>Launch: reach 2,400 m without straying beyond the flight corridor. Landing: both feet inside one pad, coming down, within that site's limits. The checks panel on the right updates to whichever site you are nearest to, so fly toward one and read it.</p><p class="help-tip">Earth has weather, rolled fresh every launch and every reentry: breezy, gale, thunderstorm or hurricane. Wind drags you and twists the rocket, drafts shove you up or down, and lightning can flame out your engine or scorch your parachute. Worse weather multiplies the return score.</p><p class="help-tip">Harder sites are narrower, further away and stricter, and they multiply your score. Tranquility is \u00d71.0. Marius Tube is underground. One site is not on the map.</p><p class="help-tip">The launch has debris in it: birds low down, wind-borne junk in a gale, hail in a storm, and heavy range debris above 1,100 m. Every hit costs hull and kicks the rocket. At zero the rocket comes apart. Hull carries through to docking and reentry.</p><p>After you land, deploy the rover. Hold the arrows to drive, tap thrust to hop rocks and rilles, and use the arrows in the air to level the wheels before you come down. Bag the three samples, touch the survey marker, and get back to the lander before the oxygen runs out.</p><p>Then lift the ascent stage to orbit (if you landed inside something, fly out first) and dock with the command module: close slowly, centred and upright, and use BRAKE to kill your speed. Over Earth, the chute arms below 450 m and tears above 110 m/s, or less if the heat shield is cracked. The later you pull it, the bigger the bonus.</p><div class="dialog-actions"><button class="button-primary" data-action="close-help">GOT IT <span class="arrow" aria-hidden="true">&#8594;</span></button></div></div>`,'help');
  helpReturn={previous,wasHidden,previousKind,previousPaused};
 }
 let helpReturn=null;
@@ -408,7 +410,7 @@ function homeRequest(){if(overlayKind==='deploy'){welcome();return;}if(canFly()|
 $('overlay').addEventListener('click',e=>{
  const difficultyButton=e.target.closest('[data-difficulty]');if(difficultyButton){difficulty=difficultyButton.dataset.difficulty;welcome();return;}
  const b=e.target.closest('[data-action]');if(!b)return;
- switch(b.dataset.action){case'start':startLaunch();break;case'practice':startLanding(true);break;case'deploy':startLanding(false);break;case'ascend':startAscent();break;case'rover':startRover();break;case'undock':beginReturn();break;case'reenter':startReentry();break;case'resume':togglePause();break;case'retry':retryStage();break;case'home':welcome();break;case'close-help':closeHelp();break;}
+ switch(b.dataset.action){case'start':startLaunch();break;case'practice':startLanding(true);break;case'deploy':startLanding(false);break;case'ascend':startAscent();break;case'rover':startRover();break;case'undock':beginReturn();break;case'reenter':startReentry();break;case'resume':togglePause();break;case'retry':retryStage();break;case'home':welcome();break;case'close-help':closeHelp();break;case'forget-pilot':forgetPilot();b.textContent='Your pilot is forgotten';b.disabled=true;break;}
 });
 $('home-button').addEventListener('click',homeRequest);$('pause-button').addEventListener('click',()=>{if(overlayKind==='help')closeHelp();else togglePause();});$('help-button').addEventListener('click',showHelp);
 for(const [id,action]of[['left-control','left'],['right-control','right']]){
@@ -426,7 +428,7 @@ window.addEventListener('keydown',e=>{
  if(e.code==='KeyR'&&!e.repeat&&[...FLYING,'crash','win'].includes(mode)&&overlayKind!=='help'){e.preventDefault();retryStage();return;}
  if(e.code==='KeyT'&&!e.repeat&&overlayKind!=='help'&&!(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))){e.preventDefault();setTensor(!tensorOn);return;}
  if(!canFly())return;
- if(e.code==='KeyG'&&!e.repeat){e.preventDefault();setAutopilot(!autopilot);return;}
+ if((e.code==='KeyG'||e.code==='KeyY')&&!e.repeat){e.preventDefault();const k=e.code==='KeyG'?'agc':'you';setAutopilot(autopilot===k?false:k);return;}
  if(autopilot&&[...thrustKeys,...steerKeys].includes(e.code)){setAutopilot(false);}
  if(thrustKeys.includes(e.code)){e.preventDefault();if(!e.repeat)tapThrust();return;}
  if(chuteKeys.includes(e.code)){e.preventDefault();if(!e.repeat)deployChute();return;}
@@ -533,8 +535,8 @@ function step(dt){
  if(!canFly())return;
  elapsed+=dt;
  if(scene==='launch'||scene==='earth')stepWeather(dt);
- const c=config[difficulty],turn=autopilot&&scene==='land'?autoStep():Number(held('right'))-Number(held('left'));
- if(scene==='land')logState(dt);
+ const c=config[difficulty],turn=autopilot&&scene==='land'?autoStep(dt):Number(held('right'))-Number(held('left'));
+ if(scene==='land'){logState(dt);recordRow(dt);}
  const isBurn=burning(),power=isBurn?ship.power:0;
  if(ship.pulse>0)ship.pulse=Math.max(0,ship.pulse-dt);
  if(scene==='earth'){stepEarth(dt,turn,power);if(isBurn)emitExhaust(dt);updateParticles(dt);return;}
@@ -563,7 +565,8 @@ function step(dt){
    }
    ay-=ship.vy*Math.abs(ship.vy)*.0016;
  }
- ship.vx+=ax*dt;ship.vy+=ay*dt;ship.x+=ship.vx*dt;ship.y+=ship.vy*dt;
+ ship.acc=[ax,ay];ship.vx+=ax*dt;ship.vy+=ay*dt;ship.x+=ship.vx*dt;ship.y+=ship.vy*dt;
+ if(scene==='land')navStep(dt,ax,ay);
  if(scene==='launch'){
    if(!ship.launched&&ship.y<=38){ship.y=38;ship.vy=0;ship.vx=0;ship.x=0;if(Math.abs(ship.angle)>PI/3){ship.angle=clamp(ship.angle,-PI/3,PI/3);ship.omega=0;}}
    if(ship.y>40)ship.launched=true;
@@ -600,7 +603,7 @@ function step(dt){
 function stepEarth(dt,turn,power){
  const g=9.81;let k=.00121;
  if(ship.chuteOpen){ship.chute=Math.min(1,ship.chute+dt/1.4);k=mix(.00121,.068*(1-(ship.chuteDamage||0)),ship.chute);}
- const drag=Math.min(k*ship.vy*ship.vy,g+30);
+ const drag=Math.min(k*ship.vy*ship.vy,g+30);ship.k=k;ship.drag=drag;
  const S=wxScale(),draft=wx.burstT>0?wx.burstPow*S*(ship.chuteOpen?.45:1):0;
  const ay=-g-Math.sign(ship.vy)*drag+power+draft;
  // The chute catches the wind: under canopy you drift with the weather, so line up upwind before you pull.
@@ -627,7 +630,7 @@ function resolveLanding(){
  if(vertical>L.vertical){crash(`Touchdown was too fast: ${vertical.toFixed(1)} m/s downward. ${site.name} allows ${L.vertical.toFixed(1)} m/s. Start braking earlier.`);return;}
  if(drift>L.drift){crash(`Too much sideways speed: ${drift.toFixed(1)} m/s. ${site.name} allows ${L.drift.toFixed(1)} m/s. Tilt against your drift, then straighten up.`);return;}
  if(tilt>L.angle){crash(`The lander tipped over at ${tilt.toFixed(1)} degrees. Touch down within ${L.angle} degrees of upright.`);return;}
- closeLog();const auto=!!ship.autoUsed;autopilot=false;
+ closeLog();const auto=!!ship.autoUsed;autopilot=false;lastFlight={rows:pilotRows,site};const learned=!auto&&learnFlight(pilotRows,site);
  const score=auto?0:Math.round((500+ship.fuel*7+300*(1-vertical/L.vertical)+200*(1-drift/L.drift)+(fullMission?300:0)+(difficulty==='pilot'?350:0))*site.mult);
  const firstFind=!!site.secret&&!found.has(site.id);
  found.add(site.id);
@@ -636,7 +639,7 @@ function resolveLanding(){
  const newBest=score>best;best=Math.max(best,score);saveRecords();
  tone(660,.35,.07);setTimeout(()=>tone(880,.45,.04),150);
  updateHUD();
- showOverlay(`<div class="dialog"><div class="eyebrow">${firstFind?'NEW SITE DISCOVERED':(fullMission?'MISSION COMPLETE':'PRACTICE COMPLETE')} / ${site.name}</div><h2>${firstFind?'NOBODY HAS<br>BEEN HERE.':'THE EAGLE<br>HAS LEGS.'}</h2><p>${firstFind?'You found the crater floor and put the lander down on it. The Hollow is on your map from now on.':'Engine off. Landing gear intact. You made it to the Moon, and the Moon let you stay.'}</p><p class="help-tip">${site.tier} SITE / SCORE MULTIPLIER \u00d7${site.mult.toFixed(1)}${siteRecord?' / SITE RECORD':''}</p><div class="result-stats"><div><span class="label">TOUCHDOWN</span><strong>${vertical.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">SIDEWAYS DRIFT</span><strong>${drift.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">FUEL REMAINING</span><strong>${Math.round(ship.fuel)}%</strong></div></div><div class="result-score"><span>${newBest?'NEW PERSONAL BEST':'MISSION SCORE'}${difficulty==='pilot'?' / PILOT':''}</span><strong>${score.toLocaleString()}</strong></div>${auto?'<p class="help-tip">THE AUTOPILOT FLEW THIS ONE. Ten weights put it down, so it scores nothing. Land it yourself to score.</p>':''}${logNote()}<p class="help-tip">THE MISSION IS NOT OVER. Two astronauts and a rover are folded into the descent stage. Drive the traverse and bring the samples back, then fly the ascent stage up to the command module.</p><div class="dialog-actions"><button class="button-primary" data-action="rover">DEPLOY THE ROVER <span class="arrow" aria-hidden="true">&#8594;</span></button><button class="button-secondary" data-action="practice">LAND AGAIN</button><button class="practice-link" data-action="ascend">Skip the EVA and lift off</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
+ showOverlay(`<div class="dialog"><div class="eyebrow">${firstFind?'NEW SITE DISCOVERED':(fullMission?'MISSION COMPLETE':'PRACTICE COMPLETE')} / ${site.name}</div><h2>${firstFind?'NOBODY HAS<br>BEEN HERE.':'THE EAGLE<br>HAS LEGS.'}</h2><p>${firstFind?'You found the crater floor and put the lander down on it. The Hollow is on your map from now on.':'Engine off. Landing gear intact. You made it to the Moon, and the Moon let you stay.'}</p><p class="help-tip">${site.tier} SITE / SCORE MULTIPLIER \u00d7${site.mult.toFixed(1)}${siteRecord?' / SITE RECORD':''}</p><div class="result-stats"><div><span class="label">TOUCHDOWN</span><strong>${vertical.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">SIDEWAYS DRIFT</span><strong>${drift.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">FUEL REMAINING</span><strong>${Math.round(ship.fuel)}%</strong></div></div><div class="result-score"><span>${newBest?'NEW PERSONAL BEST':'MISSION SCORE'}${difficulty==='pilot'?' / PILOT':''}</span><strong>${score.toLocaleString()}</strong></div>${auto?'<p class="help-tip">THE AUTOPILOT FLEW THIS ONE. Ten weights put it down, so it scores nothing. Land it yourself to score.</p>':''}${logNote()}${pilotNote(learned)}${pilotData.length?'<p><button class="practice-link" data-action="forget-pilot">Forget my pilot</button></p>':''}<p class="help-tip">THE MISSION IS NOT OVER. Two astronauts and a rover are folded into the descent stage. Drive the traverse and bring the samples back, then fly the ascent stage up to the command module.</p><div class="dialog-actions"><button class="button-primary" data-action="rover">DEPLOY THE ROVER <span class="arrow" aria-hidden="true">&#8594;</span></button><button class="button-secondary" data-action="practice">LAND AGAIN</button><button class="practice-link" data-action="ascend">Skip the EVA and lift off</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
 }
 function resolveSplashdown(){
  const c=config[difficulty],speed=-ship.vy,d=Math.abs(ship.x-RECOVERY_X);
@@ -1104,6 +1107,7 @@ function drawLanding(){
  // A shadow makes the final few meters easier to judge.
  const shadowA=clamp(1-altitude()/140,0,1)*.35;ctx.fillStyle=`rgba(0,0,0,${shadowA})`;ctx.beginPath();ctx.ellipse(sx,groundY+2,25*s,3*s,0,0,TAU);ctx.fill();
  drawLander(sx,sy,ship.angle,burning(),s,scene==='moonup'?'ascent':'full');
+ if(scene==='land'&&mode==='land'&&nav&&(tensorOn||autopilot))drawNav(v,s);
  }
  drawParticles(p=>({x:v.x(p.x),y:v.y(p.y)}),s);
  if((mode==='win'||scene==='moonup')&&landingResult)drawFlag(v.x(landingResult.x+40),v.y(landingResult.site.y),s);
@@ -1243,64 +1247,162 @@ function render(){ctx.setTransform(DPR,0,0,DPR,0,0);if(scene==='launch')drawLaun
 function frame(now){if(window.MoonboundBoot.failed)return;const dt=Math.min((now-lastFrame)/1000||0,.05);lastFrame=now;visualTime+=dt;accumulator+=dt;let steps=0;while(accumulator>=1/120&&steps<8){step(1/120);accumulator-=1/120;steps++;}if(steps===8)accumulator=0;setEngine(burning());$('thrust-control').classList.toggle('held',burning());hudClock+=dt;if(hudClock>.08){hudClock=0;if(mode!=='menu')updateHUD();}render();window.MoonboundBoot.ready();requestAnimationFrame(frame);}
 resize();welcome();requestAnimationFrame(frame);
 // ---- The flight computer. Everything in the tensor view is the live simulation state, not a separate model of it. ----
-// The physics step really is s' = A·s + B·a + g, and the autopilot really is one dense layer: out = W·f + b.
+// The physics step really is s' = A·s + B·a + g, and the autopilots really are one dense layer each: out = W·f + b.
 let tensorOn=false,autopilot=false,flightLog=[],sessionLogs=[],logClock=0,lastLog=0,tensorClock=0,agc={f:[0,0,0,0,0],out:[0,0],target:null};
 try{tensorOn=localStorage.getItem('moonbound-tensor-v1')==='1';}catch(e){}
 // Ten weights. Row 1 is the throttle (burn when positive), row 2 is the attitude the lander should hold (radians, right is positive).
-// Features f = [dx to the pad, |dx|, vx, vy, altitude]. |dx| lets it hold height until it is over the pad.
-// Tuned by search against the simulator, not by hand: hundreds of test landings, keep the weights that land (75 of 80 random starts).
+// Features f = [dx to the pad, |dx|, vx, vy, altitude], all read from the navigation estimate. |dx| lets it hold height until it is over the pad.
+// Tuned by search against the simulator: hundreds of test landings, keep the weights that land.
 const AGC_W=[[0,.15,0,-1,-.11],[-.01,0,-.11,0,0]],AGC_B=[-1.2,0],AGC_K={contact:2,tiltH:60};
 function agcTarget(){const s=nearestSite();return s.secret||s.id==='tube'?SITES[0]:s;}
-function autoStep(){
- const t=agcTarget(),h=altitude(),f=[ship.x-t.x,Math.abs(ship.x-t.x),ship.vx,ship.vy,h];
- const out=AGC_W.map((row,i)=>row.reduce((a,w,j)=>a+w*f[j],AGC_B[i]));
- agc={f,out,target:t};
- // The activations: a step on the throttle (tap or don't), and a clamp on the tilt that tightens near the ground.
- // Contact light: like Apollo, the engine is shut down in the last couple of metres and the lander drops onto its legs.
- if(out[0]>0&&ship.pulse<=0&&h>AGC_K.contact)tapThrust();
- const maxTilt=clamp(h/AGC_K.tiltH*.35,.04,.35),want=clamp(out[1],-maxTilt,maxTilt);
+
+// ---- Navigation: a Kalman filter. The computer never sees the truth, only its own estimate and what the radar tells it. ----
+// Apollo navigated this way: Stanley Schmidt's team at NASA Ames adapted Kalman's filter for the Apollo guidance computer.
+// Two filters, one per axis, each on [position, velocity]. Accelerometers drive the prediction; the landing radar corrects it.
+const NAV={radarAlt:550,ping:.25,q:.02};
+let nav=null,navSeed=1;
+function navRand(){navSeed=(Math.imul(navSeed,1664525)+1013904223)>>>0;return navSeed/4294967296;}
+function gauss(){let u=0;while(!u)u=navRand();return Math.sqrt(-2*Math.log(u))*Math.cos(TAU*navRand());}
+function navInit(){navSeed=(0x5eed+Math.round(ship.x*7+ship.y*13))>>>0;nav={x:ship.x+gauss()*35,vx:ship.vx+gauss()*1.2,y:ship.y+gauss()*30,vy:ship.vy+gauss()*1.2,Px:[[1225,0],[0,1.44]],Py:[[900,0],[0,1.44]],clock:0,pings:0,lock:false,K:[0,0],ping:0};}
+// P' = A·P·Aᵀ + Q with A = [[1, dt], [0, 1]]: the uncertainty grows a little every step the radar is silent.
+function kfPredict(P,dt){const q=NAV.q,a=P[0][0]+dt*(P[1][0]+P[0][1])+dt*dt*P[1][1],b=P[0][1]+dt*P[1][1],c=P[1][0]+dt*P[1][1];return[[a+q*dt*dt*dt/3,b+q*dt*dt/2],[c+q*dt*dt/2,P[1][1]+q*dt]];}
+// K = P·Hᵀ(H·P·Hᵀ + R)⁻¹ with H = [1, 0]: trust the radar in proportion to how unsure we are of ourselves.
+function kfUpdate(P,z,R,pos,vel){const S=P[0][0]+R,K=[P[0][0]/S,P[1][0]/S],r=z-nav[pos];nav[pos]+=K[0]*r;nav[vel]+=K[1]*r;return{K,P:[[(1-K[0])*P[0][0],(1-K[0])*P[0][1]],[P[1][0]-K[1]*P[0][0],P[1][1]-K[1]*P[0][1]]]};}
+function navStep(dt,ax,ay){
+ if(!nav)return;nav.vx+=ax*dt;nav.vy+=ay*dt;nav.x+=nav.vx*dt;nav.y+=nav.vy*dt;nav.Px=kfPredict(nav.Px,dt);nav.Py=kfPredict(nav.Py,dt);
+ const h=altitude();if(nav.ping>0)nav.ping-=dt;
+ if(!nav.lock&&h<NAV.radarAlt){nav.lock=true;if(tensorOn||autopilot)showToast('LANDING RADAR LOCK / THE ELLIPSE SHRINKS',1.8);}
+ if(!nav.lock)return;nav.clock+=dt;if(nav.clock<NAV.ping)return;nav.clock=0;
+ const sy=1.5+.02*h,sx=3+.03*h;let u=kfUpdate(nav.Py,ship.y+gauss()*sy,sy*sy,'y','vy');nav.Py=u.P;nav.K=u.K;
+ u=kfUpdate(nav.Px,ship.x+gauss()*sx,sx*sx,'x','vx');nav.Px=u.P;nav.pings++;nav.ping=.35;
+}
+function navAlt(){return nav?altitude()+(nav.y-ship.y):altitude();}
+function navFeatures(t){const dx=(nav?nav.x:ship.x)-t.x;return[dx,Math.abs(dx),nav?nav.vx:ship.vx,nav?nav.vy:ship.vy,navAlt()];}
+function drawNav(v,s){
+ const ex=Math.sqrt(Math.max(0,nav.Px[0][0])),ey=Math.sqrt(Math.max(0,nav.Py[0][0])),cx=v.x(nav.x),cy=v.y(nav.y),rx=Math.max(4,2*ex*s),ry=Math.max(4,2*ey*s);
+ ctx.save();ctx.strokeStyle=`rgba(155,229,192,${nav.lock?.8:.45})`;ctx.lineWidth=1.2;ctx.setLineDash(nav.lock?[]:[3,5]);ctx.beginPath();ctx.ellipse(cx,cy,rx,ry,0,0,TAU);ctx.stroke();
+ ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(cx-6,cy);ctx.lineTo(cx+6,cy);ctx.moveTo(cx,cy-6);ctx.lineTo(cx,cy+6);ctx.stroke();
+ if(nav.ping>0&&!reduceMotion){const a=nav.ping/.35;ctx.strokeStyle=`rgba(155,229,192,${a*.55})`;ctx.beginPath();ctx.arc(v.x(ship.x),v.y(ship.y),10+(1-a)*70*s,0,TAU);ctx.stroke();}
+ if(W>620)drawLabel(cx-rx-8,cy+3,nav.lock?'ESTIMATE / RADAR LOCK':'ESTIMATE / NO RADAR YET','#7fd8b0',9,'right');ctx.restore();
+}
+
+// ---- Your pilot: an autopilot learned from your own landings, by least squares. ----
+// Every 0.2 s of a hand-flown descent is one row. It learns your flight profile: from where you were (X = [dx, |dx|, altitude, 1])
+// to how you were moving (Y = [vx, vy]). How fast you like to fall at each height, how fast you like to slide toward the pad.
+const PILOT_KEY='moonbound-pilot-v1',PILOT_MAX=10;
+let pilotData=[],pilotW=null,pilotRows=[],rowClock=0,tapAcc=0,lastFlight=null;
+try{const d=JSON.parse(localStorage.getItem(PILOT_KEY)||'[]');if(Array.isArray(d))pilotData=d;}catch(e){pilotData=[];}
+function savePilot(){try{localStorage.setItem(PILOT_KEY,JSON.stringify(pilotData));}catch(e){}}
+function recordRow(dt){rowClock+=dt;if(rowClock<.2)return;rowClock-=.2;const r=v=>Math.round(v*100)/100;pilotRows.push([r(nav?nav.x:ship.x),r(nav?nav.vx:ship.vx),r(nav?nav.vy:ship.vy),r(navAlt())]);}
+function pilotRowCount(){return pilotData.reduce((a,f)=>a+f.rows.length,0);}
+// W = (XᵀX + λI)⁻¹ XᵀY: the closed-form least-squares fit, solved by Gaussian elimination. Gradient descent would reach the same weights, slower.
+// x = [dx, |dx|, altitude, 1]. Each neuron only sees the inputs wired to it (the zeros in W). Fully wired, it learned that
+// "high up" means "go right", because most landings start high and to the left of the pad: a spurious correlation.
+// The sideways neuron has no bias: the pad is its zero, so it can only ever steer toward it.
+const PILOT_WIRES=[[0],[1,2,3]];let PILOT_MARGIN=1;
+function solveLS(X,y){
+ const n=X[0].length,A=Array.from({length:n},()=>Array(n).fill(0)),B=Array(n).fill(0);
+ for(let k=0;k<X.length;k++){const x=X[k];for(let i=0;i<n;i++){for(let j=0;j<n;j++)A[i][j]+=x[i]*x[j];B[i]+=x[i]*y[k];}}
+ for(let i=0;i<n;i++)A[i][i]+=1e-3*(A[i][i]+1);
+ for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];[B[c],B[p]]=[B[p],B[c]];
+  for(let r=0;r<n;r++){if(r===c)continue;const m=A[r][c]/A[c][c];for(let j=c;j<n;j++)A[r][j]-=m*A[c][j];B[r]-=m*B[c];}}
+ return B.map((b,i)=>b/A[i][i]);
+}
+function trainPilot(){
+ const X=[],Y=[];
+ for(const f of pilotData)for(const row of f.rows){const dx=row[0]-f.site;X.push([dx,Math.abs(dx),row[3],1]);Y.push([row[1],row[2]]);}
+ if(X.length<20){pilotW=null;return;}
+ pilotW=PILOT_WIRES.map((wires,o)=>{const w=solveLS(X.map(x=>wires.map(i=>x[i])),Y.map(y=>y[o])),row=[0,0,0,0];wires.forEach((i,k)=>row[i]=w[k]);return row;});
+ if(pilotW.flat().some(v=>!isFinite(v)))pilotW=null;
+}
+function learnFlight(rows,site){if(rows.length<10)return false;pilotData.push({site:site.x,rows});if(pilotData.length>PILOT_MAX)pilotData.shift();savePilot();trainPilot();return true;}
+function forgetPilot(){pilotData=[];pilotW=null;savePilot();}
+trainPilot();
+
+function autoStep(dt){
+ const t=agcTarget(),f=navFeatures(t),h=altitude();let want=0;
+ if(autopilot==='you'&&pilotW){
+  const x=[f[0],f[1],f[4],1],out=pilotW.map(row=>row.reduce((a,w,j)=>a+w*x[j],0));out[1]=clamp(out[1],-45,3);agc={f:x,out,target:t};
+  // The learned layer says how you would be moving here. A fixed tracker does the rest:
+  // brake if falling faster than you would, lean toward the sideways speed you would have.
+  // The tracker keeps a small margin under your profile, so its overshoot never adds up to more than you did.
+  if(f[3]<out[1]+PILOT_MARGIN&&ship.pulse<=0&&h>AGC_K.contact)tapThrust();
+  want=.11*(out[0]-f[2]);
+ }else{
+  const out=AGC_W.map((row,i)=>row.reduce((a,w,j)=>a+w*f[j],AGC_B[i]));agc={f,out,target:t};
+  // The activations: a step on the throttle (tap or don't), and a clamp on the tilt that tightens near the ground.
+  // Contact light: like Apollo, the engine shuts down in the last couple of metres. That probe reads the real ground, not the estimate.
+  if(out[0]>0&&ship.pulse<=0&&h>AGC_K.contact)tapThrust();
+  want=out[1];
+ }
+ const maxTilt=clamp(h/AGC_K.tiltH*.35,.04,.35);want=clamp(want,-maxTilt,maxTilt);
  return clamp(4*(want-ship.angle)-.9*ship.omega,-1,1);
 }
-function setAutopilot(on){
- if(on&&!(scene==='land'&&mode==='land'&&canFly()))return;
- if(autopilot===on)return;autopilot=on;if(on){ship.autoUsed=true;if(!tensorOn)setTensor(true);}
- showToast(on?'AUTOPILOT ENGAGED / TEN WEIGHTS ARE FLYING':'YOU HAVE CONTROL',1.8);tone(on?740:330,.12,.05);tensorClock=1;
+function setAutopilot(kind){
+ if(kind&&!(scene==='land'&&mode==='land'&&canFly()))return;
+ if(kind==='you'&&!pilotW){showToast('LAND ONCE BY HAND TO TRAIN YOUR PILOT',2.2);return;}
+ if(autopilot===kind)return;autopilot=kind;tapAcc=0;if(kind){ship.autoUsed=true;if(!tensorOn)setTensor(true);}
+ showToast(kind==='agc'?'AUTOPILOT ENGAGED / TEN WEIGHTS ARE FLYING':kind==='you'?`YOUR PILOT ENGAGED / LEARNED FROM ${pilotData.length} LANDING${pilotData.length===1?'':'S'}`:'YOU HAVE CONTROL',1.8);tone(kind?740:330,.12,.05);tensorClock=1;
 }
 function setTensor(on){tensorOn=on;try{localStorage.setItem('moonbound-tensor-v1',on?'1':'0');}catch(e){}$('tensor-led').classList.toggle('on',on);$('tensor-button').setAttribute('aria-pressed',String(on));tensorClock=1;updateTensor(0);}
 function logState(dt){logClock+=dt;if(logClock>=.1){logClock-=.1;flightLog.push([ship.x,ship.y,ship.vx,ship.vy,ship.angle,ship.fuel]);}}
 function closeLog(){if(!flightLog.length)return;lastLog=flightLog.length;sessionLogs.push(flightLog);if(sessionLogs.length>50)sessionLogs.shift();flightLog=[];}
-function logNote(){if(!lastLog)return'';const n=sessionLogs.length,longest=Math.max(...sessionLogs.map(l=>l.length));return`<p class="help-tip">FLIGHT LOG: a tensor of shape (${lastLog}, 6), one row of six numbers every tenth of a second. This session: ${n} flight${n===1?'':'s'}, shape (${n}, up to ${longest}, 6). Stack enough of those and you have training data: that is how an autopilot can learn to fly from people instead of from hand-tuned numbers.</p>`;}
+function logNote(){if(!lastLog)return'';const n=sessionLogs.length,longest=Math.max(...sessionLogs.map(l=>l.length));return`<p class="help-tip">FLIGHT LOG: a tensor of shape (${lastLog}, 6), one row of six numbers every tenth of a second. This session: ${n} flight${n===1?'':'s'}, shape (${n}, up to ${longest}, 6). Stack enough of those and you have training data.</p>`;}
+function pilotNote(learned){if(!learned)return'';const n=pilotData.length,r=pilotRowCount();return`<p class="help-tip">YOUR PILOT RETRAINED on ${n} hand-flown landing${n===1?'':'s'}. X is (${r}, 4): where the computer thought you were. Y is (${r}, 2): how you were moving there. W = (XᵀX)⁻¹XᵀY turns that into 8 numbers, your flight profile. Press Y on your next descent and watch it fly like you, habits included.</p>`;}
 const fmt=(v,d=1)=>(v<0?'−':'')+Math.abs(v).toFixed(d);
+const fmtW=v=>v===0?'0':Math.abs(v)>=.995||Math.abs(v)<.005?(Math.abs(v)<.005?(v<0?'−':'')+Math.abs(v).toExponential(0).replace('e-','e−'):fmt(v,1)):fmt(v,2);
+const mat=(vals,cols,cls='')=>`<span class="mat ${cls}" style="grid-template-columns:repeat(${cols},auto)">${vals.map(v=>`<span>${v}</span>`).join('')}</span>`;
 function updateTensor(dt){
  const p=$('tensor-panel'),show=tensorOn&&!!ship&&FLYING.includes(scene)&&!$('hud').classList.contains('hidden');
  p.classList.toggle('hidden',!show);$('flight-note').classList.toggle('hidden',show||$('hud').classList.contains('hidden'));
  if(!show)return;tensorClock+=dt;if(tensorClock<.1)return;tensorClock=0;
  p.classList.toggle('compact',W<=620);
- if(scene==='rover'){p.innerHTML=`<div class="tp-head"><span>FLIGHT COMPUTER</span><span>T</span></div><div class="tp-sec"><span>ROVER STATE</span><b>RANK 1 / SHAPE (5)</b></div><div class="vec"><i>x</i><em>${fmt(rover.x)}</em><small>m along the course</small><i>y</i><em>${fmt(rover.y)}</em><small>m</small><i>vx</i><em>${fmt(rover.vx)}</em><small>m/s</small><i>θ</i><em>${fmt(rover.angle,2)}</em><small>rad</small><i>O₂</i><em>${fmt(rover.o2,0)}</em><small>s left</small></div><div class="tp-note">Same idea, different vector. A rover, a rocket and a chatbot all run on lists of numbers that get multiplied by matrices.</div>`;return;}
- const g=scene==='launch'||scene==='earth'?9.81:scene==='dock'?0:1.62,burn=burning(),pw=burn?ship.power:0,c=Math.cos(ship.angle),sn=Math.sin(ship.angle);
- const ax=sn*pw,ay=c*pw,dtS=(1/120).toFixed(4),extra=scene==='launch'?' + wind + drag':scene==='earth'?' + drag + wind':'';
+ if(scene==='rover'){const r=rover,sl=courseSlope(r.x),c=Math.cos(sl),sn=Math.sin(sl);p.innerHTML=`<div class="tp-head"><span>FLIGHT COMPUTER<span class="wide"> / TENSOR VIEW</span></span><span class="wide">T</span></div><div class="tp-sec"><span>ROVER STATE</span><b>RANK 1 / SHAPE (5)</b></div><div class="vec"><i>x</i><em>${fmt(r.x)}</em><small>m along the course</small><i>y</i><em>${fmt(r.y)}</em><small>m</small><i>vx</i><em>${fmt(r.vx)}</em><small>m/s</small><i>θ</i><em>${fmt(r.angle,2)}</em><small>rad</small><i>O₂</i><em>${fmt(r.o2,0)}</em><small>s left</small></div><div class="wide"><div class="tp-sec"><span>THE SLOPE IS A ROTATION</span><b>RANK 2 / (2, 2)</b></div><div class="eq">${mat([fmt(c,2),fmt(-sn,2),fmt(sn,2),fmt(c,2)],2)}<span class="dim">ground under the wheels:<br>${fmt(sl*DEG,0)}°. Same matrix that<br>aims the lander's engine.</span></div></div><div class="tp-note">A rover, a rocket and a chatbot all run on lists of numbers that get multiplied by matrices.</div>`;return;}
+ const earth=scene==='earth',dock=scene==='dock',land=scene==='land',g=scene==='launch'||earth?9.81:dock?0:1.62,burn=burning(),pw=burn?ship.power:0,c=Math.cos(ship.angle),sn=Math.sin(ship.angle);
+ const ax=sn*pw,ay=c*pw,dtS=(1/120).toFixed(4),hc=burn?'hot':'';
  const rows=[['x',fmt(ship.x),'position, m'],['y',fmt(ship.y),''],['vx',fmt(ship.vx),'velocity, m/s'],['vy',fmt(ship.vy),''],['θ',fmt(ship.angle,2),'attitude, rad'],['m',fmt(ship.fuel,0),'propellant, %']];
- const hc=burn?'hot':'';
  let html=`<div class="tp-head"><span>FLIGHT COMPUTER<span class="wide"> / TENSOR VIEW</span></span><span class="wide">T</span></div>
-<div class="tp-sec"><span>STATE  s</span><b>RANK 1 / SHAPE (6)</b></div>
-<div class="vec">${rows.map(r=>`<i>${r[0]}</i><em>${r[1]}</em><small>${r[2]}</small>`).join('')}</div>
-<div class="wide"><div class="tp-sec"><span>THRUST  a = R(θ) · [0, p]</span><b>RANK 2 / SHAPE (2, 2)</b></div>
-<div class="eq"><span class="mat" style="grid-template-columns:auto auto"><span>${fmt(c,2)}</span><span>${fmt(sn,2)}</span><span>${fmt(-sn,2)}</span><span>${fmt(c,2)}</span></span>·<span class="mat ${hc}" style="grid-template-columns:auto"><span>0</span><span>${fmt(pw,1)}</span></span>=<span class="mat ${hc}" style="grid-template-columns:auto"><span>${fmt(ax,1)}</span><span>${fmt(ay,1)}</span></span><span class="dim">m/s²</span></div>
-<div class="tp-sec"><span>EVERY 1/120 S</span><b>s′ = A·s + B·a + g</b></div>
-<div class="eq"><span class="mat dim" style="grid-template-columns:repeat(4,auto)"><span class="cool">1</span><span>0</span><span class="cool">${dtS}</span><span>0</span><span>0</span><span class="cool">1</span><span>0</span><span class="cool">${dtS}</span><span>0</span><span>0</span><span class="cool">1</span><span>0</span><span>0</span><span>0</span><span>0</span><span class="cool">1</span></span><span class="dim">A: position picks up velocity × dt.<br>g = ${g} m/s² down${extra}</span></div></div>
-<div class="tp-sec"><span>FLIGHT LOG</span><b>SHAPE (${flightLog.length}, 6)<span class="wide"> / SESSION (${sessionLogs.length+(flightLog.length?1:0)}, ·, 6)</span></b></div>`;
- if(scene==='land'){
-  if(autopilot){const f=agc.f,o=agc.out,w=AGC_W;
-   html+=`<div class="tp-sec"><span>AUTOPILOT  out = W·f + b</span><b>10 WEIGHTS + 2 BIASES</b></div>
-<div class="eq"><span class="mat" style="grid-template-columns:repeat(5,auto)">${w.flat().map(v=>`<span>${v}</span>`).join('')}</span>·<span class="mat cool" style="grid-template-columns:auto"><span>${fmt(f[0],0)}</span><span>${fmt(f[1],0)}</span><span>${fmt(f[2])}</span><span>${fmt(f[3])}</span><span>${fmt(f[4],0)}</span></span>+<span class="mat" style="grid-template-columns:auto"><span>${AGC_B[0]}</span><span>${AGC_B[1]}</span></span></div>
-<div class="tp-note">f = [distance to ${agc.target?agc.target.name:'pad'}, its size, vx, vy, altitude]. Throttle <b class="${o[0]>0?'hot':''}">${fmt(o[0])} → ${o[0]>0?'BURN':'COAST'}</b>. Attitude <b>${fmt(o[1],2)} rad</b>. That is the whole pilot: one layer of a neural network. Its weights were found by flying hundreds of simulated landings and keeping the ones that worked, which is training in miniature. It still misses about one landing in sixteen. Press any flight key to take it back.</div>`;}
-  else html+=`<div class="tp-note"><b>y = W·x + b.</b> Multiply a vector by a matrix, add a bias. That is one step of this lander, and it is also one layer of a neural network. Press <b>G</b> to let a ten-weight autopilot fly.</div>`;
-  html+=`<button class="agc-button ${autopilot?'on':''}" data-action="agc">${autopilot?'TAKE CONTROL':W<=620?'AUTOPILOT':'ENGAGE AUTOPILOT / G'}</button>`;
- }else html+=`<div class="tp-note"><b>y = W·x + b.</b> The same multiply-and-add moves this ship and runs every layer of a neural network.</div>`;
+<div class="tp-sec"><span>STATE  s${land?' / TRUTH':''}</span><b>RANK 1 / SHAPE (6)</b></div>
+<div class="vec">${rows.map(r=>`<i>${r[0]}</i><em>${r[1]}</em><small>${r[2]}</small>`).join('')}</div><div class="wide">`;
+ if(earth){
+  const k=ship.k||.00121,drag=ship.drag||0;
+  html+=`<div class="tp-sec"><span>DRAG  d = k · vy²</span><b>k ${ship.chuteOpen?'UNDER CANOPY':'BARE CAPSULE'}</b></div>
+<div class="eq">${mat([k.toFixed(5)],1,ship.chuteOpen?'cool':'')}·${mat([fmt(ship.vy*ship.vy,0)],1)}=${mat([fmt(drag,1)],1,'hot')}<span class="dim">m/s² up.<br>Gravity: ${g} down.</span></div>
+<div class="tp-note">The parachute changes <b>one number</b>: k goes from 0.00121 to 0.068, about 56 times bigger, so the same speed makes 56 times the drag. Training a neural network is the same move at scale: change the numbers, not the equation.</div>`;
+ }else{
+  html+=`<div class="tp-sec"><span>THRUST  a = R(θ) · [0, p]</span><b>RANK 2 / SHAPE (2, 2)</b></div>
+<div class="eq">${mat([fmt(c,2),fmt(sn,2),fmt(-sn,2),fmt(c,2)],2)}·${mat(['0',fmt(pw,1)],1,hc)}=${mat([fmt(ax,1),fmt(ay,1)],1,hc)}<span class="dim">m/s²</span></div>`;
+  if(dock){
+   const pr=dockProbe(),port=dockPort(),dx=pr.x-port.x,dy=pr.y-port.y,rvx=ship.vx-csm.vx;
+   html+=`<div class="tp-sec"><span>CHANGE OF FRAME  r = T · p</span><b>RANK 2 / (3, 3)</b></div>
+<div class="eq">${mat(['1','0',`<span class="cool">${fmt(-port.x,1)}</span>`,'0','1',`<span class="cool">${fmt(-port.y,1)}</span>`,'0','0','1'],3,'dim')}·${mat([fmt(pr.x,1),fmt(pr.y,1),'1'],1)}=${mat([fmt(dx,1),fmt(dy,1),'1'],1,Math.abs(dx)<=DOCK.portDx?'cool':'hot')}</div>
+<div class="tp-note">T moves the world so the docking port sits at zero. In that frame the job is simple: make r = [0, 0] while closing at ${fmt(Math.hypot(rvx,ship.vy),2)} m/s or less than ${DOCK[difficulty].speed}. Vision models and robot arms do this same frame change millions of times a second.</div>`;
+  }else if(scene==='launch'){
+   const acc=ship.acc||[ax,ay-g],d=[acc[0]-ax,acc[1]-ay+g];
+   html+=`<div class="tp-sec"><span>EVERYTHING ELSE  d = a<sub>total</sub> − a − g</span><b>WIND + DRAG</b></div>
+<div class="eq">${mat([fmt(acc[0],1),fmt(acc[1],1)],1)}−${mat([fmt(ax,1),fmt(ay,1)],1,hc)}−${mat(['0',fmt(-g,2)],1)}=${mat([fmt(d[0],1),fmt(d[1],1)],1,'cool')}</div>
+<div class="tp-note">Forces are vectors, so they just add. The weather is one more vector in the sum. Lean so the engine's vector cancels the wind's.</div>`;
+  }else if(land&&nav){
+   const P=nav.Py,ex=Math.sqrt(nav.Px[0][0]),ey=Math.sqrt(P[0][0]),err=Math.hypot(nav.x-ship.x,nav.y-ship.y);
+   html+=`<div class="tp-sec"><span>KALMAN FILTER  P′ = A·P·Aᵀ + Q</span><b>${nav.lock?'RADAR LOCK':'NO RADAR YET'}</b></div>
+<div class="eq">${mat([fmt(P[0][0],1),fmt(P[0][1],2),fmt(P[1][0],2),fmt(P[1][1],3)],2)}<span class="dim">P: how unsure it is of [y, vy].<br>±${fmt(ex*2,1)} m across, ±${fmt(ey*2,1)} m up and down.<br>K = [${fmt(nav.K[0],2)}, ${fmt(nav.K[1],2)}] per radar ping. Error ${fmt(err,1)} m.</span></div>`;
+  }else html+=`<div class="tp-sec"><span>EVERY 1/120 S</span><b>s′ = A·s + B·a + g</b></div>
+<div class="eq">${mat(['<span class="cool">1</span>','0',`<span class="cool">${dtS}</span>`,'0','0','<span class="cool">1</span>','0',`<span class="cool">${dtS}</span>`,'0','0','<span class="cool">1</span>','0','0','0','0','<span class="cool">1</span>'],4,'dim')}<span class="dim">A: position picks up velocity × dt.<br>g = ${g} m/s² down</span></div>`;
+ }
+ html+=`</div>`;
+ if(land||scene==='moonup')html+=`<div class="tp-sec"><span>FLIGHT LOG</span><b>SHAPE (${flightLog.length}, 6)<span class="wide"> / SESSION (${sessionLogs.length+(flightLog.length?1:0)}, ·, 6)</span></b></div>`;
+ if(land){
+  if(autopilot){const f=agc.f,o=agc.out,you=autopilot==='you'&&pilotW,Wm=you?pilotW:AGC_W,cols=you?4:5,fv=f;
+   html+=`<div class="tp-sec"><span>${you?'YOUR PILOT  v = W·x':'AUTOPILOT  out = W·f + b'}</span><b>${you?`X (${pilotRowCount()}, 4) / ${pilotData.length} LANDINGS`:'10 WEIGHTS + 2 BIASES'}</b></div>
+<div class="eq wide">${mat(Wm.flat().map(fmtW),cols)}·${mat(fv.map((v,i)=>fmt(v,!you&&(i===2||i===3)?1:0)),1,'cool')}${you?'':'+'+mat(AGC_B.map(String),1)}</div>
+<div class="tp-note">${you?`x = [distance to ${agc.target?agc.target.name:'pad'}, its size, altitude, 1], from the <b>estimate</b>. The zeros are unwired inputs: wire everything and it learns that high up means go right, because most landings start high and to the left. Here you would be sliding at <b>${fmt(o[0])} m/s</b> and falling at <b>${fmt(-o[1])} m/s</b>, so that is what it flies. Those 8 numbers came from W = (XᵀX)⁻¹XᵀY over your own landings: your flight profile, habits included.`:`f = [distance to ${agc.target?agc.target.name:'pad'}, its size, vx, vy, altitude], read from the <b>estimate</b>, not the truth. Throttle <b class="${o[0]>0?'hot':''}">${fmt(o[0])} → ${o[0]>0?'BURN':'COAST'}</b>. Attitude <b>${fmt(o[1],2)} rad</b>. One layer of a neural network, weights found by flying hundreds of simulated landings and keeping the ones that worked. It misses about one in sixteen.`} Any flight key takes it back.</div>`;}
+  else html+=`<div class="tp-note"><b>y = W·x + b.</b> Multiply a vector by a matrix, add a bias: one step of this lander, and one layer of a neural network. The green ellipse is where the computer <b>thinks</b> you are. <b>G</b> hands over to a ten-weight autopilot. <b>Y</b> hands over to one trained on your own landings.</div>`;
+  html+=`<div class="agc-row"><button class="agc-button ${autopilot==='agc'?'on':''}" data-action="agc">${autopilot==='agc'?'TAKE CONTROL':W<=620?'AUTOPILOT':'AUTOPILOT / G'}</button><button class="agc-button ${autopilot==='you'?'on':''} ${pilotW?'':'off'}" data-action="you">${autopilot==='you'?'TAKE CONTROL':pilotW?(W<=620?'YOUR PILOT':'YOUR PILOT / Y'):(W<=620?'LAND TO TRAIN':'YOURS: LAND TO TRAIN')}</button></div>`;
+ }else if(!earth&&!dock&&scene!=='launch')html+=`<div class="tp-note"><b>y = W·x + b.</b> The same multiply-and-add moves this ship and runs every layer of a neural network.</div>`;
  p.innerHTML=html;
 }
 $('tensor-button').addEventListener('click',()=>setTensor(!tensorOn));
-$('tensor-panel').addEventListener('click',e=>{if(e.target.closest('[data-action="agc"]'))setAutopilot(!autopilot);});
+$('tensor-panel').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const k=b.dataset.action;if(k==='agc'||k==='you')setAutopilot(autopilot===k?false:k);});
 $('tensor-led').classList.toggle('on',tensorOn);$('tensor-button').setAttribute('aria-pressed',String(tensorOn));
 // QA hooks are opt-in and inert in normal play: append ?test=1 to the local URL.
 if(new URLSearchParams(location.search).has('test'))window.MoonboundTest={
@@ -1308,13 +1410,13 @@ if(new URLSearchParams(location.search).has('test'))window.MoonboundTest={
  getState:()=>({homeward,descentStage,mode,scene,paused,difficulty,fullMission,elapsed,ship:ship?{...ship}:null,sites:SITES.map(t=>({...t})),shaft:{...SHAFT},inShaft:inShaft(),target:nearestSite().id,found:[...found],siteBest:{...siteBest},altitude:ship?altitude():0,result:landingResult,overlay:overlayKind,crashReason}),
  startLaunch,startLanding,startAscent,startReentry,startRover,startDock,tap:tapThrust,chute:deployChute,setDifficulty:d=>{if(config[d])difficulty=d;},
  hull:()=>integrity,setHull:v=>{integrity=v;},debris:()=>debrisField.map(d=>({...d,kind:d.kind.id})),rover:()=>rover&&{...rover},course:()=>course,csm:()=>csm&&{...csm},results:()=>({landing:landingResult,rover:roverResult,dock:dockResult}),
- setShip:changes=>{if(ship)Object.assign(ship,changes);},
+ setShip:changes=>{if(ship){Object.assign(ship,changes);if(scene==='land')navInit();}},
  input:(action,on)=>{if(action==='thrust'){if(on)tapThrust();return;}const key={left:'ArrowLeft',right:'ArrowRight'}[action];if(key){on?keys.add(key):keys.delete(key);syncButtons();}},
  advance:(seconds,quiet)=>{const count=Math.round(seconds*120);for(let i=0;i<count;i++)step(1/120);if(!quiet){updateHUD();render();}},
  pause:togglePause,groundAt,floorBelow,roofHit,config,render,SITES,SHAFT,ROOFS,limitsFor,nearestSite,terrain,
- forget:()=>{found=new Set();siteBest={};best=0;saveRecords();},
+ forget:()=>{found=new Set();siteBest={};best=0;saveRecords();forgetPilot();},
  home:welcome,
- autopilot:on=>setAutopilot(!!on),tensor:on=>setTensor(!!on),agc:()=>({...agc,on:autopilot,W:AGC_W,b:AGC_B}),setAGC:(w,b,k)=>{AGC_W.splice(0,2,...w);AGC_B.splice(0,2,...b);if(k)Object.assign(AGC_K,k);},logs:()=>({current:flightLog.length,session:sessionLogs.map(l=>l.length)})
+ autopilot:on=>setAutopilot(on===true?'agc':on||false),nav:()=>nav&&JSON.parse(JSON.stringify(nav)),learnLast:()=>lastFlight&&learnFlight(lastFlight.rows,lastFlight.site),forgetPilot,setMargin:v=>{PILOT_MARGIN=v;},pilot:()=>({W:pilotW,landings:pilotData.length,rows:pilotRowCount()}),tensor:on=>setTensor(!!on),agc:()=>({...agc,on:autopilot,W:AGC_W,b:AGC_B}),setAGC:(w,b,k)=>{AGC_W.splice(0,2,...w);AGC_B.splice(0,2,...b);if(k)Object.assign(AGC_K,k);},logs:()=>({current:flightLog.length,session:sessionLogs.map(l=>l.length)})
 };
 })();
 </script>
