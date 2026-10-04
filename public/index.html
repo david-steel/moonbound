@@ -74,6 +74,16 @@
 #course-card .course-msg{min-height:40px;font-size:12px}#course-card b{color:var(--ink);font-weight:500}#course-card b.good{color:var(--green)}#course-card b.bad{color:var(--red)}
 #course-card .course-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font:10px var(--mono);letter-spacing:1.2px;color:var(--amber)}
 #course-card .course-sum{margin:16px 0}#course-card .course-sum strong{font:13px var(--mono);color:var(--green);letter-spacing:1px}#course-card .course-sum p{line-height:1.65;margin-top:10px}#course-card .course-actions{display:flex;justify-content:flex-end}
+#rescue-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:12;width:min(780px,calc(100vw - 32px));background:linear-gradient(160deg,rgba(20,34,47,.98),rgba(8,17,28,.98));border:1px solid var(--line);border-top:2px solid var(--amber);border-radius:8px;padding:16px 20px;color:#a5b4bf;font-size:13px;box-shadow:0 25px 90px rgba(0,0,0,.5)}
+#rescue-card .rs-head{display:flex;justify-content:space-between;gap:12px;font:10px var(--mono);letter-spacing:1.6px;color:var(--amber)}#rescue-card .rs-head b{color:var(--ink);font-weight:500}
+#rescue-card .rs-body{display:grid;grid-template-columns:340px 1fr;gap:18px;margin-top:12px;align-items:start}#rescue-canvas{width:340px;height:340px;border-radius:4px;border:1px solid var(--line);display:block}
+#rescue-card .rs-side p{margin:0 0 10px;line-height:1.55}#rescue-card .rs-eq{font:12px var(--mono)!important;color:var(--green)}#rescue-card .rs-eq i{font-style:normal;color:var(--amber)}
+#rescue-card .rs-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font:11px var(--mono);letter-spacing:.8px;margin:6px 0 10px}#rescue-card .rs-stats strong{display:block;font-size:15px;color:var(--ink)}
+#rescue-card .rs-thr{display:flex;gap:6px;align-items:center;font:10px var(--mono);letter-spacing:1.2px}#rescue-card .rs-thr span{width:22px;height:8px;border-radius:2px;background:#24323f}#rescue-card .rs-thr span.on{background:var(--green)}
+#rescue-card .rs-btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}#rescue-card .rs-btns button{min-width:64px}
+#rescue-card .rs-msg{min-height:36px;font-size:12px;margin-top:8px}#rescue-card b.good{color:var(--green)}#rescue-card b.bad{color:var(--red)}
+#rescue-card .rs-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font:10px var(--mono);letter-spacing:1.2px;color:var(--muted)}
+@media(max-width:620px){#rescue-card .rs-body{grid-template-columns:1fr;gap:8px}#rescue-canvas{width:min(260px,70vw);height:min(260px,70vw);margin:0 auto}#rescue-card{padding:12px}}
 @media(max-width:620px){#course-card .course-body{grid-template-columns:1fr;gap:10px}#course-canvas{width:min(220px,60vw);height:min(220px,60vw);margin:0 auto;display:block}#course-card{padding:12px}}
 @media(min-width:1700px){.welcome{max-width:1250px}.welcome h1{font-size:100px}}
 @media(max-width:900px){.welcome{gap:35px}.welcome h1{font-size:clamp(44px,7.2vw,68px)}.briefing{padding:22px}.intro-text{font-size:14px}.start-actions{gap:9px}.button-primary{padding:16px 18px}.readouts{gap:20px}.readout:last-child{padding-left:18px}.hud-cell{padding:14px}#hud{grid-template-columns:1.4fr repeat(3,1fr)}.metric{font-size:24px}.stage-name{font-size:14px}#landing-checks{top:199px}.check{font-size:9px}#flight-note{top:199px;max-width:290px}#flight-note p{font-size:12px}}
@@ -193,6 +203,7 @@
 <aside id="tensor-panel" class="hidden" aria-label="Flight computer tensor view"></aside>
 <div id="scan-card" class="hidden" role="dialog" aria-label="Spectrometer"></div>
 <div id="course-card" class="hidden" role="dialog" aria-label="Mid-course correction"></div>
+<div id="rescue-card" class="hidden" role="dialog" aria-label="Crew recovery"></div>
 <aside id="landing-checks" class="hidden" aria-label="Safe landing limits"><div class="check-site" id="check-site"></div><div class="check" id="check-vertical"></div><div class="check" id="check-drift"></div><div class="check" id="check-angle"></div><div class="check" id="check-weather"></div></aside>
 <div id="toast" aria-live="polite"></div>
 <div id="notice" aria-live="polite"></div>
@@ -371,8 +382,9 @@ const FLYING=['launch','land','moonup','entry','earth','rover','dock'];
 function canFly(){return !paused&&FLYING.includes(mode);}
 function burning(){return canFly()&&!!ship&&ship.pulse>0;}
 // One tap, one burn. Taps landing during a burn stack up to two pulses, so mashing costs fuel for little gain.
-function tapThrust(){if(!canFly()||!ship||scene==='entry')return;if(scene==='rover'){roverHop();return;}if(ship.fuel<=0)return;if(wx&&wx.cut>0&&(scene==='launch'||scene==='earth')){tone(90,.06,.03);return;}const t=tapParams(),use=Math.min(t.fuel,ship.fuel);ship.fuel-=use;if(cheatFuel&&scene==='land'){ship.fuel+=use;ship.autoUsed=true;}ship.taps=(ship.taps||0)+1;ship.pulse=Math.min(PULSE*2,(ship.pulse||0)+PULSE);ship.power=t.dv/PULSE*(use/t.fuel);}
+function tapThrust(){if(rescue){rescueThrottle(1);return;}if(!canFly()||!ship||scene==='entry')return;if(scene==='rover'){roverHop();return;}if(ship.fuel<=0)return;if(wx&&wx.cut>0&&(scene==='launch'||scene==='earth')){tone(90,.06,.03);return;}const t=tapParams(),use=Math.min(t.fuel,ship.fuel);ship.fuel-=use;if(cheatFuel&&scene==='land'){ship.fuel+=use;ship.autoUsed=true;}ship.taps=(ship.taps||0)+1;ship.pulse=Math.min(PULSE*2,(ship.pulse||0)+PULSE);ship.power=t.dv/PULSE*(use/t.fuel);}
 function deployChute(){
+ if(rescue){rescueThrottle(-1);return;}
  if(scene==='entry')return;
  if(scene==='dock'){rcsBrake();return;}if(scene==='rover'){roverBrake();return;}
  if(scene!=='earth'||!canFly()||!ship||ship.chuteOpen||ship.chuteTorn)return;
@@ -403,7 +415,7 @@ function welcome(){
  aborting=false;endCourse();
  daily=null;
  clearInput();mode='menu';scene='menu';paused=false;ship=null;particles=[];debris=[];showHUD(false);$('toast').classList.remove('visible');
- showOverlay(`<div class="welcome"><div><div class="eyebrow">INDEPENDENT FLIGHT PROGRAM / MISSION 001</div><h1>ONE ROCKET.<br>ONE MOON.<br><span>ONE WAY HOME.</span></h1><p class="intro-text">Getting there is only half the mission. Tap your way off Earth through whatever the sky throws at you, put a lander down somewhere on the Moon, drive the rover out and back, dock with the command module, and pull the parachute over the ocean. Late enough to be brave. Under the hood, every frame is the tensor math that runs AI: press <kbd>T</kbd> to watch it.</p><div class="start-actions"><button class="button-primary" data-action="start">LAUNCH MISSION <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="practice-link" data-action="practice">Practice landing</button><button class="practice-link" data-action="practice-entry">Practice reentry</button></div>${dailyButton()}<div class="log-link"><button class="practice-link" data-action="codex">MISSION LOG: ${progressLine()}</button></div><div class="key-legend"><kbd>&larr;</kbd><kbd>&rarr;</kbd> ROTATE &nbsp; <kbd>SPACE</kbd> THRUST &nbsp; <kbd>E</kbd> CHUTE &nbsp; <kbd>T</kbd> TENSORS &nbsp; <kbd>G</kbd> <kbd>Y</kbd> AUTOPILOTS</div><div class="mobile-legend">TAP THRUST TO BURN. HOLD THE ARROWS TO STEER.</div></div><div class="briefing"><div class="briefing-top"><span class="eyebrow">YOUR FLIGHT PLAN</span><span class="serial">MB / 001</span></div><div class="mission-step"><span class="step-num">01</span><div><div class="step-title">Leave Earth behind.</div><div class="step-copy">Tap thrust in bursts, lean into the weather, and dodge the debris. The hull only takes so much.</div></div></div><div class="mission-step"><span class="step-num">02</span><div><div class="step-title">Separate. Descend. Commit.</div><div class="step-copy">Every tap slows your fall a little. Your engine is your only brake.</div></div></div><div class="mission-step"><span class="step-num">03</span><div><div class="step-title">Land. Then drive.</div><div class="step-copy">Pick a site, then drive the rover out, scan the samples to name their minerals, and get back before the oxygen runs out.</div></div></div><div class="mission-step"><span class="step-num">04</span><div><div class="step-title">Dock. Then come home.</div><div class="step-copy">Dock with the command module, fly the fireball through the entry corridor, then ride the storm down to the recovery ship.</div></div></div><div class="site-list">${siteRoster()}</div><div class="site-legend">TIER / SITE / MULTIPLIER / YOUR BEST<br>THE LANDER DEPLOYS EAST OF TRANQUILITY. EVERYTHING ELSE COSTS FUEL TO REACH.</div><div class="difficulty"><div class="difficulty-label">SELECT FLIGHT DIFFICULTY</div><div class="difficulty-options"><button class="difficulty-button ${difficulty==='cadet'?'selected':''}" data-difficulty="cadet" aria-pressed="${difficulty==='cadet'}"><strong>CADET</strong><small>More forgiving landings</small></button><button class="difficulty-button ${difficulty==='pilot'?'selected':''}" data-difficulty="pilot" aria-pressed="${difficulty==='pilot'}"><strong>PILOT</strong><small>Precision required</small></button></div></div><div class="briefing-footer">${best?`PERSONAL BEST: ${best.toLocaleString()} POINTS`:'FLIGHT RECORD: A CLEAN SLATE.'}<br>SITES FOUND: ${found.size} OF ${SITES.length}. ARCADE PHYSICS, REAL CONSEQUENCES.</div></div></div><div class="version"><span>MOONBOUND / PROTOTYPE 2.5</span><span class="version-note">BUILT FOR A STEADY HAND.</span><span>EARTH &rarr; MOON &rarr; EARTH</span></div>`,'welcome');
+ showOverlay(`<div class="welcome"><div><div class="eyebrow">INDEPENDENT FLIGHT PROGRAM / MISSION 001</div><h1>ONE ROCKET.<br>ONE MOON.<br><span>ONE WAY HOME.</span></h1><p class="intro-text">Getting there is only half the mission. Tap your way off Earth through whatever the sky throws at you, put a lander down somewhere on the Moon, drive the rover out and back, dock with the command module, and pull the parachute over the ocean. Late enough to be brave. Under the hood, every frame is the tensor math that runs AI: press <kbd>T</kbd> to watch it.</p><div class="start-actions"><button class="button-primary" data-action="start">LAUNCH MISSION <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="practice-link" data-action="practice">Practice landing</button><button class="practice-link" data-action="practice-entry">Practice reentry</button></div>${dailyButton()}<div class="log-link"><button class="practice-link" data-action="codex">MISSION LOG: ${progressLine()}</button></div><div class="key-legend"><kbd>&larr;</kbd><kbd>&rarr;</kbd> ROTATE &nbsp; <kbd>SPACE</kbd> THRUST &nbsp; <kbd>E</kbd> CHUTE &nbsp; <kbd>T</kbd> TENSORS &nbsp; <kbd>G</kbd> <kbd>Y</kbd> AUTOPILOTS</div><div class="mobile-legend">TAP THRUST TO BURN. HOLD THE ARROWS TO STEER.</div></div><div class="briefing"><div class="briefing-top"><span class="eyebrow">YOUR FLIGHT PLAN</span><span class="serial">MB / 001</span></div><div class="mission-step"><span class="step-num">01</span><div><div class="step-title">Leave Earth behind.</div><div class="step-copy">Tap thrust in bursts, lean into the weather, and dodge the debris. The hull only takes so much.</div></div></div><div class="mission-step"><span class="step-num">02</span><div><div class="step-title">Separate. Descend. Commit.</div><div class="step-copy">Every tap slows your fall a little. Your engine is your only brake.</div></div></div><div class="mission-step"><span class="step-num">03</span><div><div class="step-title">Land. Then drive.</div><div class="step-copy">Pick a site, then drive the rover out, scan the samples to name their minerals, and get back before the oxygen runs out.</div></div></div><div class="mission-step"><span class="step-num">04</span><div><div class="step-title">Dock. Then come home.</div><div class="step-copy">Dock with the command module, fly the fireball through the entry corridor, then ride the storm down to the recovery ship.</div></div></div><div class="site-list">${siteRoster()}</div><div class="site-legend">TIER / SITE / MULTIPLIER / YOUR BEST<br>THE LANDER DEPLOYS EAST OF TRANQUILITY. EVERYTHING ELSE COSTS FUEL TO REACH.</div><div class="difficulty"><div class="difficulty-label">SELECT FLIGHT DIFFICULTY</div><div class="difficulty-options"><button class="difficulty-button ${difficulty==='cadet'?'selected':''}" data-difficulty="cadet" aria-pressed="${difficulty==='cadet'}"><strong>CADET</strong><small>More forgiving landings</small></button><button class="difficulty-button ${difficulty==='pilot'?'selected':''}" data-difficulty="pilot" aria-pressed="${difficulty==='pilot'}"><strong>PILOT</strong><small>Precision required</small></button></div></div><div class="briefing-footer">${best?`PERSONAL BEST: ${best.toLocaleString()} POINTS`:'FLIGHT RECORD: A CLEAN SLATE.'}<br>SITES FOUND: ${found.size} OF ${SITES.length}. ARCADE PHYSICS, REAL CONSEQUENCES.</div></div></div><div class="version"><span>MOONBOUND / PROTOTYPE 2.6</span><span class="version-note">BUILT FOR A STEADY HAND.</span><span>EARTH &rarr; MOON &rarr; EARTH</span></div>`,'welcome');
 }
 function startLaunch(){
  aborting=false;courseScore=0;endCourse();
@@ -498,6 +510,12 @@ window.addEventListener('keydown',e=>{
  if(e.code==='KeyM'&&!e.repeat&&overlayKind!=='help'){e.preventDefault();toggleMusic();return;}
  if(e.code==='KeyT'&&!e.repeat&&overlayKind!=='help'&&!(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))){e.preventDefault();setTensor(!tensorOn);return;}
  if(course2&&!e.repeat){if(!course2.summary&&/^Digit[123]$/.test(e.code)){e.preventDefault();pickCourse(+e.code.slice(5)-1);return;}if(course2.summary&&(e.code==='Enter'||e.code==='Space')){e.preventDefault();endCourse();return;}}
+ if(rescue){
+  if(rescue.over){if(!e.repeat&&(e.code==='Enter'||e.code==='Space')){e.preventDefault();endRescue();}return;}
+  if(thrustKeys.includes(e.code)){e.preventDefault();if(!e.repeat)rescueThrottle(1);return;}
+  if(chuteKeys.includes(e.code)){e.preventDefault();if(!e.repeat)rescueThrottle(-1);return;}
+  if(steerKeys.includes(e.code)){e.preventDefault();keys.add(e.code);syncButtons();return;}
+ }
  if(scene==='rover'&&rover&&rover.scanning&&/^Digit[123]$/.test(e.code)&&!e.repeat){e.preventDefault();pickScan(+e.code.slice(5)-1);return;}
  if(!canFly())return;
  if(e.code==='KeyL'&&!e.repeat&&pilotW){e.preventDefault();toggleLayers();return;}
@@ -607,6 +625,7 @@ function step(dt){
  if(toastTimer>0){toastTimer-=dt;if(toastTimer<=0)$('toast').classList.remove('visible');}
  if(shake>0)shake=Math.max(0,shake-dt*2.5);
  if(mode==='transit'){if(!coastReady){if(course2){stepCourse(dt);return;}transitTime+=dt;elapsed+=dt;if(transitTime>=1.4&&!coursePlayed){coursePlayed=true;startCourse();return;}if(transitTime>=4.2){if(homeward)reentryBriefing();else deployBriefing();}}return;}
+ if(rescue){stepRescue(dt);updateParticles(dt);return;}
  if(mode==='crash'){if(wx){wx.flash=Math.max(0,wx.flash-dt*2.5);wx.bolt=null;}failureAge+=dt;updateParticles(dt);if(failureAge>1.15&&overlayKind!=='result')showFailure();return;}
  if(mode==='win'){updateParticles(dt);return;}
  if(!canFly())return;
@@ -700,7 +719,6 @@ function stepEarth(dt,turn,power){
  ship.vx+=ax*dt;ship.vy+=ay*dt;ship.x+=ship.vx*dt;ship.y+=ship.vy*dt;
  ship.angle=mix(ship.angle,clamp((ship.vx-wind)*.02+turn*.14+wx.turb*.25*S*(ship.chuteOpen?1:.4),-.5,.5),1-Math.exp(-dt*3));
  const alt=ship.y-10;
- if(Math.abs(ship.x)>2200){crash('The wind carried the capsule out of the recovery area. Steer while you are still falling fast, and pull the chute upwind of the ship.');return;}
  if(!ship.armed&&alt<=CHUTE_ARM){ship.armed=true;showToast('MAIN CHUTE ARMED / PULL WHEN YOU DARE',2.2);tone(560,.12,.05);}
  if(!lowWarning&&!ship.chuteOpen&&!ship.chuteTorn&&alt<170){lowWarning=true;showToast('PULL THE CHUTE',1.5);tone(220,.2,.07);}
  if(Math.abs(ship.x-RECOVERY_X)<44&&alt<=14+waterAt(RECOVERY_X)&&ship.vy<0){crash('You came down on the deck of the recovery ship. Close is good. On top of it is not.');return;}
@@ -742,12 +760,20 @@ function resolveSplashdown(){
  if(speed>c.splash){crash(`Splashdown at ${speed.toFixed(1)} m/s is too hard. The limit is ${c.splash} m/s. Pull a little higher so the chute can fully open, or tap the retro rockets just before the water.`);return;}
  const near=clamp(1-Math.max(0,d-60)/900,0,1),nerve=Math.max(0,Math.round((CHUTE_ARM-ship.deployAlt)*3));
  const hullBonus=Math.round(integrity*4),ret=Math.round((600+1400*near+nerve+ship.fuel*3+300*(1-speed/c.splash))*(difficulty==='pilot'?1.25:1)*wx.mult)+hullBonus;
- const landed=landingResult?landingResult.score:0,eva=roverResult?roverResult.score:0,docked=dockResult?dockResult.score:0,ent=entryResult?entryResult.score:0,crs=courseScore,total=landed+eva+docked+ent+crs+ret,newBest=total>best;best=Math.max(best,total);saveRecords();
- if(fullMission&&landingResult)award('home');const newDaily=!!daily&&saveDailyBest(total);scoreEgg(total);if(daily)award('daily');if(wx&&wx.name==='HURRICANE')award('storm');
  mode='win';ship.y=10+waterAt(ship.x);ship.vx=0;ship.vy=0;clearInput();setEngine(false);$('pause-button').classList.add('hidden');$('toast').classList.remove('visible');
  for(let i=0;i<30;i++){const a=PI*(.15+Math.random()*.7),v=6+Math.random()*22;particles.push({x:ship.x,y:2,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.5+Math.random()*.9,max:1.4,size:2+Math.random()*4,kind:'splash'});}
  tone(660,.35,.07);setTimeout(()=>tone(880,.45,.04),150);setTimeout(()=>tone(990,.5,.04),320);updateHUD();
- showOverlay(`<div class="dialog"><div class="eyebrow">ROUND TRIP COMPLETE${landingResult?' / '+landingResult.site.name+' AND BACK':''}</div><h2>WELCOME<br>HOME.</h2><p>The capsule is in the water ${Math.round(d)} m from the recovery ship${d<=150?', close enough to wave at':''}. ${roverResult?`${roverResult.samples} sample${roverResult.samples===1?'':'s'} from ${roverResult.site.name} came home with the crew. `:''}${landingResult?`Your flag is still standing at ${landingResult.site.name}.`:''}</p><div class="result-stats"><div><span class="label">SPLASHDOWN</span><strong>${speed.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">CHUTE PULLED AT</span><strong>${Math.round(ship.deployAlt)} <small style="font-size:11px">m</small></strong></div><div><span class="label">TO THE SHIP</span><strong>${Math.round(d)} <small style="font-size:11px">m</small></strong></div></div><p class="help-tip">LANDING ${landed.toLocaleString()}${eva?' + EVA '+eva.toLocaleString():''}${docked?' + DOCKING '+docked.toLocaleString():''}${crs?' + COURSE '+crs.toLocaleString():''}${ent?` + ENTRY ${ent.toLocaleString()} (${Math.round(Math.abs(entryResult.err))} KM ${entryResult.err<0?'SHORT':'LONG'}, PEAK ${entryResult.maxG.toFixed(1)} G)`:''} + SPLASHDOWN ${ret.toLocaleString()} (${wx.name} \u00d7${wx.mult}${nerve?', NERVE BONUS '+nerve.toLocaleString():''}, HULL ${Math.round(integrity)}% +${hullBonus})</p><div class="result-score"><span>${newBest?'NEW PERSONAL BEST':'TOTAL SCORE'}${difficulty==='pilot'?' / PILOT':''}</span><strong>${total.toLocaleString()}</strong></div>${daily?`<div class="daily-wrap"><div class="eyebrow">DAILY MISSION / ${dailyLabel(daily.key)}${newDaily?' / YOUR BEST TODAY':''}</div><pre id="daily-card">${dailyCard(total,d)}</pre><button class="button-secondary" data-action="copy-daily">COPY RESULT</button></div>`:''}<div class="dialog-actions"><button class="button-primary" data-action="${daily?'daily':'start'}">${daily?'FLY TODAY AGAIN':'FLY IT AGAIN'} <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="button-secondary" data-action="practice">PRACTICE LANDING</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
+ // A good splash is not the end: somebody has to go and get the crew. Close in, the ship's boat is
+ // alongside before anyone needs a plan. Further out, it is a race the player drives.
+ const home=rs=>finishHome(speed,d,ret,nerve,hullBonus,rs);
+ if(d<=RESCUE_AUTO)home({kind:'auto',points:rescuePoints(d,1),time:0});
+ else startRescue(ship.x-RECOVERY_X,home);
+}
+function finishHome(speed,d,ret,nerve,hullBonus,rs){
+ const rsc=rs.points||0;
+ const landed=landingResult?landingResult.score:0,eva=roverResult?roverResult.score:0,docked=dockResult?dockResult.score:0,ent=entryResult?entryResult.score:0,crs=courseScore,total=landed+eva+docked+ent+crs+ret+rsc,newBest=total>best;best=Math.max(best,total);saveRecords();
+ if(fullMission&&landingResult)award('home');const newDaily=!!daily&&saveDailyBest(total);scoreEgg(total);if(daily)award('daily');if(wx&&wx.name==='HURRICANE')award('storm');
+ showOverlay(`<div class="dialog"><div class="eyebrow">ROUND TRIP COMPLETE${landingResult?' / '+landingResult.site.name+' AND BACK':''}</div><h2>WELCOME<br>HOME.</h2><p>The capsule is in the water ${Math.round(d)} m from the recovery ship${d<=150?', close enough to wave at':''}. ${roverResult?`${roverResult.samples} sample${roverResult.samples===1?'':'s'} from ${roverResult.site.name} came home with the crew. `:''}${landingResult?`Your flag is still standing at ${landingResult.site.name}.`:''}</p><p>${rescueLine(rs)}</p><div class="result-stats"><div><span class="label">SPLASHDOWN</span><strong>${speed.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">CHUTE PULLED AT</span><strong>${Math.round(ship.deployAlt)} <small style="font-size:11px">m</small></strong></div><div><span class="label">TO THE SHIP</span><strong>${Math.round(d)} <small style="font-size:11px">m</small></strong></div><div><span class="label">CREW RECOVERED BY</span><strong>${rs.kind==='helo'?'HELICOPTER':'BOAT'}</strong></div></div><p class="help-tip">LANDING ${landed.toLocaleString()}${eva?' + EVA '+eva.toLocaleString():''}${docked?' + DOCKING '+docked.toLocaleString():''}${crs?' + COURSE '+crs.toLocaleString():''}${ent?` + ENTRY ${ent.toLocaleString()} (${Math.round(Math.abs(entryResult.err))} KM ${entryResult.err<0?'SHORT':'LONG'}, PEAK ${entryResult.maxG.toFixed(1)} G)`:''} + SPLASHDOWN ${ret.toLocaleString()} (${wx.name} \u00d7${wx.mult}${nerve?', NERVE BONUS '+nerve.toLocaleString():''}, HULL ${Math.round(integrity)}% +${hullBonus})${rsc?' + RESCUE '+rsc.toLocaleString():''}</p><div class="result-score"><span>${newBest?'NEW PERSONAL BEST':'TOTAL SCORE'}${difficulty==='pilot'?' / PILOT':''}</span><strong>${total.toLocaleString()}</strong></div>${daily?`<div class="daily-wrap"><div class="eyebrow">DAILY MISSION / ${dailyLabel(daily.key)}${newDaily?' / YOUR BEST TODAY':''}</div><pre id="daily-card">${dailyCard(total,d)}</pre><button class="button-secondary" data-action="copy-daily">COPY RESULT</button></div>`:''}<div class="dialog-actions"><button class="button-primary" data-action="${daily?'daily':'start'}">${daily?'FLY TODAY AGAIN':'FLY IT AGAIN'} <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="button-secondary" data-action="practice">PRACTICE LANDING</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
 }
 function crash(reason){
  sessionFails++;if(sessionFails===13)egg('kranz');crashStreak=crashStreak.scene===scene?{scene,n:crashStreak.n+1}:{scene,n:1};if(crashStreak.n>=3)egg('kerbal');if(!soundOn&&['land','moonup','dock'].includes(scene))egg('alien');
@@ -1526,6 +1552,128 @@ function stepCourse(dt){
 function courseNext(){const c=course2;if(!c)return;c.wait=false;c.i++;c.tries=0;c.clock=14;if(c.i>=c.rounds.length){c.summary=true;courseScore+=c.points;if(c.perfect===3)award('navigator');renderCourse();fitPanel($('course-card'),H-150);return;}renderCourse();}
 function endCourse(){if(!course2)return;course2=null;$('course-card').classList.add('hidden');}
 let coursePlayed=false;
+// ---- Crew recovery: the capsule is down, now somebody has to go and get them. You drive the ship's motor boat
+// out to the capsule and race the recovery helicopter, as Apollo did with swimmers and a Sea King.
+// The lesson is relative motion. The ocean current carries the boat and the capsule alike, so it cancels.
+// The wind does not: the capsule floats high and drifts faster than your low boat. Aim where it will be.
+const RESCUE_AUTO=150,RESCUE={vmax:7,notches:4,timeScale:10,turn:1.5,heloSpool:300,heloSpeed:50,reach:14,gentle:2.2,current:.03,capLee:.035,boatLee:.01};
+let rescue=null;
+function rescuePoints(d,margin){return Math.round((250+.5*d)*(1+.6*clamp(margin,0,1))*(difficulty==='pilot'?1.25:1));}
+function rescueLine(rs){
+ if(rs.kind==='auto')return'The ship’s boat was alongside in under a minute. Swimmers fitted the flotation collar and the crew climbed out.';
+ if(rs.kind==='helo')return`The recovery helicopter reached the crew first. Everyone is safe, but the boat crew buys the drinks tonight.`;
+ return`Your boat reached the capsule in ${fmtClock(rs.time)} of mission time, ${fmtClock(rs.spare)} ahead of the helicopter.`;
+}
+function fmtClock(t){t=Math.max(0,Math.round(t));return`${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`;}
+function startRescue(dx,done){
+ // Top-down: x east along the splashdown line, y north. The capsule lands dx from the ship, a little off the line.
+ const w=(wx?wx.base:8)*(wx?wx.dir:1),cap={x:dx,y:(Math.random()-.5)*Math.min(300,Math.abs(dx)*.35)};
+ const d0=Math.hypot(cap.x,cap.y);
+ rescue={done,over:false,t:0,boat:{x:0,y:-18,h:Math.atan2(cap.y+18,cap.x),v:0,thr:0,bumps:0},cap,d0,wind:w,trail:[],heloT:RESCUE.heloSpool+d0/RESCUE.heloSpeed,result:null,msg:'Tap THRUST to open the throttle. Steer with LEFT and RIGHT. Come alongside slowly.'};
+ const pad=Math.max(120,d0*.18),xs=[0,cap.x],ys=[0,cap.y];
+ rescue.view={x0:Math.min(...xs)-pad,x1:Math.max(...xs)+pad,y0:Math.min(...ys)-pad,y1:Math.max(...ys)+pad};
+ learn('relvel');renderRescue();$('rescue-card').classList.remove('hidden');fitPanel($('rescue-card'),H-140);
+ $('bottom-deck').classList.remove('hidden');
+}
+/** Water current and leeway, from the real weather: the classic rules of thumb, 3% of the wind for the surface current,
+ * turned 45 degrees to the right of the wind (northern hemisphere), and a few percent more for whatever floats high. */
+function rescueDrift(){
+ const r=rescue,w=wx&&wx.windNow?wx.windNow:r.wind,a=-PI/4,cur=[RESCUE.current*w*Math.cos(a),RESCUE.current*w*Math.sin(a)];
+ return{cur,cap:[cur[0]+RESCUE.capLee*w,cur[1]],boat:[cur[0]+RESCUE.boatLee*w,cur[1]]};
+}
+function rescueThrottle(dir){const b=rescue&&!rescue.over?rescue.boat:null;if(!b)return;b.thr=clamp(b.thr+dir,0,RESCUE.notches);tone(dir>0?520+b.thr*60:300,.06,.03);renderRescueStats();}
+function stepRescue(dt){
+ const r=rescue;if(!r||r.over)return;
+ if(wx)stepWeather(dt);
+ const S=RESCUE.timeScale,sdt=dt*S,b=r.boat,dr=rescueDrift();
+ b.h+=(Number(held('right'))-Number(held('left')))*-RESCUE.turn*dt;
+ // Swell knocks the bow around: bigger seas, bigger knocks, and more of them the longer you are out there.
+ const sw=wx?wx.swell*wxScale():1;b.h+=Math.sin(r.t*.9)*.0009*sw*sdt+(Math.random()-.5)*.004*sw*Math.sqrt(sdt);
+ const target=RESCUE.vmax*b.thr/RESCUE.notches;b.v+=(target-b.v)*(1-Math.exp(-sdt/4));
+ const vb=[b.v*Math.cos(b.h)+dr.boat[0],b.v*Math.sin(b.h)+dr.boat[1]];
+ b.x+=vb[0]*sdt;b.y+=vb[1]*sdt;r.cap.x+=dr.cap[0]*sdt;r.cap.y+=dr.cap[1]*sdt;r.t+=sdt;r.vb=vb;r.vc=dr.cap;r.cur=dr.cur;
+ if(!r.trail.length||Math.hypot(b.x-r.trail[r.trail.length-1][0],b.y-r.trail[r.trail.length-1][1])>r.d0/80)r.trail.push([b.x,b.y]);
+ const v=r.view,grow=60;if(b.x<v.x0+grow)v.x0=b.x-grow;if(b.x>v.x1-grow)v.x1=b.x+grow;if(b.y<v.y0+grow)v.y0=b.y-grow;if(b.y>v.y1-grow)v.y1=b.y+grow;
+ const dist=Math.hypot(r.cap.x-b.x,r.cap.y-b.y),rel=Math.hypot(vb[0]-dr.cap[0],vb[1]-dr.cap[1]);
+ if(dist<RESCUE.reach){
+  if(rel<=RESCUE.gentle){finishRescue('boat');return;}
+  // Too fast: the bow bumps the capsule. Nobody is hurt, but you have to back off and come in again.
+  b.bumps++;b.thr=0;b.v=-1.5;const ang=Math.atan2(b.y-r.cap.y,b.x-r.cap.x);b.x=r.cap.x+Math.cos(ang)*(RESCUE.reach+10);b.y=r.cap.y+Math.sin(ang)*(RESCUE.reach+10);
+  r.msg=`<b class="bad">BUMP.</b> You came alongside at ${rel.toFixed(1)} m/s. Under ${RESCUE.gentle} m/s, or the swimmers cannot get across.`;tone(140,.2,.06);shake=.3;
+ }
+ if(r.t>=r.heloT){finishRescue('helo');return;}
+ drawRescue();renderRescueStats();
+}
+function finishRescue(kind){
+ const r=rescue;r.over=true;r.boat.thr=0;clearInput();
+ const spare=Math.max(0,r.heloT-r.t),pts=kind==='boat'?Math.max(0,rescuePoints(r.d0,spare/r.heloT)-r.boat.bumps*50):0;
+ r.result={kind,points:pts,time:r.t,spare};
+ if(kind==='boat'){tone(880,.15,.05);setTimeout(()=>tone(1175,.25,.04),140);if(r.d0>=1200)award('lifeguard');}else tone(240,.3,.05);
+ renderRescue();drawRescue();fitPanel($('rescue-card'),H-140);
+}
+function endRescue(){const r=rescue;if(!r||!r.over)return;rescue=null;$('rescue-card').classList.add('hidden');$('bottom-deck').classList.add('hidden');r.done(r.result);}
+function renderRescue(){
+ const r=rescue,card=$('rescue-card');if(!r)return;
+ if(r.over){const ok=r.result.kind==='boat';
+  card.innerHTML=`<div class="rs-head"><span>CREW RECOVERY / ${ok?'BOAT ALONGSIDE':'HELICOPTER FIRST'}</span><span>${ok?'+'+r.result.points:'+0'}</span></div>
+<div class="rs-body"><canvas id="rescue-canvas" width="480" height="480" aria-label="Map of the recovery"></canvas><div class="rs-side">
+<p>${ok?`<b class="good">CREW SAFE.</b> ${fmtClock(r.t)} of mission time from the ship, ${fmtClock(r.result.spare)} before the helicopter.${r.boat.bumps?` ${r.boat.bumps} bump${r.boat.bumps>1?'s':''} cost ${r.boat.bumps*50}.`:''}`:`<b class="bad">THE HELICOPTER GOT THERE FIRST.</b> The crew is safe. The rescue bonus is not yours.`}</p>
+<p>Everything in the water rides the same current, so the current cancels out between you and the capsule. What does not cancel is the wind: the capsule sits high and drifts at about ${(RESCUE.capLee*100).toFixed(1)}% of the wind, your boat at ${(RESCUE.boatLee*100).toFixed(0)}%. To close, you aim at where the capsule will be.</p>
+<p class="rs-eq">v<sub>closing</sub> = v<sub>boat</sub> − v<sub>capsule</sub></p>
+<p>A neural network that tracks objects in video does this sum for every one of them, every frame: predict where each one moves, then match.</p></div></div>
+<div class="rs-foot"><span>${r.d0>=1200&&ok?'PATCH: LIFEGUARD':''}</span><button class="button-primary" data-rescue="done">WELCOME HOME <span class="arrow" aria-hidden="true">&#8594;</span></button></div>`;
+  drawRescue();return;}
+ card.innerHTML=`<div class="rs-head"><span>CREW RECOVERY / BEAT THE HELICOPTER</span><span>HELICOPTER ON SCENE IN <b id="rs-helo">${fmtClock(r.heloT-r.t)}</b></span></div>
+<div class="rs-body"><canvas id="rescue-canvas" width="480" height="480" aria-label="Map of the recovery: ship, capsule, your boat and the drift"></canvas><div class="rs-side">
+<p>The capsule is down ${Math.round(r.d0)} m from the ship. Take the ship’s boat out and get the crew before the helicopter does. It needs ${Math.round(RESCUE.heloSpool/60)} minutes to launch, then flies at ${RESCUE.heloSpeed} m/s; your boat makes ${RESCUE.vmax} m/s. The clock runs ${RESCUE.timeScale}×.</p>
+<div class="rs-stats"><div>TO CAPSULE<strong id="rs-dist">0 m</strong></div><div>CLOSING<strong id="rs-close">0 m/s</strong></div><div>WIND<strong>${windArrow(r.wind)} ${Math.abs(r.wind).toFixed(0)} m/s</strong></div><div>CAPSULE DRIFT<strong id="rs-cdrift">0 m/s</strong></div></div>
+<p class="rs-eq" id="rs-eq"></p>
+<div class="rs-thr" id="rs-thr"></div>
+<div class="rs-btns"><button class="button-secondary" data-rescue="slow">− THROTTLE <small>E</small></button><button class="button-secondary" data-rescue="fast">+ THROTTLE <small>SPACE</small></button></div>
+<p class="rs-msg" id="rs-msg">${r.msg}</p></div></div>
+<div class="rs-foot"><span>WHITE: YOUR TRACK. AMBER: DRIFT. GREEN: WHERE YOU POINT.</span><button class="practice-link" data-rescue="helo">Leave it to the helicopter</button></div>`;
+ drawRescue();renderRescueStats();
+}
+function renderRescueStats(){
+ const r=rescue;if(!r||r.over)return;const b=r.boat,vb=r.vb||[0,0],vc=r.vc||[0,0];
+ const dist=Math.hypot(r.cap.x-b.x,r.cap.y-b.y),dx=(r.cap.x-b.x)/Math.max(1,dist),dy=(r.cap.y-b.y)/Math.max(1,dist);
+ const closing=(vb[0]-vc[0])*dx+(vb[1]-vc[1])*dy,set=(id,t)=>{const e=$(id);if(e)e.textContent=t;};
+ set('rs-dist',`${Math.round(dist)} m`);set('rs-close',`${closing.toFixed(1)} m/s`);set('rs-cdrift',`${Math.hypot(vc[0],vc[1]).toFixed(1)} m/s`);set('rs-helo',fmtClock(r.heloT-r.t));
+ const eq=$('rs-eq');if(eq)eq.innerHTML=`[${vb[0].toFixed(1)}, ${vb[1].toFixed(1)}] − <i>[${vc[0].toFixed(1)}, ${vc[1].toFixed(1)}]</i> = [${(vb[0]-vc[0]).toFixed(1)}, ${(vb[1]-vc[1]).toFixed(1)}]`;
+ const th=$('rs-thr');if(th)th.innerHTML=`THROTTLE ${[...Array(RESCUE.notches)].map((_,i)=>`<span class="${i<b.thr?'on':''}"></span>`).join('')}`;
+ const m=$('rs-msg');if(m&&m.innerHTML!==r.msg)m.innerHTML=r.msg;
+}
+function drawRescue(){
+ const cv=$('rescue-canvas'),r=rescue;if(!cv||!r)return;const g=cv.getContext('2d'),S=cv.width,v=r.view;
+ const span=Math.max(v.x1-v.x0,v.y1-v.y0),k=(S-40)/span,cx=(v.x0+v.x1)/2,cy=(v.y0+v.y1)/2,P=(x,y)=>[S/2+(x-cx)*k,S/2-(y-cy)*k];
+ const sea=g.createLinearGradient(0,0,0,S);sea.addColorStop(0,'#0b2a3d');sea.addColorStop(1,'#071a28');g.fillStyle=sea;g.fillRect(0,0,S,S);
+ // Swell lines, moving with the waves.
+ const sw=wx?wx.swell:1,wl=Math.max(30,60*k);g.strokeStyle=`rgba(150,200,220,${.06+.03*sw})`;g.lineWidth=1;
+ for(let i=-2;i<S/wl+2;i++){const o=((r.t*1.2*k)%wl);g.beginPath();for(let x=0;x<=S;x+=12){const y=i*wl+o+Math.sin(x*.05+i)*3*Math.min(3,sw);x?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();}
+ // Distance rings from the ship.
+ const o=P(0,0);g.strokeStyle='rgba(150,180,200,.12)';g.setLineDash([3,5]);for(const rr of[500,1000,1500,2000,2500]){if(rr*k>S*1.5)break;g.beginPath();g.arc(o[0],o[1],rr*k,0,TAU);g.stroke();}g.setLineDash([]);
+ // Ship.
+ g.save();g.translate(o[0],o[1]);g.scale(1.35,1.35);g.fillStyle='#8a97a3';g.beginPath();g.moveTo(-26,-6);g.lineTo(20,-6);g.lineTo(30,0);g.lineTo(20,6);g.lineTo(-26,6);g.closePath();g.fill();g.fillStyle='#c9d2da';g.fillRect(-14,-4,12,8);g.restore();
+ g.font='bold 11px ui-monospace,monospace';g.fillStyle='#a5b4bf';g.fillText('SHIP',o[0]-14,o[1]+20);
+ // Trail.
+ if(r.trail.length>1){g.strokeStyle='rgba(255,255,255,.35)';g.lineWidth=1.5;g.beginPath();r.trail.forEach((p,i)=>{const q=P(p[0],p[1]);i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]);});const bq=P(r.boat.x,r.boat.y);g.lineTo(bq[0],bq[1]);g.stroke();}
+ // Capsule, with its flashing recovery beacon and its drift.
+ const c=P(r.cap.x,r.cap.y),blink=Math.floor(r.t/3)%2===0;
+ if(blink){g.fillStyle='rgba(255,240,180,.25)';g.beginPath();g.arc(c[0],c[1],16,0,TAU);g.fill();}
+ g.fillStyle='#e8edf1';g.beginPath();g.moveTo(c[0],c[1]-11);g.lineTo(c[0]+10,c[1]+8);g.lineTo(c[0]-10,c[1]+8);g.closePath();g.fill();g.fillStyle='#f4bb66';g.beginPath();g.arc(c[0],c[1]+9,12,0,PI);g.fill();
+ g.fillStyle='#a5b4bf';g.fillText('CREW',c[0]-14,c[1]+32);
+ const arrow=(x,y,vx,vy,col,scale)=>{const ex=x+vx*scale,ey=y-vy*scale,a=Math.atan2(ey-y,ex-x),L=Math.hypot(ex-x,ey-y);if(L<4)return;g.strokeStyle=col;g.fillStyle=col;g.lineWidth=2.5;g.beginPath();g.moveTo(x,y);g.lineTo(ex,ey);g.stroke();g.beginPath();g.moveTo(ex,ey);g.lineTo(ex-9*Math.cos(a-.45),ey-9*Math.sin(a-.45));g.lineTo(ex-9*Math.cos(a+.45),ey-9*Math.sin(a+.45));g.closePath();g.fill();};
+ const AS=9;if(r.vc)arrow(c[0],c[1],r.vc[0],r.vc[1],'#f4bb66',AS);
+ // Boat and its three arrows: where it points, how the water and wind move it, and the sum.
+ const b=r.boat,q=P(b.x,b.y);
+ if(r.vb&&!r.over){const dr=rescueDrift();arrow(q[0],q[1],b.v*Math.cos(b.h),b.v*Math.sin(b.h),'#9be5c0',AS);arrow(q[0],q[1],dr.boat[0],dr.boat[1],'#f4bb66',AS);arrow(q[0],q[1],r.vb[0],r.vb[1],'#ffffff',AS);}
+ g.save();g.translate(q[0],q[1]);g.rotate(-b.h);g.fillStyle='#ff8a3d';g.beginPath();g.moveTo(13,0);g.lineTo(-8,-7);g.lineTo(-8,7);g.closePath();g.fill();g.restore();
+ // The helicopter, once it is airborne, flying from the ship toward the capsule.
+ const launch=RESCUE.heloSpool;if(r.t>launch){const f=clamp((r.t-launch)*RESCUE.heloSpeed/Math.max(1,Math.hypot(r.cap.x,r.cap.y)),0,1),h=P(r.cap.x*f,r.cap.y*f);g.fillStyle='#d6dde3';g.beginPath();g.arc(h[0],h[1],5,0,TAU);g.fill();g.strokeStyle='#d6dde3';g.lineWidth=1.5;const sp=r.t*30;g.beginPath();g.moveTo(h[0]+Math.cos(sp)*11,h[1]+Math.sin(sp)*11);g.lineTo(h[0]-Math.cos(sp)*11,h[1]-Math.sin(sp)*11);g.stroke();g.fillStyle='#a5b4bf';g.fillText('HELO',h[0]+8,h[1]-6);}
+ // Scale bar.
+ const bar=Math.pow(10,Math.floor(Math.log10(span/4))),bl=bar*k;g.strokeStyle='#a5b4bf';g.lineWidth=1.5;g.beginPath();g.moveTo(14,S-14);g.lineTo(14+bl,S-14);g.stroke();g.fillText(`${bar} m`,14,S-20);
+ g.fillText('N ↑',S-30,22);
+}
 // ---- Launch abort: the escape tower pulls the capsule off a failing booster, then you bring the crew down under a chute. ----
 // Like Apollo's launch escape system: a solid motor on a tower above the capsule, about 4 g for a couple of seconds, then jettison.
 let aborting=false,abortFrom=null;
@@ -1673,6 +1821,7 @@ const PATCHES=[
  {id:'corridor',code:'06',name:'CORRIDOR',desc:'Come out of the plasma inside the recovery zone.'},
  {id:'ironcrew',code:'G',name:'IRON CREW',desc:'Fly the whole entry under 6 g.'},
  {id:'home',code:'⌂',name:'WELCOME HOME',desc:'Fly a full mission, Earth to Moon to Earth.'},
+ {id:'lifeguard',code:'⚓',name:'LIFEGUARD',desc:'Beat the helicopter to a capsule more than 1.2 km out.'},
  {id:'storm',code:'ϟ',name:'STORM RIDER',desc:'Splash down in a hurricane.'},
  {id:'trainer',code:'W',name:'TRAINER',desc:'Teach your pilot with a hand-flown landing.'},
  {id:'deep',code:'NN',name:'DEEP LEARNER',desc:'Let your two-layer pilot land the lander.'},
@@ -1708,6 +1857,9 @@ const CODEX=[
  {id:'matvec',title:'Matrices move arrows',trigger:'Fly a mid-course correction.',
   body:'A 2\u00d72 matrix is a machine that moves every arrow on the plane at once. A rotation turns them all, a scale stretches them all, a shear slants them. Multiply it by your velocity and out comes your new velocity. Multiply two matrices together and you get one matrix that does both moves.',
   math:'v\u2032 = W \u00b7 v',ai:'A neural network layer is this move in hundreds or thousands of dimensions: it rotates and stretches its input until the answer lines up.'},
+ {id:'relvel',title:'Closing on a moving target',trigger:'Drive the recovery boat out to the capsule.',
+  body:'Everything afloat rides the same ocean current, so between your boat and the capsule the current cancels out. The wind does not: the capsule sits high and drifts faster than your boat. What brings you together is the difference of your two velocities, and you steer for where the capsule will be, not where it is. The surface current is about 3% of the wind, turned 45\u00b0 to the right of it in the northern hemisphere.',
+  math:'v_closing = v_boat \u2212 v_capsule',ai:'Object trackers in self-driving cars and video models predict where every object is heading, then match predictions to what they see next: velocity subtraction, thousands of times a second.'},
  {id:'conv',title:'How AI sees: convolution',trigger:'Watch the hazard scan on a descent with the tensor view on.',
   body:'The radar samples the ground below as a row of heights. The computer slides two tiny kernels along it: [\u22121, 0, 1] finds slopes and [1, \u22122, 1] finds bumps. Each output is a dot product of the kernel with three neighbours. Ground that comes out near zero on both is flat and level: safe to land. Two kernels make a convolution layer with two filters.',
   math:'y\u1d62 = \u03a3\u2c7c k\u2c7c \u00b7 x\u1d62\u208a\u2c7c',ai:'Image models slide thousands of learned 3\u00d73 kernels across every picture. Their first layers end up learning edge finders much like these two.'},
@@ -2147,6 +2299,7 @@ function updateTensor(dt){
 }
 $('tensor-button').addEventListener('click',()=>setTensor(!tensorOn));
 $('abort-control').addEventListener('click',()=>{if(canAbort())startAbort();});
+$('rescue-card').addEventListener('click',e=>{const b=e.target.closest('[data-rescue]');if(!b||!rescue)return;const k=b.dataset.rescue;if(k==='fast')rescueThrottle(1);else if(k==='slow')rescueThrottle(-1);else if(k==='helo'&&!rescue.over)finishRescue('helo');else if(k==='done')endRescue();});
 $('course-card').addEventListener('click',e=>{const o=e.target.closest('[data-copt]');if(o){pickCourse(+o.dataset.copt);return;}const b=e.target.closest('[data-course]');if(b)endCourse();});
 $('scan-card').addEventListener('click',e=>{const b=e.target.closest('[data-pick]');if(b&&!b.disabled)pickScan(+b.dataset.pick);});
 $('tensor-panel').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const k=b.dataset.action;if(k==='agc'||k==='you')setAutopilot(autopilot===k?false:k);if(k==='layers')toggleLayers();});
@@ -2178,7 +2331,8 @@ if(new URLSearchParams(location.search).has('test'))window.MoonboundTest={
  pause:togglePause,groundAt,floorBelow,roofHit,config,render,SITES,SHAFT,ROOFS,limitsFor,nearestSite,terrain,
  forget:()=>{found=new Set();siteBest={};best=0;saveRecords();forgetPilot();earnedPatches=new Set();codexSeen=new Set();saveProgress();ghost=null;try{localStorage.removeItem('moonbound-ghost-v1');}catch(e){}},
  home:welcome,courseGame:()=>course2&&{i:course2.i,summary:course2.summary,points:course2.points,perfect:course2.perfect,okIdx:course2.rounds[course2.i]?course2.rounds[course2.i].opts.findIndex(o=>o.ok):-1},pickCourse,courseScore:()=>courseScore,eggs:()=>[...eggsFound],abort:()=>startAbort(),aborting:()=>aborting,scan:()=>scan&&{xs:scan.xs,safe:scan.safe},musicState:()=>({song:music.song,step:music.step,on:musicOn,running:!!music.gain}),dailyNow:()=>daily&&{...daily},progress:()=>({patches:[...earnedPatches],codex:[...codexSeen]}),ghost:()=>ghost&&{site:ghost.site,score:ghost.score,rows:ghost.rows.length},showCodex,probe:()=>{const lines=[];for(const dx of [0,40,150,400])for(const h of [0,3,10,30,80,200,500]){const n=pilotNet?['-',(netForward(pilotNet,[Math.abs(dx)/100,h/300]).y[0]*10).toFixed(1)]:['-','-'];const l=pilotW?pilotW.map(w=>(w[0]*dx+w[1]*Math.abs(dx)+w[2]*h+w[3]).toFixed(1)):['-','-'];let near=pilotData.flatMap(f=>f.rows.filter(r=>Math.abs(Math.abs(r[0]-f.site)-dx)<20&&Math.abs(r[3]-h)<Math.max(3,h*.2)).map(r=>r[2]));const avg=near.length?(near.reduce((a,b)=>a+b,0)/near.length).toFixed(1):'-';lines.push(`dx ${dx} h ${h}: net vx ${n[0]} vy ${n[1]} | line vx ${l[0]} vy ${l[1]} | data vy ${avg} (n=${near.length})`);}return lines.join('\n');},net:()=>netTrain&&{done:netTrain.done,epoch:netTrain.epoch,final:netTrain.final,lin:netTrain.lin},setLayers:n=>{pilotLayers=n;},netReady:()=>!!pilotNet,pickScan,cosine,MINERALS,startEntry,entry:()=>entry&&{...entry,pred:entry.pred&&{s:entry.pred.s,maxG:entry.pred.maxG,skip:entry.pred.skip},trail:null},setBank:deg=>{if(entry)entry.phi=deg*PI/180;},entryResult:()=>entryResult,
- autopilot:on=>setAutopilot(on===true?'agc':on||false),nav:()=>nav&&JSON.parse(JSON.stringify(nav)),learnLast:()=>lastFlight&&learnFlight(lastFlight.rows,lastFlight.site),forgetPilot,setMargin:v=>{PILOT_MARGIN=v;},pilot:()=>({W:pilotW,landings:pilotData.length,rows:pilotRowCount()}),tensor:on=>setTensor(!!on),agc:()=>({...agc,on:autopilot,W:AGC_W,b:AGC_B}),setAGC:(w,b,k)=>{AGC_W.splice(0,2,...w);AGC_B.splice(0,2,...b);if(k)Object.assign(AGC_K,k);},logs:()=>({current:flightLog.length,session:sessionLogs.map(l=>l.length)})
+ autopilot:on=>setAutopilot(on===true?'agc':on||false),nav:()=>nav&&JSON.parse(JSON.stringify(nav)),learnLast:()=>lastFlight&&learnFlight(lastFlight.rows,lastFlight.site),forgetPilot,setMargin:v=>{PILOT_MARGIN=v;},pilot:()=>({W:pilotW,landings:pilotData.length,rows:pilotRowCount()}),tensor:on=>setTensor(!!on),agc:()=>({...agc,on:autopilot,W:AGC_W,b:AGC_B}),setAGC:(w,b,k)=>{AGC_W.splice(0,2,...w);AGC_B.splice(0,2,...b);if(k)Object.assign(AGC_K,k);},logs:()=>({current:flightLog.length,session:sessionLogs.map(l=>l.length)}),
+ rescueState:()=>rescue&&{over:rescue.over,t:rescue.t,heloT:rescue.heloT,d0:rescue.d0,boat:{...rescue.boat},cap:{...rescue.cap},result:rescue.result,vb:rescue.vb,vc:rescue.vc},rescueThrottle,rescueEnd:endRescue,rescueGiveUp:()=>rescue&&!rescue.over&&finishRescue('helo')
 };
 })();
 </script>
