@@ -73,6 +73,7 @@ The checks panel on the right always shows the limits for whichever site you are
 | Your pilot | `Y`, after at least one hand-flown landing. `L` switches one layer / two |
 | Rover science | Stop on a sample, then `1` `2` `3` to pick the mineral |
 | Entry | `LEFT`/`RIGHT` roll the capsule's lift vector |
+| Music | `M` (needs SOUND on) |
 | Pause | `P` or `ESC` |
 | Restart stage | `R` |
 
@@ -181,6 +182,7 @@ Simulation runs at a fixed 120 Hz and is separate from rendering, so frame rate 
 
 ## History
 
+- **2.1** A generated chiptune score: one key, tempo and four chords per stage, scheduled on the audio clock, with hats and a higher arpeggio as the danger rises (altitude on the descent, heat on entry, oxygen on the EVA). Follows SOUND; `M` mutes the music alone.
 - **2.0** Daily mission with seeded weather, a featured site and a copyable score card; DAILY FLYER patch.
 - **1.9** Mission patches (16), the codex (11 entries unlocked in play), a ghost of your best landing, patch and codex notifications, and a main menu that no longer scrolls under its footer.
 - **1.8** Atmospheric entry from 122 km with real lifting-entry equations, bank-angle control, a predicted path, g, heat and blackout; your accuracy sets where the parachute phase starts. Surface science: stop-and-scan spectrometer with cosine-similarity reveal, water ice at the poles, big-air scoring. Two-layer pilot: a backprop-trained network that learns your braking curve, with a live training chart and visible neurons. Practice reentry from the main menu.
