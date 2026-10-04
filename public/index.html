@@ -634,13 +634,18 @@ function step(dt){
  if(scene==='launch'){
    if(!ship.launched&&ship.y<=38){ship.y=38;ship.vy=0;ship.vx=0;ship.x=0;if(Math.abs(ship.angle)>PI/3){ship.angle=clamp(ship.angle,-PI/3,PI/3);ship.omega=0;}}
    if(ship.y>40&&!ship.launched){ship.launched=true;egg('godspeed');}
+   // Rockets fly nose first. Turned broadside to the airflow, the structure fails: warn past 45 degrees, break up past 60 held for a second.
+   if(ship.launched){const tl=Math.abs(normalizeAngle(ship.angle))*DEG;
+    if(tl>45&&!ship.tiltWarn){ship.tiltWarn=true;showToast('TOO MUCH TILT / NOSE UP',1.4);tone(240,.15,.06);}if(tl<30)ship.tiltWarn=false;
+    ship.sideT=tl>60?(ship.sideT||0)+dt:0;
+    if(ship.sideT>1){crash(`The rocket turned ${Math.round(tl)} degrees sideways into the airflow and broke apart. Rockets fly nose first: lean a little into the wind, never more than about 45 degrees.`);return;}}
    if(ship.launched&&ship.y<=38){crash('The rocket fell back to Earth. Keep tapping: every burst only buys a moment against gravity.');return;}
    if(Math.abs(ship.x)>CORRIDOR){crash(`The ${wx?wx.name.toLowerCase():'wind'} pushed the rocket out of the launch corridor. Lean into the wind: tilt against the drift and keep tapping.`);return;}
    if(ship.y-38>=launchTarget){
      // Orbit needs the nose up and the rocket still climbing. Arriving sideways does not count; keep flying until it is straight.
      const tilt=Math.abs(normalizeAngle(ship.angle))*DEG;
-     if(tilt<=35&&ship.vy>0){beginTransit();return;}
-     if(!ship.tiltWarned){ship.tiltWarned=true;showToast(`NOSE UP TO MAKE ORBIT / ${Math.round(tilt)}\u00b0 OFF VERTICAL`,2.2);tone(200,.2,.06);}
+     if(tilt<=25&&ship.vy>0){beginTransit();return;}
+     ship.noseT=(ship.noseT||0)-dt;if(ship.noseT<=0){ship.noseT=2;showToast(`STRAIGHTEN UP TO MAKE ORBIT / ${Math.round(tilt)}\u00b0 OFF VERTICAL, 25\u00b0 MAX`,1.8);tone(200,.2,.06);}
    }
    if(!fuelWarning&&ship.fuel<20){fuelWarning=true;showToast('BOOSTER FUEL LOW');tone(180,.25,.06);}
  }else if(scene==='moonup'){
