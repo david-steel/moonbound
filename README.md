@@ -31,6 +31,16 @@ Press `T` (or TENSORS, top right) on any stage and the flight computer shows wha
 
 **Every stage has its own view.** The Earth ascent adds forces as vectors (thrust + wind + drag + gravity). Docking is a change of frame: a 3×3 homogeneous transform that puts the port at zero. The Earth return shows drag d = k·vy², where the parachute changes one number, k, by about 56 times. The rover shows the slope as a rotation.
 
+## Progress that sticks
+
+**Mission patches.** Sixteen to earn, from LIFTOFF to DEEP LEARNER (let your two-layer pilot land), via the hard sites, GEOLOGIST (identify every sample), ICE HUNTER, BIG AIR, FEATHER (dock at half the speed limit), CORRIDOR and IRON CREW (entry under 6 g), STORM RIDER (splash down in a hurricane) and WELCOME HOME.
+
+**The codex.** Eleven short entries, each unlocked by meeting the idea in play: vectors, one step as one layer, rotation matrices, the Kalman filter, cosine similarity, least squares, spurious correlation, backpropagation, change of frame, model rollouts, and one parameter changing everything. Each gives the idea in plain words, its formula, and where it shows up in AI. Open it from MISSION LOG on the main menu.
+
+**Ghost.** Your best hand-flown landing is saved from its flight log and flies beside you, translucent, on every descent. Beat it and yours replaces it.
+
+All of it lives in this browser's `localStorage`; nothing leaves the device.
+
 ## The five landing sites
 
 The lander deploys east of Tranquility with a full tank. Everything else costs fuel to reach, and the harder sites are narrower, further out and stricter about how you arrive. Each one multiplies your score.
@@ -169,6 +179,7 @@ Simulation runs at a fixed 120 Hz and is separate from rendering, so frame rate 
 
 ## History
 
+- **1.9** Mission patches (16), the codex (11 entries unlocked in play), a ghost of your best landing, patch and codex notifications, and a main menu that no longer scrolls under its footer.
 - **1.8** Atmospheric entry from 122 km with real lifting-entry equations, bank-angle control, a predicted path, g, heat and blackout; your accuracy sets where the parachute phase starts. Surface science: stop-and-scan spectrometer with cosine-similarity reveal, water ice at the poles, big-air scoring. Two-layer pilot: a backprop-trained network that learns your braking curve, with a live training chart and visible neurons. Practice reentry from the main menu.
 - **1.7** Navigation is a Kalman filter with a visible uncertainty ellipse and radar lock; both autopilots fly on the estimate. Your pilot: a least-squares model of your own flight profile, trained on your hand-flown landings, with wiring that blocks a spurious correlation. Stage-specific tensor views for the ascent (force vectors), docking (change of frame), Earth return (drag coefficient) and the rover (slope rotation).
 - **1.6** The flight computer. A tensor view (`T`) shows the live state vector, the rotation matrix that aims the thrust, the update matrix and the flight log's shape on every stage. A ten-weight autopilot (`G`) lands the lunar module as one neural-network layer, weights visible while it flies; its landings score nothing. Result screens show your flight log as a tensor and your session as a stack of them.

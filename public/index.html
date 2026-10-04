@@ -46,6 +46,14 @@
 #scan-card .scan-opt.right{border-color:var(--green);background:rgba(155,229,192,.09)}#scan-card .scan-opt.chosen:not(.right){border-color:var(--red)}#scan-card .scan-opt:disabled{cursor:default}
 #scan-card .scan-foot{margin-top:10px;line-height:1.55;font-size:11px}
 @media(max-width:620px){#scan-card{bottom:196px;padding:12px}#scan-card .scan-sample{grid-template-columns:110px 1fr;gap:10px;margin:8px 0}#scan-card .scan-sample p{font-size:10px}#scan-card .scan-foot{font-size:10px}#scan-card .scan-opt strong{font-size:8px}}
+#notice{position:absolute;top:96px;left:50%;transform:translate(-50%,-10px);z-index:30;display:flex;gap:10px;align-items:center;background:var(--panel);border:1px solid rgba(155,229,192,.5);border-radius:30px;padding:7px 18px 7px 7px;font:11px var(--mono);letter-spacing:1.2px;color:var(--ink);opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;white-space:nowrap}#notice.visible{opacity:1;transform:translate(-50%,0)}
+#notice .notice-badge{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--green);display:grid;place-items:center;color:var(--green);font-size:10px;flex-shrink:0}#notice small{display:block;font-size:8px;color:var(--green);letter-spacing:1.6px;margin-bottom:2px}
+.dialog.codex{max-width:780px}.patch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}.patch{border:1px solid var(--line);border-radius:6px;padding:10px;opacity:.5}.patch.got{opacity:1;border-color:rgba(244,187,102,.5);background:rgba(244,187,102,.04)}
+.patch-badge{width:38px;height:38px;border-radius:50%;border:2px solid currentColor;display:grid;place-items:center;font:11px var(--mono);color:var(--muted);margin-bottom:8px}.patch.got .patch-badge{color:var(--amber);background:rgba(244,187,102,.1)}.patch strong{display:block;font:10px var(--mono);letter-spacing:1px}.patch small{display:block;font-size:10px;color:var(--muted);margin-top:4px;line-height:1.4}
+.codex-list{margin-top:10px}.codex-list details{border-top:1px solid var(--line);padding:11px 0}.codex-list summary{cursor:pointer;font-size:14px;color:var(--ink)}.codex-list details p{margin:10px 0 0!important;font-size:13px!important}.codex-math{font:12px var(--mono)!important;color:var(--green)!important}.codex-ai b{color:var(--amber);font-weight:500}
+.codex-locked{border-top:1px solid var(--line);padding:11px 0;font-size:12px;color:var(--muted)}.codex-locked span{font:9px var(--mono);letter-spacing:1.4px;margin-right:12px;color:#647583}.log-link{margin-top:14px}
+@media(max-width:620px){.patch-grid{grid-template-columns:repeat(2,1fr)}#notice{top:72px;font-size:9px}}
+#overlay:not(.compact){padding-bottom:84px}#overlay:not(.compact) .version{position:fixed;z-index:21;background:linear-gradient(0deg,rgba(6,12,20,.95),rgba(6,12,20,0));padding-top:18px;bottom:0;padding-bottom:20px}
 @media(min-width:1700px){.welcome{max-width:1250px}.welcome h1{font-size:100px}}
 @media(max-width:900px){.welcome{gap:35px}.welcome h1{font-size:clamp(44px,7.2vw,68px)}.briefing{padding:22px}.intro-text{font-size:14px}.start-actions{gap:9px}.button-primary{padding:16px 18px}.readouts{gap:20px}.readout:last-child{padding-left:18px}.hud-cell{padding:14px}#hud{grid-template-columns:1.4fr repeat(3,1fr)}.metric{font-size:24px}.stage-name{font-size:14px}#landing-checks{top:199px}.check{font-size:9px}#flight-note{top:199px;max-width:290px}#flight-note p{font-size:12px}}
 @media(max-width:620px){.brand .brand-sub{display:none!important}.topbar{gap:8px;left:18px;right:18px;top:max(19px,env(safe-area-inset-top))}.brand-title{font-size:13px;letter-spacing:2.2px}.brand-sub{font-size:7px;letter-spacing:1.6px}.brandmark{width:23px;height:23px}.brandmark:after{width:24px;height:24px;left:8px;top:-3px}.top-actions{gap:5px}.text-button{font-size:8px;padding:8px;letter-spacing:.6px;min-height:33px}.help-word{display:none}#hud{left:18px;right:18px;top:77px;grid-template-columns:1.1fr 1fr 1fr}.hud-cell{padding:12px 9px}.hud-cell:first-child{grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)}.hud-cell:nth-child(2){border-left:0;padding-left:0}.hud-cell .label{font-size:8px;letter-spacing:1.1px}.stage-name{font-size:12px;margin:0}.stage-number{margin-right:5px}.metric{font-size:23px;margin-top:6px}.metric small{font-size:8px;margin-left:3px}.hud-cell.fuel .metric{font-size:21px}.fuel-meter{margin-top:5px}.eyebrow{font-size:8px;letter-spacing:1.3px}#flight-note{top:199px;left:18px;max-width:200px}#flight-note p{font-size:10px;line-height:1.5;margin-top:6px}#landing-checks{top:199px;right:18px;max-width:140px}.check{font-size:8px;letter-spacing:0;line-height:1.95}#bottom-deck{left:18px;right:18px;bottom:max(20px,env(safe-area-inset-bottom));flex-direction:column;align-items:stretch;gap:14px}.readouts{padding:0;justify-content:space-between;gap:8px}.readout .label{font-size:8px;letter-spacing:.8px}.readout-value{font-size:12px;margin-top:5px}.readout:last-child{padding-left:14px}.controls{gap:8px;width:100%}.control{height:59px;min-width:64px;flex:1}.control.burn{flex:2;min-width:130px;margin-left:6px}.control small{font-size:8px}.control.burn small{font-size:8px}.control.burn .burn-text{font-size:11px}#toast{font-size:9px;letter-spacing:1px;max-width:92vw;white-space:normal;text-align:center;line-height:1.7}#overlay{padding:95px 25px 45px;align-items:center;background:linear-gradient(90deg,rgba(6,12,20,.95),rgba(6,12,20,.65))}.welcome{display:block;max-width:430px}.welcome h1{font-size:clamp(35px,11.5vw,57px);letter-spacing:-2.5px;margin:21px 0}.welcome .eyebrow{font-size:8px;letter-spacing:1.5px}.intro-text{font-size:13px;line-height:1.7;max-width:335px;margin-bottom:23px}.briefing{margin-top:26px;padding:15px 18px}.briefing-top{display:none}.mission-step{margin:8px 0;grid-template-columns:20px 1fr;gap:10px}.step-title{font-size:12px;margin-bottom:3px}.step-copy{font-size:10px;line-height:1.5}.mission-step:last-of-type{margin-bottom:12px}.difficulty{padding-top:12px;margin-top:13px}.difficulty-label{font-size:8px;margin-bottom:9px}.difficulty-button{padding:8px 10px}.briefing-footer{display:none}.key-legend{display:none}.mobile-legend{display:block;font:9px var(--mono);color:var(--muted);line-height:1.8;margin-top:15px}.version{left:18px;right:18px;font-size:7px;letter-spacing:.8px;bottom:16px}.version .version-note{display:none}.button-primary{font-size:10px;letter-spacing:1.2px;min-height:49px;padding:16px 19px;gap:25px}.practice-link{font-size:11px;margin-left:3px}.dialog{padding:26px}.dialog h2{font-size:37px}.dialog p{font-size:12px;line-height:1.7}.dialog .eyebrow{font-size:9px}.dialog-actions{gap:8px;margin-top:22px}.button-secondary{font-size:10px;padding:14px;min-height:49px}.result-stats strong{font-size:20px}.result-stats .label{font-size:7px}.result-score{font-size:9px}.result-score strong{font-size:24px}.help-row{font-size:10px}.help-tip{font-size:11px!important}}
@@ -100,7 +108,7 @@
   <p id="boot-instructions">On a phone, open the <strong>hosted game address in Safari or Chrome</strong>. A downloaded HTML attachment is not a live game link.</p>
   <pre id="boot-detail" style="display:none"></pre>
   <button id="boot-reload" type="button">Try loading again</button>
-  <p class="boot-foot">Already opening a website? Share the address and a screenshot of this message to troubleshoot it.<br>Build 1.8 / Startup diagnostics / No external downloads</p>
+  <p class="boot-foot">Already opening a website? Share the address and a screenshot of this message to troubleshoot it.<br>Build 1.9 / Startup diagnostics / No external downloads</p>
  </div>
 </section>
 <script>
@@ -165,6 +173,7 @@
 <div id="scan-card" class="hidden" role="dialog" aria-label="Spectrometer"></div>
 <aside id="landing-checks" class="hidden" aria-label="Safe landing limits"><div class="check-site" id="check-site"></div><div class="check" id="check-vertical"></div><div class="check" id="check-drift"></div><div class="check" id="check-angle"></div><div class="check" id="check-weather"></div></aside>
 <div id="toast" aria-live="polite"></div>
+<div id="notice" aria-live="polite"></div>
 <footer id="bottom-deck" class="hidden">
  <div class="readouts"><div class="readout"><div class="label">LATERAL DRIFT</div><div class="readout-value" id="drift-value">0.0 M/S</div></div><div class="readout"><div class="label">ATTITUDE</div><div class="readout-value" id="angle-value">0.0 DEG</div></div><div class="readout"><div class="label" id="hull-label">HULL</div><div class="readout-value" id="hull-value">100%</div></div><div class="readout"><div class="label">MISSION TIME</div><div class="readout-value" id="time-value">00:00</div></div></div>
  <div class="controls" aria-label="Flight controls"><button class="control" id="left-control" aria-label="Hold to tilt left"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12l7 7M8 12h12"/></svg><small>LEFT / A</small></button><button class="control" id="right-control" aria-label="Hold to tilt right"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7M16 12H4"/></svg><small>RIGHT / D</small></button><button class="control chute hidden" id="chute-control" aria-label="Deploy parachute"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11a9 9 0 0 1 18 0Z"/><path d="m3 11 9 9 9-9M8 11l4 9 4-9"/></svg><small id="chute-text">CHUTE / E</small></button><button class="control burn" id="thrust-control" aria-label="Tap to fire main engine"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C9 7 5 9 5 14a7 7 0 0 0 14 0c0-3-2-6-4-8 0 3-2 4-2 4s0-5-1-8Z"/><path d="M12 13c-1 2-3 3-3 5a3 3 0 0 0 6 0c0-2-2-3-3-5Z"/></svg><span class="burn-text">THRUST<small>TAP / SPACE / UP</small></span></button></div>
@@ -346,7 +355,7 @@ function deployChute(){
  if(alt>CHUTE_ARM){showToast(`MAIN CHUTE LOCKED ABOVE ${CHUTE_ARM} M`,1.6);tone(200,.12,.04);return;}
  ship.deployAlt=alt;ship.deploySpeed=speed;
  if(speed>chuteMax()){ship.chuteTorn=true;showToast(`CHUTE TORN AT ${Math.round(speed)} M/S`,2.5);tone(90,.4,.07);}
- else{ship.chuteOpen=true;showToast('MAIN CHUTE OUT',1.6);tone(620,.18,.05);}
+ else{ship.chuteOpen=true;learn('drag');showToast('MAIN CHUTE OUT',1.6);tone(620,.18,.05);}
  $('chute-control').disabled=true;
 }
 function resize(){W=window.innerWidth;H=window.innerHeight;DPR=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);if(onMoon()&&ship)updateCamera(1,true);if(scene==='earth'&&ship)updateEarthCamera(1,true);if(scene==='rover'&&rover)updateRoverCamera(1,true);document.querySelector('.help-short').classList.toggle('hidden',W>620);}
@@ -366,7 +375,7 @@ function siteRoster(){
 }
 function welcome(){
  clearInput();mode='menu';scene='menu';paused=false;ship=null;particles=[];debris=[];showHUD(false);$('toast').classList.remove('visible');
- showOverlay(`<div class="welcome"><div><div class="eyebrow">INDEPENDENT FLIGHT PROGRAM / MISSION 001</div><h1>ONE ROCKET.<br>ONE MOON.<br><span>ONE WAY HOME.</span></h1><p class="intro-text">Getting there is only half the mission. Tap your way off Earth through whatever the sky throws at you, put a lander down somewhere on the Moon, drive the rover out and back, dock with the command module, and pull the parachute over the ocean. Late enough to be brave. Not too late.</p><p class="intro-text">Under the hood, every frame is a matrix multiply: the same tensor math that runs AI. Press <kbd>T</kbd> to watch it fly.</p><div class="start-actions"><button class="button-primary" data-action="start">LAUNCH MISSION <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="practice-link" data-action="practice">Practice landing</button><button class="practice-link" data-action="practice-entry">Practice reentry</button></div><div class="key-legend"><kbd>&larr;</kbd><kbd>&rarr;</kbd> ROTATE &nbsp; <kbd>SPACE</kbd> TAP TO THRUST &nbsp; <kbd>E</kbd> CHUTE &nbsp; <kbd>P</kbd> PAUSE &nbsp; <kbd>T</kbd> TENSORS &nbsp; <kbd>G</kbd> AUTOPILOT &nbsp; <kbd>Y</kbd> YOUR PILOT<br>Every tap is a short burn. Gravity takes it back. Keep tapping.</div><div class="mobile-legend">TAP THRUST TO BURN. HOLD THE ARROWS TO STEER.</div></div><div class="briefing"><div class="briefing-top"><span class="eyebrow">YOUR FLIGHT PLAN</span><span class="serial">MB / 001</span></div><div class="mission-step"><span class="step-num">01</span><div><div class="step-title">Leave Earth behind.</div><div class="step-copy">Tap thrust in bursts, lean into the weather, and dodge the debris. The hull only takes so much.</div></div></div><div class="mission-step"><span class="step-num">02</span><div><div class="step-title">Separate. Descend. Commit.</div><div class="step-copy">Every tap slows your fall a little. Your engine is your only brake.</div></div></div><div class="mission-step"><span class="step-num">03</span><div><div class="step-title">Land. Then drive.</div><div class="step-copy">Pick a site, then take two astronauts out on the rover, bag the samples and get back before the oxygen runs out.</div></div></div><div class="mission-step"><span class="step-num">04</span><div><div class="step-title">Dock. Then come home.</div><div class="step-copy">Dock with the command module, fly the fireball through the entry corridor, then ride the storm down to the recovery ship.</div></div></div><div class="site-list">${siteRoster()}</div><div class="site-legend">TIER / SITE / MULTIPLIER / YOUR BEST<br>THE LANDER DEPLOYS EAST OF TRANQUILITY. EVERYTHING ELSE COSTS FUEL TO REACH.</div><div class="difficulty"><div class="difficulty-label">SELECT FLIGHT DIFFICULTY</div><div class="difficulty-options"><button class="difficulty-button ${difficulty==='cadet'?'selected':''}" data-difficulty="cadet" aria-pressed="${difficulty==='cadet'}"><strong>CADET</strong><small>More forgiving landings</small></button><button class="difficulty-button ${difficulty==='pilot'?'selected':''}" data-difficulty="pilot" aria-pressed="${difficulty==='pilot'}"><strong>PILOT</strong><small>Precision required</small></button></div></div><div class="briefing-footer">${best?`PERSONAL BEST: ${best.toLocaleString()} POINTS`:'FLIGHT RECORD: A CLEAN SLATE.'}<br>SITES FOUND: ${found.size} OF ${SITES.length}. ARCADE PHYSICS, REAL CONSEQUENCES.</div></div></div><div class="version"><span>MOONBOUND / PROTOTYPE 1.8</span><span class="version-note">BUILT FOR A STEADY HAND.</span><span>EARTH &rarr; MOON &rarr; EARTH</span></div>`,'welcome');
+ showOverlay(`<div class="welcome"><div><div class="eyebrow">INDEPENDENT FLIGHT PROGRAM / MISSION 001</div><h1>ONE ROCKET.<br>ONE MOON.<br><span>ONE WAY HOME.</span></h1><p class="intro-text">Getting there is only half the mission. Tap your way off Earth through whatever the sky throws at you, put a lander down somewhere on the Moon, drive the rover out and back, dock with the command module, and pull the parachute over the ocean. Late enough to be brave. Not too late.</p><p class="intro-text">Under the hood, every frame is a matrix multiply: the same tensor math that runs AI. Press <kbd>T</kbd> to watch it fly.</p><div class="start-actions"><button class="button-primary" data-action="start">LAUNCH MISSION <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="practice-link" data-action="practice">Practice landing</button><button class="practice-link" data-action="practice-entry">Practice reentry</button></div><div class="log-link"><button class="practice-link" data-action="codex">MISSION LOG: ${progressLine()}</button></div><div class="key-legend"><kbd>&larr;</kbd><kbd>&rarr;</kbd> ROTATE &nbsp; <kbd>SPACE</kbd> THRUST &nbsp; <kbd>E</kbd> CHUTE &nbsp; <kbd>T</kbd> TENSORS &nbsp; <kbd>G</kbd> <kbd>Y</kbd> AUTOPILOTS</div><div class="mobile-legend">TAP THRUST TO BURN. HOLD THE ARROWS TO STEER.</div></div><div class="briefing"><div class="briefing-top"><span class="eyebrow">YOUR FLIGHT PLAN</span><span class="serial">MB / 001</span></div><div class="mission-step"><span class="step-num">01</span><div><div class="step-title">Leave Earth behind.</div><div class="step-copy">Tap thrust in bursts, lean into the weather, and dodge the debris. The hull only takes so much.</div></div></div><div class="mission-step"><span class="step-num">02</span><div><div class="step-title">Separate. Descend. Commit.</div><div class="step-copy">Every tap slows your fall a little. Your engine is your only brake.</div></div></div><div class="mission-step"><span class="step-num">03</span><div><div class="step-title">Land. Then drive.</div><div class="step-copy">Pick a site, then drive the rover out, scan the samples to name their minerals, and get back before the oxygen runs out.</div></div></div><div class="mission-step"><span class="step-num">04</span><div><div class="step-title">Dock. Then come home.</div><div class="step-copy">Dock with the command module, fly the fireball through the entry corridor, then ride the storm down to the recovery ship.</div></div></div><div class="site-list">${siteRoster()}</div><div class="site-legend">TIER / SITE / MULTIPLIER / YOUR BEST<br>THE LANDER DEPLOYS EAST OF TRANQUILITY. EVERYTHING ELSE COSTS FUEL TO REACH.</div><div class="difficulty"><div class="difficulty-label">SELECT FLIGHT DIFFICULTY</div><div class="difficulty-options"><button class="difficulty-button ${difficulty==='cadet'?'selected':''}" data-difficulty="cadet" aria-pressed="${difficulty==='cadet'}"><strong>CADET</strong><small>More forgiving landings</small></button><button class="difficulty-button ${difficulty==='pilot'?'selected':''}" data-difficulty="pilot" aria-pressed="${difficulty==='pilot'}"><strong>PILOT</strong><small>Precision required</small></button></div></div><div class="briefing-footer">${best?`PERSONAL BEST: ${best.toLocaleString()} POINTS`:'FLIGHT RECORD: A CLEAN SLATE.'}<br>SITES FOUND: ${found.size} OF ${SITES.length}. ARCADE PHYSICS, REAL CONSEQUENCES.</div></div></div><div class="version"><span>MOONBOUND / PROTOTYPE 1.9</span><span class="version-note">BUILT FOR A STEADY HAND.</span><span>EARTH &rarr; MOON &rarr; EARTH</span></div>`,'welcome');
 }
 function startLaunch(){
  clearInput();mode='launch';scene='launch';paused=false;fullMission=true;elapsed=0;launchTime=0;transitTime=0;coastReady=false;landingResult=null;crashReason='';particles=[];debris=[];fuelWarning=false;lowWarning=false;
@@ -380,7 +389,7 @@ function startLanding(practice=false){
  $('objective-title').textContent='CHOOSE A SITE AND LAND ON IT';$('objective-copy').textContent='Each tap is a short burn that slows your fall. Tilt against drift, straighten up for touchdown. Far to the east, a lava tube runs under the plain.';
  showToast(practice?'LUNAR LANDING PRACTICE':'LUNAR MODULE DEPLOYED',2.5);updateHUD();tone(520,.16,.05);
 }
-function beginTransit(){homeward=false;launchTime=elapsed;mode='transit';scene='transit';transitTime=0;coastReady=false;particles=[];clearInput();$('bottom-deck').classList.add('hidden');$('landing-checks').classList.add('hidden');$('objective-title').textContent='TRANSLUNAR COAST';$('objective-copy').textContent='Ascent complete. Orbital flight and the journey to the Moon are compressed in this prototype.';showToast('ASCENT COMPLETE / COURSE SET FOR THE MOON',3);tone(440,.25,.06);}
+function beginTransit(){award('liftoff');homeward=false;launchTime=elapsed;mode='transit';scene='transit';transitTime=0;coastReady=false;particles=[];clearInput();$('bottom-deck').classList.add('hidden');$('landing-checks').classList.add('hidden');$('objective-title').textContent='TRANSLUNAR COAST';$('objective-copy').textContent='Ascent complete. Orbital flight and the journey to the Moon are compressed in this prototype.';showToast('ASCENT COMPLETE / COURSE SET FOR THE MOON',3);tone(440,.25,.06);}
 function deployBriefing(){coastReady=true;$('pause-button').classList.add('hidden');showOverlay(`<div class="dialog"><div class="eyebrow">02 / LUNAR ORBIT ACQUIRED</div><h2>YOUR ENGINE<br>IS YOUR BRAKE.</h2><p>The coast is over. Separate your lander and choose where to put it down. You deploy just east of Tranquility with a full tank. Everything else is a burn away.</p><div class="result-stats">${SITES.filter(siteKnown).map(t=>`<div><span class="label">${t.name}</span><strong>\u00d7${t.mult.toFixed(1)} <small style="font-size:11px">${t.tier.toLowerCase()}</small></strong></div>`).join('')}</div><p>Tap to brake, a little at a time. Tilt left to slow a rightward drift, then straighten up. Keep both feet inside a pad. The panel on the right always shows the limits for the site you are nearest to.</p><p class="help-tip">FLIGHT COMPUTER: press T (or TENSORS, top right) to see the lander the way the computer does: six numbers in a vector, turned by a 2×2 matrix every 1/120 of a second. The green ellipse is where the computer thinks you are: a Kalman filter, as on Apollo, tightened by every radar ping. Press G and a ten-weight autopilot flies on that estimate. Land once yourself and Y hands over to a pilot trained on your own flying. Autopilot landings score nothing.</p><div class="dialog-actions"><button class="button-primary" data-action="deploy">DEPLOY LANDER <span class="arrow" aria-hidden="true">&#8595;</span></button><button class="practice-link" data-action="home">Abort to main menu</button></div></div>`,'deploy');restoreFocus();}
 function startAscent(){
  if(!landingResult)return;
@@ -430,7 +439,7 @@ function homeRequest(){if(overlayKind==='deploy'){welcome();return;}if(canFly()|
 $('overlay').addEventListener('click',e=>{
  const difficultyButton=e.target.closest('[data-difficulty]');if(difficultyButton){difficulty=difficultyButton.dataset.difficulty;welcome();return;}
  const b=e.target.closest('[data-action]');if(!b)return;
- switch(b.dataset.action){case'start':startLaunch();break;case'practice':startLanding(true);break;case'deploy':startLanding(false);break;case'ascend':startAscent();break;case'rover':startRover();break;case'undock':beginReturn();break;case'reenter':startEntry();break;case'practice-entry':fullMission=false;integrity=100;landingResult=null;roverResult=null;dockResult=null;rollWeather('earth');startEntry();break;case'resume':togglePause();break;case'retry':retryStage();break;case'home':welcome();break;case'close-help':closeHelp();break;case'forget-pilot':forgetPilot();b.textContent='Your pilot is forgotten';b.disabled=true;break;}
+ switch(b.dataset.action){case'start':startLaunch();break;case'practice':startLanding(true);break;case'deploy':startLanding(false);break;case'ascend':startAscent();break;case'rover':startRover();break;case'undock':beginReturn();break;case'reenter':startEntry();break;case'practice-entry':fullMission=false;integrity=100;landingResult=null;roverResult=null;dockResult=null;rollWeather('earth');startEntry();break;case'resume':togglePause();break;case'retry':retryStage();break;case'home':welcome();break;case'close-help':closeHelp();break;case'codex':showCodex();break;case'forget-pilot':forgetPilot();b.textContent='Your pilot is forgotten';b.disabled=true;break;}
 });
 $('home-button').addEventListener('click',homeRequest);$('pause-button').addEventListener('click',()=>{if(overlayKind==='help')closeHelp();else togglePause();});$('help-button').addEventListener('click',showHelp);
 for(const [id,action]of[['left-control','left'],['right-control','right']]){
@@ -552,6 +561,7 @@ function updateHUD(){
 }
 function step(dt){
  if(paused)return;
+ stepNotices(dt);
  if(toastTimer>0){toastTimer-=dt;if(toastTimer<=0)$('toast').classList.remove('visible');}
  if(shake>0)shake=Math.max(0,shake-dt*2.5);
  if(mode==='transit'){if(!coastReady){transitTime+=dt;elapsed+=dt;if(transitTime>=4.2){if(homeward)reentryBriefing();else deployBriefing();}}return;}
@@ -657,15 +667,18 @@ function resolveLanding(){
  if(drift>L.drift){crash(`Too much sideways speed: ${drift.toFixed(1)} m/s. ${site.name} allows ${L.drift.toFixed(1)} m/s. Tilt against your drift, then straighten up.`);return;}
  if(tilt>L.angle){crash(`The lander tipped over at ${tilt.toFixed(1)} degrees. Touch down within ${L.angle} degrees of upright.`);return;}
  closeLog();const auto=!!ship.autoUsed;autopilot=false;lastFlight={rows:pilotRows,site};const learned=!auto&&learnFlight(pilotRows,site);setTimeout(drawLossChart,0);
+ award('eagle');if(['copernicus','shackleton','tube','hollow'].includes(site.id))award(site.id);learn('rotation');
+ if(learned){award('trainer');learn('leastsq');learn('spurious');}
+ if(auto&&ship.pilotKind==='you'&&agc.deep)award('deep');
  const score=auto?0:Math.round((500+ship.fuel*7+300*(1-vertical/L.vertical)+200*(1-drift/L.drift)+(fullMission?300:0)+(difficulty==='pilot'?350:0))*site.mult);
  const firstFind=!!site.secret&&!found.has(site.id);
  found.add(site.id);
  const siteRecord=score>(siteBest[site.id]||0);if(siteRecord)siteBest[site.id]=score;
  landingResult={site,x:ship.x,vertical,drift,tilt,fuel:ship.fuel,score,fullMission};mode='win';ship.y=site.y+23;ship.vx=0;ship.vy=0;ship.angle=0;ship.omega=0;clearInput();setEngine(false);$('pause-button').classList.add('hidden');$('toast').classList.remove('visible');
- const newBest=score>best;best=Math.max(best,score);saveRecords();
+ const newBest=score>best;best=Math.max(best,score);saveRecords();const newGhost=!auto&&saveGhost(site,score,sessionLogs[sessionLogs.length-1]);
  tone(660,.35,.07);setTimeout(()=>tone(880,.45,.04),150);
  updateHUD();
- showOverlay(`<div class="dialog"><div class="eyebrow">${firstFind?'NEW SITE DISCOVERED':(fullMission?'MISSION COMPLETE':'PRACTICE COMPLETE')} / ${site.name}</div><h2>${firstFind?'NOBODY HAS<br>BEEN HERE.':'THE EAGLE<br>HAS LEGS.'}</h2><p>${firstFind?'You found the crater floor and put the lander down on it. The Hollow is on your map from now on.':'Engine off. Landing gear intact. You made it to the Moon, and the Moon let you stay.'}</p><p class="help-tip">${site.tier} SITE / SCORE MULTIPLIER \u00d7${site.mult.toFixed(1)}${siteRecord?' / SITE RECORD':''}</p><div class="result-stats"><div><span class="label">TOUCHDOWN</span><strong>${vertical.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">SIDEWAYS DRIFT</span><strong>${drift.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">FUEL REMAINING</span><strong>${Math.round(ship.fuel)}%</strong></div></div><div class="result-score"><span>${newBest?'NEW PERSONAL BEST':'MISSION SCORE'}${difficulty==='pilot'?' / PILOT':''}</span><strong>${score.toLocaleString()}</strong></div>${auto?'<p class="help-tip">THE AUTOPILOT FLEW THIS ONE. Ten weights put it down, so it scores nothing. Land it yourself to score.</p>':''}${logNote()}${pilotNote(learned)}${pilotData.length?'<p><button class="practice-link" data-action="forget-pilot">Forget my pilot</button></p>':''}<p class="help-tip">THE MISSION IS NOT OVER. Two astronauts and a rover are folded into the descent stage. Drive the traverse and bring the samples back, then fly the ascent stage up to the command module.</p><div class="dialog-actions"><button class="button-primary" data-action="rover">DEPLOY THE ROVER <span class="arrow" aria-hidden="true">&#8594;</span></button><button class="button-secondary" data-action="practice">LAND AGAIN</button><button class="practice-link" data-action="ascend">Skip the EVA and lift off</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
+ showOverlay(`<div class="dialog"><div class="eyebrow">${firstFind?'NEW SITE DISCOVERED':(fullMission?'MISSION COMPLETE':'PRACTICE COMPLETE')} / ${site.name}</div><h2>${firstFind?'NOBODY HAS<br>BEEN HERE.':'THE EAGLE<br>HAS LEGS.'}</h2><p>${firstFind?'You found the crater floor and put the lander down on it. The Hollow is on your map from now on.':'Engine off. Landing gear intact. You made it to the Moon, and the Moon let you stay.'}</p><p class="help-tip">${site.tier} SITE / SCORE MULTIPLIER \u00d7${site.mult.toFixed(1)}${siteRecord?' / SITE RECORD':''}</p><div class="result-stats"><div><span class="label">TOUCHDOWN</span><strong>${vertical.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">SIDEWAYS DRIFT</span><strong>${drift.toFixed(1)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">FUEL REMAINING</span><strong>${Math.round(ship.fuel)}%</strong></div></div><div class="result-score"><span>${newBest?'NEW PERSONAL BEST':'MISSION SCORE'}${difficulty==='pilot'?' / PILOT':''}</span><strong>${score.toLocaleString()}</strong></div>${newGhost?'<p class="help-tip">NEW GHOST: this landing will fly beside you on your next descent. Beat it.</p>':''}${auto?'<p class="help-tip">THE AUTOPILOT FLEW THIS ONE. Ten weights put it down, so it scores nothing. Land it yourself to score.</p>':''}${logNote()}${pilotNote(learned)}${pilotData.length?'<p><button class="practice-link" data-action="forget-pilot">Forget my pilot</button></p>':''}<p class="help-tip">THE MISSION IS NOT OVER. Two astronauts and a rover are folded into the descent stage. Drive the traverse and bring the samples back, then fly the ascent stage up to the command module.</p><div class="dialog-actions"><button class="button-primary" data-action="rover">DEPLOY THE ROVER <span class="arrow" aria-hidden="true">&#8594;</span></button><button class="button-secondary" data-action="practice">LAND AGAIN</button><button class="practice-link" data-action="ascend">Skip the EVA and lift off</button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
 }
 function resolveSplashdown(){
  const c=config[difficulty],speed=-ship.vy,d=Math.abs(ship.x-RECOVERY_X);
@@ -676,6 +689,7 @@ function resolveSplashdown(){
  const near=clamp(1-Math.max(0,d-60)/900,0,1),nerve=Math.max(0,Math.round((CHUTE_ARM-ship.deployAlt)*3));
  const hullBonus=Math.round(integrity*4),ret=Math.round((600+1400*near+nerve+ship.fuel*3+300*(1-speed/c.splash))*(difficulty==='pilot'?1.25:1)*wx.mult)+hullBonus;
  const landed=landingResult?landingResult.score:0,eva=roverResult?roverResult.score:0,docked=dockResult?dockResult.score:0,ent=entryResult?entryResult.score:0,total=landed+eva+docked+ent+ret,newBest=total>best;best=Math.max(best,total);saveRecords();
+ if(fullMission&&landingResult)award('home');if(wx&&wx.name==='HURRICANE')award('storm');
  mode='win';ship.y=10+waterAt(ship.x);ship.vx=0;ship.vy=0;clearInput();setEngine(false);$('pause-button').classList.add('hidden');$('toast').classList.remove('visible');
  for(let i=0;i<30;i++){const a=PI*(.15+Math.random()*.7),v=6+Math.random()*22;particles.push({x:ship.x,y:2,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.5+Math.random()*.9,max:1.4,size:2+Math.random()*4,kind:'splash'});}
  tone(660,.35,.07);setTimeout(()=>tone(880,.45,.04),150);setTimeout(()=>tone(990,.5,.04),320);updateHUD();
@@ -875,6 +889,7 @@ function stepRover(dt,turn){
 function resolveRover(){
  const r=rover,c=course,all=r.samples===c.samples.length;
  const score=Math.round((350+r.samples*250+(all?300:0)+r.ids*220+(r.ice?400:0)+r.o2*2+r.hull*3+(fullMission?200:0))*(difficulty==='pilot'?1.3:1)*c.site.mult*.6)+r.airPts;
+ if(r.ids===c.samples.length)award('geologist');if(r.ice)award('ice');
  roverResult={score,samples:r.samples,total:c.samples.length,hull:r.hull,o2:r.o2,time:r.t,site:c.site};
  mode='win';r.vx=0;clearInput();setEngine(false);$('pause-button').classList.add('hidden');$('toast').classList.remove('visible');
  tone(660,.35,.07);setTimeout(()=>tone(880,.45,.04),150);updateHUD();
@@ -933,6 +948,7 @@ function drawRoverBody(x,y,a,s,r){
 function dockPort(){return{x:csm.x,y:csm.y-20};}
 function dockProbe(){return worldPoint({x:0,y:21});}
 function startDock(){
+ learn('frame');
  clearInput();mode='dock';scene='dock';paused=false;particles=[];debris=[];fuelWarning=false;lowWarning=false;crashReason='';dockClock=0;dockResult=null;
  const D=DOCK[difficulty];
  csm={x:0,y:230,vx:0,drift:D.drift,ph:Math.random()*TAU,t:0};
@@ -976,7 +992,7 @@ function dockBump(rel,why){
 function resolveDock(rel,dx,ang){
  const D=DOCK[difficulty];
  const score=Math.round((400+500*(1-rel/D.speed)+250*(1-Math.abs(dx)/DOCK.portDx)+150*(1-ang/D.angle)+ship.fuel*2+Math.max(0,90-dockClock)*3)*(difficulty==='pilot'?1.3:1));
- dockResult={score,rel,dx,ang,fuel:ship.fuel,time:dockClock};
+ dockResult={score,rel,dx,ang,fuel:ship.fuel,time:dockClock};if(rel<=D.speed/2)award('softdock');
  mode='win';ship.x=csm.x;ship.y=csm.y-41;ship.vx=csm.vx;ship.vy=0;ship.angle=0;ship.omega=0;ship.docked=true;clearInput();setEngine(false);$('pause-button').classList.add('hidden');$('toast').classList.remove('visible');
  tone(660,.35,.07);setTimeout(()=>tone(880,.45,.04),150);updateHUD();
  showOverlay(`<div class="dialog"><div class="eyebrow">05 / HARD DOCK / CAPTURE LATCHES ENGAGED</div><h2>CONTACT.<br>AND CAPTURE.</h2><p>The hatch met the port at ${rel.toFixed(2)} m/s. The crew and the samples move across to the command module, and the ascent stage gets left in lunar orbit.</p><div class="result-stats"><div><span class="label">CLOSING SPEED</span><strong>${rel.toFixed(2)} <small style="font-size:11px">m/s</small></strong></div><div><span class="label">OFF CENTRE</span><strong>${Math.abs(dx).toFixed(1)} <small style="font-size:11px">m</small></strong></div><div><span class="label">HULL</span><strong>${Math.round(integrity)}%</strong></div></div><div class="result-score"><span>DOCKING SCORE${difficulty==='pilot'?' / PILOT':''}</span><strong>${score.toLocaleString()}</strong></div><p class="help-tip">NEXT: the burn for home, then the reentry.${integrity<35?' The hull is under 35%: expect a cracked heat shield and a weaker chute.':''}</p><div class="dialog-actions"><button class="button-primary" data-action="undock">JETTISON AND HEAD HOME <span class="arrow" aria-hidden="true">&#8594;</span></button><button class="practice-link" data-action="home">Main menu</button></div></div>`,'result');restoreFocus();
@@ -1135,6 +1151,7 @@ function drawLanding(){
  }
  // A shadow makes the final few meters easier to judge.
  const shadowA=clamp(1-altitude()/140,0,1)*.35;ctx.fillStyle=`rgba(0,0,0,${shadowA})`;ctx.beginPath();ctx.ellipse(sx,groundY+2,25*s,3*s,0,0,TAU);ctx.fill();
+ drawGhost(v,s);
  drawLander(sx,sy,ship.angle,burning(),s,scene==='moonup'?'ascent':'full');
  if(scene==='land'&&mode==='land'&&nav&&(tensorOn||autopilot))drawNav(v,s);
  }
@@ -1274,7 +1291,92 @@ function drawParticles(project,scale){
 function drawLabel(x,y,text,color='#8ca0af',size=10,align='center'){ctx.save();ctx.font=`${size}px ui-monospace, SFMono-Regular, Consolas, monospace`;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillStyle=color;ctx.fillText(text,x,y);ctx.restore();}
 function render(){ctx.setTransform(DPR,0,0,DPR,0,0);if(scene==='launch')drawLaunch();else if(scene==='rover'){drawRover();drawPopups();}else if(scene==='dock')drawDock();else if(onMoon())drawLanding();else if(scene==='transit')drawTransit();else if(scene==='entry')drawEntry();else if(scene==='earth')drawEarthReturn();else drawMenu();}
 function frame(now){if(window.MoonboundBoot.failed)return;const dt=Math.min((now-lastFrame)/1000||0,.05);lastFrame=now;visualTime+=dt;accumulator+=dt;let steps=0;while(accumulator>=1/120&&steps<8){step(1/120);accumulator-=1/120;steps++;}if(steps===8)accumulator=0;setEngine(burning());$('thrust-control').classList.toggle('held',burning());hudClock+=dt;if(hudClock>.08){hudClock=0;if(mode!=='menu')updateHUD();}render();window.MoonboundBoot.ready();requestAnimationFrame(frame);}
-resize();welcome();requestAnimationFrame(frame);
+// ---- Mission patches and the codex: what you have done, and the maths you met doing it. Both live in this browser only. ----
+const PATCHES=[
+ {id:'liftoff',code:'01',name:'LIFTOFF',desc:'Fly the rocket out of the atmosphere.'},
+ {id:'eagle',code:'02',name:'THE EAGLE',desc:'Put a lander down on the Moon.'},
+ {id:'copernicus',code:'B',name:'TECHNICAL',desc:'Land on Copernicus Ledge.'},
+ {id:'shackleton',code:'C',name:'EXPERT',desc:'Land on Shackleton Spur.'},
+ {id:'tube',code:'D',name:'SPELUNKER',desc:'Land inside the Marius lava tube.'},
+ {id:'hollow',code:'?',name:'UNCHARTED',desc:'Find the site that is not on the map.'},
+ {id:'geologist',code:'03',name:'GEOLOGIST',desc:'Identify every sample on one EVA.'},
+ {id:'ice',code:'H2O',name:'ICE HUNTER',desc:'Identify water ice by its spectrum.'},
+ {id:'bigair',code:'AIR',name:'BIG AIR',desc:'Hang 2.5 s beyond a normal hop on the rover.'},
+ {id:'softdock',code:'05',name:'FEATHER',desc:'Dock at under half the closing-speed limit.'},
+ {id:'corridor',code:'06',name:'CORRIDOR',desc:'Come out of the plasma inside the recovery zone.'},
+ {id:'ironcrew',code:'G',name:'IRON CREW',desc:'Fly the whole entry under 6 g.'},
+ {id:'home',code:'⌂',name:'WELCOME HOME',desc:'Fly a full mission, Earth to Moon to Earth.'},
+ {id:'storm',code:'ϟ',name:'STORM RIDER',desc:'Splash down in a hurricane.'},
+ {id:'trainer',code:'W',name:'TRAINER',desc:'Teach your pilot with a hand-flown landing.'},
+ {id:'deep',code:'NN',name:'DEEP LEARNER',desc:'Let your two-layer pilot land the lander.'}
+];
+const CODEX=[
+ {id:'vector',title:'Everything is a list of numbers',trigger:'Fly any stage with the tensor view on.',
+  body:'The lander is six numbers: where it is, how fast it moves, which way it points, how much fuel is left. A list like that is a vector, a rank-1 tensor. A photo is a grid of numbers (rank 2), a colour video a stack of grids (rank 3 and up). Before an AI can do anything with the world, the world has to become tensors.',
+  math:'s = [x, y, vx, vy, θ, m]',ai:'Every input to a neural network, text included, is turned into vectors first.'},
+ {id:'layer',title:'One step is one layer',trigger:'Hand control to an autopilot.',
+  body:'Each tick, the game multiplies the state vector by a matrix and adds a little: position picks up velocity, velocity picks up thrust and gravity. A neural-network layer does the same multiply-and-add, y = W·x + b. The flight-computer autopilot is exactly one of those layers with ten weights.',
+  math:'y = W·x + b',ai:'Big models are thousands of these layers stacked, with a bend (an activation) between each.'},
+ {id:'rotation',title:'Turning is a matrix',trigger:'Land on the Moon.',
+  body:'Tilting the lander does not change the engine; it rotates where the push goes. That rotation is a 2×2 matrix of cosines and sines. The same matrix aims the capsule’s lift on the way home and tilts the rover on a slope.',
+  math:'R(θ) = [[cos θ, sin θ], [−sin θ, cos θ]]',ai:'Image models rotate, scale and shift features with the same kind of matrices; so do robots and game engines.'},
+ {id:'kalman',title:'Knowing what you do not know',trigger:'See the landing radar lock on.',
+  body:'The computer never sees the truth. It guesses where it is, keeps track of how unsure it is (the matrix P, drawn as the green ellipse), and blends in each radar ping in proportion to that doubt. This is the Kalman filter, and NASA adapted it to navigate Apollo.',
+  math:'K = P·Hᵀ(H·P·Hᵀ + R)⁻¹',ai:'Self-driving cars, phones and drones all fuse noisy sensors this way. Good AI reports how sure it is.'},
+ {id:'cosine',title:'Finding the closest thing',trigger:'Scan a sample on the rover.',
+  body:'A spectrum is a vector. To match it, multiply two vectors number by number, add it up, and divide by their lengths. That is cosine similarity: 1.00 means the same shape, 0 means unrelated, below 0 means opposite.',
+  math:'cos = (a·b) / (|a| |b|)',ai:'This is how AI search and chatbot memory find the passage, image or song closest to what you asked.'},
+ {id:'leastsq',title:'Learning from examples',trigger:'Land by hand once.',
+  body:'Your landing became a table: where the computer thought you were (X) and how you were moving (Y). Least squares finds the weights W that make X·W as close to Y as possible, in one shot. That is training: examples in, numbers out.',
+  math:'W = (XᵀX)⁻¹XᵀY',ai:'Every supervised model, from spam filters to translation, starts from pairs of inputs and right answers.'},
+ {id:'spurious',title:'Learning the wrong lesson',trigger:'Train your pilot.',
+  body:'Wired to everything, your pilot learned that being high up means moving right, because most landings start high and to the left. True in the data, wrong in the world. Cutting that wire fixed it. Data that only covers part of the world teaches confident nonsense about the rest.',
+  math:'correlation ≠ cause',ai:'The same trap makes models judge X-rays by the hospital’s label in the corner, or loans by postcode.'},
+ {id:'backprop',title:'Backpropagation',trigger:'Watch the two-layer network train.',
+  body:'The network guesses, measures its error, and the chain rule walks that error backwards through every weight to say which way each one should move. Repeat 900 times. A straight line cannot bend to brake harder near the ground; eight bent neurons can.',
+  math:'w ← w − η · ∂loss/∂w',ai:'Every modern neural network, the largest language models included, is trained with exactly this loop.'},
+ {id:'frame',title:'Changing the point of view',trigger:'Fly the docking.',
+  body:'Docking is hard in world coordinates and simple in the command module’s: just make the gap [0, 0]. A 3×3 transform moves the whole world so the port sits at the origin. One matrix multiply changes your point of view.',
+  math:'r = T · [x, y, 1]',ai:'Attention in a transformer, at heart, projects the same data into different points of view and compares them.'},
+ {id:'rollout',title:'Looking ahead',trigger:'Fly the atmospheric entry.',
+  body:'The dashed line is the computer running the entry equations forward, hundreds of steps, five times a second, to show where you will land if you hold your bank. You steer the prediction, not the capsule.',
+  math:'sₙ₊₁ = f(sₙ, φ)',ai:'Game-playing AIs and planning agents simulate many futures with a model before they act, the same idea.'},
+ {id:'drag',title:'One number changes everything',trigger:'Open the parachute.',
+  body:'Drag is k·v². The parachute does not change the equation; it changes k, about 56 times. Same formula, different parameter, completely different behaviour.',
+  math:'d = k · v²',ai:'Training never rewrites a network’s code; it only changes its numbers. That is enough to turn noise into a pilot.'}
+];
+let earnedPatches=new Set(),codexSeen=new Set(),notices=[],noticeT=0;
+try{const p=JSON.parse(localStorage.getItem('moonbound-progress-v1')||'{}');earnedPatches=new Set(p.patches||[]);codexSeen=new Set(p.codex||[]);}catch(e){}
+function saveProgress(){try{localStorage.setItem('moonbound-progress-v1',JSON.stringify({patches:[...earnedPatches],codex:[...codexSeen]}));}catch(e){}}
+function award(id){const p=PATCHES.find(x=>x.id===id);if(!p||earnedPatches.has(id))return;earnedPatches.add(id);saveProgress();notices.push({kind:'PATCH EARNED',text:p.name,code:p.code});}
+function learn(id){const c=CODEX.find(x=>x.id===id);if(!c||codexSeen.has(id))return;codexSeen.add(id);saveProgress();notices.push({kind:'NEW IN THE CODEX',text:c.title,code:'Σ'});}
+function stepNotices(dt){
+ const el=$('notice');if(noticeT>0){noticeT-=dt;if(noticeT<=0)el.classList.remove('visible');return;}
+ if(!notices.length)return;const n=notices.shift();
+ el.innerHTML=`<span class="notice-badge">${n.code}</span><span><small>${n.kind}</small>${n.text}</span>`;el.classList.add('visible');noticeT=2.8;tone(n.kind==='PATCH EARNED'?1046:784,.14,.05);
+}
+function progressLine(){return`PATCHES ${earnedPatches.size}/${PATCHES.length} &nbsp;/&nbsp; CODEX ${codexSeen.size}/${CODEX.length}`;}
+function showCodex(){
+ showOverlay(`<div class="dialog codex"><div class="eyebrow">MISSION LOG / ${progressLine()}</div><h2>WHAT YOU<br>HAVE DONE.</h2>
+<div class="patch-grid">${PATCHES.map(p=>`<div class="patch ${earnedPatches.has(p.id)?'got':''}" title="${p.desc}"><span class="patch-badge">${p.code}</span><strong>${earnedPatches.has(p.id)?p.name:'LOCKED'}</strong><small>${p.desc}</small></div>`).join('')}</div>
+<div class="eyebrow" style="margin-top:28px">THE CODEX / THE MATHS UNDER THE GAME</div>
+<div class="codex-list">${CODEX.map(c=>codexSeen.has(c.id)?`<details><summary>${c.title}</summary><p>${c.body}</p><p class="codex-math">${c.math}</p><p class="codex-ai"><b>In AI:</b> ${c.ai}</p></details>`:`<div class="codex-locked"><span>LOCKED</span>${c.trigger}</div>`).join('')}</div>
+<div class="dialog-actions"><button class="button-primary" data-action="home">BACK TO THE PAD <span class="arrow" aria-hidden="true">&#8592;</span></button></div></div>`,'codex');
+}
+// ---- Ghost: your best hand-flown landing, replayed from its flight log tensor. ----
+let ghost=null;
+try{const g=JSON.parse(localStorage.getItem('moonbound-ghost-v1')||'null');if(g&&Array.isArray(g.rows))ghost=g;}catch(e){}
+function saveGhost(site,score,log){
+ if(!log||log.length<10||(ghost&&ghost.score>=score))return false;
+ ghost={site:site.id,name:site.name,score,rows:log.map(r=>[Math.round(r[0]*10)/10,Math.round(r[1]*10)/10,Math.round(r[4]*100)/100])};
+ try{localStorage.setItem('moonbound-ghost-v1',JSON.stringify(ghost));}catch(e){}return true;
+}
+function drawGhost(v,s){
+ if(!ghost||scene!=='land'||mode!=='land')return;
+ const i=Math.min(flightLog.length,ghost.rows.length-1),r=ghost.rows[i],gx=v.x(r[0]),gy=v.y(r[1]);
+ ctx.save();ctx.globalAlpha=.28;drawLander(gx,gy,r[2],false,s,'full');ctx.restore();
+ if(W>620)drawLabel(gx,gy-34*s,`BEST / ${ghost.name} / ${ghost.score.toLocaleString()}`,'#9fb2c0',8);
+}
 // ---- Surface science: every sample is a spectrum, and a spectrum is a vector. ----
 // Six bands of reflected light, 415 nm to 2000 nm. Simplified reference shapes for the minerals the Apollo crews actually brought home
 // (orange volcanic glass is Apollo 17's), plus water ice, which is what everyone wants to find at the poles.
@@ -1305,7 +1407,7 @@ function prepareSamples(c){
 // Each spectrum is drawn against its own peak, so you compare shapes, which is what the similarity measures.
 function specBars(v,cls=''){const mx=Math.max(...v);return`<span class="spec ${cls}">${v.map(x=>`<i style="height:${Math.max(6,Math.round(x/mx*100))}%"></i>`).join('')}</span>`;}
 function openScan(s){
- const r=rover;r.scanning=s;r.scanLeft=10;r.vx=0;tone(880,.1,.05);
+ learn('cosine');const r=rover;r.scanning=s;r.scanLeft=10;r.vx=0;tone(880,.1,.05);
  const card=$('scan-card');
  card.innerHTML=`<div class="scan-head"><span>SPECTROMETER / SAMPLE ${r.samples+1} OF ${course.samples.length}</span><span id="scan-clock">10</span></div>
 <div class="scan-sample"><div>${specBars(s.spec,'hot')}<div class="spec-axis">${BANDS.map(b=>`<span>${b}</span>`).join('')}</div></div><p>Reflected light in six bands (nanometres): a vector of six numbers, scaled to its peak. Which mineral has the same <b>shape</b>? The oxygen is still running.</p></div>
@@ -1329,7 +1431,7 @@ function airtimeLanding(r){
  // A plain hop on the flat always hangs for 2·v/g. Only the time beyond that is big air: launch off a rim or clear a rille.
  const t=r.airT||0,base=r.hopped?2*ROVER.hop[difficulty]/ROVER.g:0,extra=t-base;r.airT=0;r.hopped=false;if(extra<.8)return;
  r.combo=r.lastAir!=null&&r.t-r.lastAir<2.2?(r.combo||0)+1:0;r.lastAir=r.t;
- const pts=Math.round(extra*45*(1+.5*r.combo));r.airPts=(r.airPts||0)+pts;r.airBest=Math.max(r.airBest||0,t);
+ if(extra>=2.5)award('bigair');const pts=Math.round(extra*45*(1+.5*r.combo));r.airPts=(r.airPts||0)+pts;r.airBest=Math.max(r.airBest||0,t);
  popups.push({x:r.x,y:r.y+18,text:`+${pts} BIG AIR ${t.toFixed(1)} S${r.combo?` / COMBO ×${(1+.5*r.combo).toFixed(1)}`:''}`,life:1.6});tone(600+r.combo*120,.1,.04);
 }
 function drawPopups(){if(!popups.length||scene!=='rover')return;const v=roverView();for(const p of popups){p.life-=1/60;p.y+=.4;const a=clamp(p.life/1.6,0,1);ctx.save();ctx.globalAlpha=a;drawLabel(v.x(p.x),v.y(p.y),p.text,'#f4bb66',11);ctx.restore();}popups=popups.filter(p=>p.life>0);}
@@ -1351,6 +1453,7 @@ function entryPredict(){
  pts.push([p.s,p.h]);entry.pred={pts,s:p.s,maxG,skip};
 }
 function startEntry(){
+ learn('rollout');
  clearInput();mode='entry';scene='entry';paused=false;particles=[];debris=[];fuelWarning=false;lowWarning=false;crashReason='';entryResult=null;
  const C=ENTRY[difficulty],shield=integrity<35?.85:1;
  entry={h:122,v:11,gam:-6.5*PI/180,s:0,phi:0,t:0,g:0,maxG:0,heat:0,heatMax:C.heat*shield,q:0,trail:[[0,122]],predClock:1,blackout:false,pred:null};
@@ -1379,7 +1482,7 @@ function stepEntry(dt,turn){
 function resolveEntry(){
  const e=entry,C=ENTRY[difficulty],err=e.s-ENTRY.target,acc=clamp(1-Math.max(0,Math.abs(err)-C.tol*.25)/1500,0,1);
  const score=Math.round((500+900*acc+400*clamp(1-e.maxG/C.maxG,0,1)+300*clamp(1-e.heat/e.heatMax,0,1))*(difficulty==='pilot'?1.25:1));
- entryResult={score,err,maxG:e.maxG,heat:e.heat/e.heatMax,inZone:Math.abs(err)<=C.tol};
+ entryResult={score,err,maxG:e.maxG,heat:e.heat/e.heatMax,inZone:Math.abs(err)<=C.tol};if(entryResult.inZone)award('corridor');if(e.maxG<6)award('ironcrew');
  // Where you come out of the plasma decides where the parachute phase starts: a kilometre of error is two metres here.
  const startX=clamp(err*2,-1900,950);
  showToast(entryResult.inZone?`IN THE RECOVERY ZONE / ${Math.round(Math.abs(err))} KM ${err<0?'SHORT':'LONG'}`:`${Math.round(Math.abs(err))} KM ${err<0?'SHORT':'LONG'} / LONG WAY TO THE SHIP`,2.6);
@@ -1465,7 +1568,7 @@ function kfUpdate(P,z,R,pos,vel){const S=P[0][0]+R,K=[P[0][0]/S,P[1][0]/S],r=z-n
 function navStep(dt,ax,ay){
  if(!nav)return;nav.vx+=ax*dt;nav.vy+=ay*dt;nav.x+=nav.vx*dt;nav.y+=nav.vy*dt;nav.Px=kfPredict(nav.Px,dt);nav.Py=kfPredict(nav.Py,dt);
  const h=altitude();if(nav.ping>0)nav.ping-=dt;
- if(!nav.lock&&h<NAV.radarAlt){nav.lock=true;if(tensorOn||autopilot)showToast('LANDING RADAR LOCK / THE ELLIPSE SHRINKS',1.8);}
+ if(!nav.lock&&h<NAV.radarAlt){nav.lock=true;if(tensorOn||autopilot)learn('kalman');if(tensorOn||autopilot)showToast('LANDING RADAR LOCK / THE ELLIPSE SHRINKS',1.8);}
  if(!nav.lock)return;nav.clock+=dt;if(nav.clock<NAV.ping)return;nav.clock=0;
  const sy=1.5+.02*h,sx=3+.03*h;let u=kfUpdate(nav.Py,ship.y+gauss()*sy,sy*sy,'y','vy');nav.Py=u.P;nav.K=u.K;
  u=kfUpdate(nav.Px,ship.x+gauss()*sx,sx*sx,'x','vx');nav.Px=u.P;nav.pings++;nav.ping=.35;
@@ -1509,7 +1612,7 @@ function trainPilot(){
  pilotW=PILOT_WIRES.map((wires,o)=>{const w=solveLS(X.map(x=>wires.map(i=>x[i])),Y.map(y=>y[o])),row=[0,0,0,0];wires.forEach((i,k)=>row[i]=w[k]);return row;});
  if(pilotW.flat().some(v=>!isFinite(v)))pilotW=null;
 }
-function learnFlight(rows,site){if(rows.length<10)return false;pilotData.push({site:site.x,rows});if(pilotData.length>PILOT_MAX)pilotData.shift();savePilot();trainPilot();startNetTraining();return true;}
+function learnFlight(rows,site){if(rows.length<10)return false;pilotData.push({site:site.x,rows});if(pilotData.length>PILOT_MAX)pilotData.shift();savePilot();trainPilot();startNetTraining();if(netTrain)netTrain.user=true;return true;}
 function forgetPilot(){pilotData=[];pilotW=null;savePilot();if(netTrain&&netTrain.timer)clearTimeout(netTrain.timer);netTrain=null;pilotNet=null;}
 trainPilot();
 // ---- Two layers: the same flight data, fed to a small neural network, trained by backpropagation right here in the browser. ----
@@ -1552,7 +1655,7 @@ function startNetTraining(){
 function trainChunk(){
  const t=netTrain;if(!t)return;
  for(let i=0;i<NET.chunk&&t.epoch<NET.epochs;i++,t.epoch++){const l=netEpoch(t);if(t.epoch%10===0)t.hist.push(l);}
- if(t.epoch>=NET.epochs){t.done=true;pilotNet=t.net;t.final=t.hist[t.hist.length-1];drawLossChart();return;}
+ if(t.epoch>=NET.epochs){t.done=true;if(t.user)learn('backprop');pilotNet=t.net;t.final=t.hist[t.hist.length-1];drawLossChart();return;}
  drawLossChart();t.timer=setTimeout(trainChunk,0);
 }
 function drawLossChart(){
@@ -1595,10 +1698,10 @@ function autoStep(dt){
 function setAutopilot(kind){
  if(kind&&!(scene==='land'&&mode==='land'&&canFly()))return;
  if(kind==='you'&&!pilotW){showToast('LAND ONCE BY HAND TO TRAIN YOUR PILOT',2.2);return;}
- if(autopilot===kind)return;autopilot=kind;tapAcc=0;if(kind){ship.autoUsed=true;if(!tensorOn)setTensor(true);}
+ if(autopilot===kind)return;autopilot=kind;tapAcc=0;if(kind){ship.autoUsed=true;ship.pilotKind=kind;learn('layer');if(!tensorOn)setTensor(true);}
  showToast(kind==='agc'?'AUTOPILOT ENGAGED / TEN WEIGHTS ARE FLYING':kind==='you'?`YOUR PILOT ENGAGED / LEARNED FROM ${pilotData.length} LANDING${pilotData.length===1?'':'S'}`:'YOU HAVE CONTROL',1.8);tone(kind?740:330,.12,.05);tensorClock=1;
 }
-function setTensor(on){tensorOn=on;try{localStorage.setItem('moonbound-tensor-v1',on?'1':'0');}catch(e){}$('tensor-led').classList.toggle('on',on);$('tensor-button').setAttribute('aria-pressed',String(on));tensorClock=1;updateTensor(0);}
+function setTensor(on){tensorOn=on;if(on&&ship&&FLYING.includes(scene))learn('vector');try{localStorage.setItem('moonbound-tensor-v1',on?'1':'0');}catch(e){}$('tensor-led').classList.toggle('on',on);$('tensor-button').setAttribute('aria-pressed',String(on));tensorClock=1;updateTensor(0);}
 function logState(dt){logClock+=dt;if(logClock>=.1){logClock-=.1;flightLog.push([ship.x,ship.y,ship.vx,ship.vy,ship.angle,ship.fuel]);}}
 function closeLog(){if(!flightLog.length)return;lastLog=flightLog.length;sessionLogs.push(flightLog);if(sessionLogs.length>50)sessionLogs.shift();flightLog=[];}
 function logNote(){if(!lastLog)return'';const n=sessionLogs.length,longest=Math.max(...sessionLogs.map(l=>l.length));return`<p class="help-tip">FLIGHT LOG: a tensor of shape (${lastLog}, 6), one row of six numbers every tenth of a second. This session: ${n} flight${n===1?'':'s'}, shape (${n}, up to ${longest}, 6). Stack enough of those and you have training data.</p>`;}
@@ -1609,7 +1712,7 @@ const mat=(vals,cols,cls='')=>`<span class="mat ${cls}" style="grid-template-col
 function updateTensor(dt){
  const p=$('tensor-panel'),show=tensorOn&&!!ship&&FLYING.includes(scene)&&!$('hud').classList.contains('hidden');
  p.classList.toggle('hidden',!show);$('flight-note').classList.toggle('hidden',show||$('hud').classList.contains('hidden'));
- if(!show)return;tensorClock+=dt;if(tensorClock<.1)return;tensorClock=0;
+ if(!show)return;learn('vector');tensorClock+=dt;if(tensorClock<.1)return;tensorClock=0;
  p.classList.toggle('compact',W<=620);
  if(scene==='entry'&&entry){const e=entry,d=entryDeriv(e,e.phi),c=Math.cos(e.phi),sn=Math.sin(e.phi),L=d.L*1000;
   p.innerHTML=`<div class="tp-head"><span>FLIGHT COMPUTER<span class="wide"> / TENSOR VIEW</span></span><span class="wide">T</span></div><div class="tp-sec"><span>STATE  s</span><b>RANK 1 / SHAPE (4)</b></div><div class="vec"><i>h</i><em>${fmt(e.h)}</em><small>altitude, km</small><i>v</i><em>${fmt(e.v,2)}</em><small>speed, km/s</small><i>γ</i><em>${fmt(e.gam*DEG,2)}</em><small>flight path, deg</small><i>s</i><em>${fmt(e.s,0)}</em><small>downrange, km</small></div><div class="wide"><div class="tp-sec"><span>LIFT  ℓ = R(φ) · [0, L]</span><b>RANK 2 / SHAPE (2, 2)</b></div><div class="eq">${mat([fmt(c,2),fmt(sn,2),fmt(-sn,2),fmt(c,2)],2)}·${mat(['0',fmt(L,1)],1)}=${mat([fmt(sn*L,1),fmt(c*L,1)],1,'cool')}<span class="dim">m/s²: sideways,<br>and up. Only “up”<br>bends the path.</span></div></div><div class="tp-note">The same 2×2 rotation that aimed the lander's engine now aims the capsule's lift. The dashed line is the computer running these equations ${e.pred?e.pred.pts.length*6:0} steps ahead, five times a second, for the bank you hold: a model rollout, the way AI planners look ahead before they act.</div>`;return;}
@@ -1664,6 +1767,8 @@ $('scan-card').addEventListener('click',e=>{const b=e.target.closest('[data-pick
 $('tensor-panel').addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const k=b.dataset.action;if(k==='agc'||k==='you')setAutopilot(autopilot===k?false:k);if(k==='layers')toggleLayers();});
 function toggleLayers(){pilotLayers=pilotLayers===2?1:2;showToast(pilotLayers===2?(pilotNet?'YOUR PILOT: 2 LAYERS, 33 WEIGHTS':'2 LAYERS STILL TRAINING'):'YOUR PILOT: 1 LAYER, 8 NUMBERS',1.6);tensorClock=1;}
 $('tensor-led').classList.toggle('on',tensorOn);$('tensor-button').setAttribute('aria-pressed',String(tensorOn));
+// Start once every module above has initialised (the menu reads patches and the codex).
+resize();welcome();requestAnimationFrame(frame);
 // QA hooks are opt-in and inert in normal play: append ?test=1 to the local URL.
 if(new URLSearchParams(location.search).has('test'))window.MoonboundTest={
  setWeather:(id,dir)=>{rollWeather(scene==='earth'?'earth':'launch',id);if(dir)wx.dir=dir;wx.spent=true;},weather:()=>wx&&{...wx},
@@ -1674,8 +1779,8 @@ if(new URLSearchParams(location.search).has('test'))window.MoonboundTest={
  input:(action,on)=>{if(action==='thrust'){if(on)tapThrust();return;}const key={left:'ArrowLeft',right:'ArrowRight'}[action];if(key){on?keys.add(key):keys.delete(key);syncButtons();}},
  advance:(seconds,quiet)=>{const count=Math.round(seconds*120);for(let i=0;i<count;i++)step(1/120);if(!quiet){updateHUD();render();}},
  pause:togglePause,groundAt,floorBelow,roofHit,config,render,SITES,SHAFT,ROOFS,limitsFor,nearestSite,terrain,
- forget:()=>{found=new Set();siteBest={};best=0;saveRecords();forgetPilot();},
- home:welcome,probe:()=>{const lines=[];for(const dx of [0,40,150,400])for(const h of [0,3,10,30,80,200,500]){const n=pilotNet?['-',(netForward(pilotNet,[Math.abs(dx)/100,h/300]).y[0]*10).toFixed(1)]:['-','-'];const l=pilotW?pilotW.map(w=>(w[0]*dx+w[1]*Math.abs(dx)+w[2]*h+w[3]).toFixed(1)):['-','-'];let near=pilotData.flatMap(f=>f.rows.filter(r=>Math.abs(Math.abs(r[0]-f.site)-dx)<20&&Math.abs(r[3]-h)<Math.max(3,h*.2)).map(r=>r[2]));const avg=near.length?(near.reduce((a,b)=>a+b,0)/near.length).toFixed(1):'-';lines.push(`dx ${dx} h ${h}: net vx ${n[0]} vy ${n[1]} | line vx ${l[0]} vy ${l[1]} | data vy ${avg} (n=${near.length})`);}return lines.join('\n');},net:()=>netTrain&&{done:netTrain.done,epoch:netTrain.epoch,final:netTrain.final,lin:netTrain.lin},setLayers:n=>{pilotLayers=n;},netReady:()=>!!pilotNet,pickScan,cosine,MINERALS,startEntry,entry:()=>entry&&{...entry,pred:entry.pred&&{s:entry.pred.s,maxG:entry.pred.maxG,skip:entry.pred.skip},trail:null},setBank:deg=>{if(entry)entry.phi=deg*PI/180;},entryResult:()=>entryResult,
+ forget:()=>{found=new Set();siteBest={};best=0;saveRecords();forgetPilot();earnedPatches=new Set();codexSeen=new Set();saveProgress();ghost=null;try{localStorage.removeItem('moonbound-ghost-v1');}catch(e){}},
+ home:welcome,progress:()=>({patches:[...earnedPatches],codex:[...codexSeen]}),ghost:()=>ghost&&{site:ghost.site,score:ghost.score,rows:ghost.rows.length},showCodex,probe:()=>{const lines=[];for(const dx of [0,40,150,400])for(const h of [0,3,10,30,80,200,500]){const n=pilotNet?['-',(netForward(pilotNet,[Math.abs(dx)/100,h/300]).y[0]*10).toFixed(1)]:['-','-'];const l=pilotW?pilotW.map(w=>(w[0]*dx+w[1]*Math.abs(dx)+w[2]*h+w[3]).toFixed(1)):['-','-'];let near=pilotData.flatMap(f=>f.rows.filter(r=>Math.abs(Math.abs(r[0]-f.site)-dx)<20&&Math.abs(r[3]-h)<Math.max(3,h*.2)).map(r=>r[2]));const avg=near.length?(near.reduce((a,b)=>a+b,0)/near.length).toFixed(1):'-';lines.push(`dx ${dx} h ${h}: net vx ${n[0]} vy ${n[1]} | line vx ${l[0]} vy ${l[1]} | data vy ${avg} (n=${near.length})`);}return lines.join('\n');},net:()=>netTrain&&{done:netTrain.done,epoch:netTrain.epoch,final:netTrain.final,lin:netTrain.lin},setLayers:n=>{pilotLayers=n;},netReady:()=>!!pilotNet,pickScan,cosine,MINERALS,startEntry,entry:()=>entry&&{...entry,pred:entry.pred&&{s:entry.pred.s,maxG:entry.pred.maxG,skip:entry.pred.skip},trail:null},setBank:deg=>{if(entry)entry.phi=deg*PI/180;},entryResult:()=>entryResult,
  autopilot:on=>setAutopilot(on===true?'agc':on||false),nav:()=>nav&&JSON.parse(JSON.stringify(nav)),learnLast:()=>lastFlight&&learnFlight(lastFlight.rows,lastFlight.site),forgetPilot,setMargin:v=>{PILOT_MARGIN=v;},pilot:()=>({W:pilotW,landings:pilotData.length,rows:pilotRowCount()}),tensor:on=>setTensor(!!on),agc:()=>({...agc,on:autopilot,W:AGC_W,b:AGC_B}),setAGC:(w,b,k)=>{AGC_W.splice(0,2,...w);AGC_B.splice(0,2,...b);if(k)Object.assign(AGC_K,k);},logs:()=>({current:flightLog.length,session:sessionLogs.map(l=>l.length)})
 };
 })();
