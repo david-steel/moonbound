@@ -184,6 +184,7 @@ Simulation runs at a fixed 120 Hz and is separate from rendering, so frame rate 
 
 ## History
 
+- **2.3** New clouds: cumulus sprites built from soft puffs with flat undersides and light from above, toned by the weather (pale when breezy, slate in storms), more of them in worse weather, a haze instead of a stripe. They sit behind the rocket and the debris so hazards stay visible, a thin mist covers the screen while you are inside a deck, and clouds behind the instruments fade back. Same renderer over the ocean on the way home.
 - **2.2** Hazard scan: a two-filter convolution over the ground below, drawn as safe and rough points and shown in the tensor panel; new codex entry, How AI sees.
 - **2.1** A generated chiptune score: one key, tempo and four chords per stage, scheduled on the audio clock, with hats and a higher arpeggio as the danger rises (altitude on the descent, heat on entry, oxygen on the EVA). Follows SOUND; `M` mutes the music alone.
 - **2.0** Daily mission with seeded weather, a featured site and a copyable score card; DAILY FLYER patch.

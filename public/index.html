@@ -112,7 +112,7 @@
   <p id="boot-instructions">On a phone, open the <strong>hosted game address in Safari or Chrome</strong>. A downloaded HTML attachment is not a live game link.</p>
   <pre id="boot-detail" style="display:none"></pre>
   <button id="boot-reload" type="button">Try loading again</button>
-  <p class="boot-foot">Already opening a website? Share the address and a screenshot of this message to troubleshoot it.<br>Build 2.2 / Startup diagnostics / No external downloads</p>
+  <p class="boot-foot">Already opening a website? Share the address and a screenshot of this message to troubleshoot it.<br>Build 2.3 / Startup diagnostics / No external downloads</p>
  </div>
 </section>
 <script>
@@ -383,7 +383,7 @@ function siteRoster(){
 function welcome(){
  daily=null;
  clearInput();mode='menu';scene='menu';paused=false;ship=null;particles=[];debris=[];showHUD(false);$('toast').classList.remove('visible');
- showOverlay(`<div class="welcome"><div><div class="eyebrow">INDEPENDENT FLIGHT PROGRAM / MISSION 001</div><h1>ONE ROCKET.<br>ONE MOON.<br><span>ONE WAY HOME.</span></h1><p class="intro-text">Getting there is only half the mission. Tap your way off Earth through whatever the sky throws at you, put a lander down somewhere on the Moon, drive the rover out and back, dock with the command module, and pull the parachute over the ocean. Late enough to be brave. Not too late.</p><p class="intro-text">Under the hood, every frame is a matrix multiply: the same tensor math that runs AI. Press <kbd>T</kbd> to watch it fly.</p><div class="start-actions"><button class="button-primary" data-action="start">LAUNCH MISSION <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="practice-link" data-action="practice">Practice landing</button><button class="practice-link" data-action="practice-entry">Practice reentry</button></div>${dailyButton()}<div class="log-link"><button class="practice-link" data-action="codex">MISSION LOG: ${progressLine()}</button></div><div class="key-legend"><kbd>&larr;</kbd><kbd>&rarr;</kbd> ROTATE &nbsp; <kbd>SPACE</kbd> THRUST &nbsp; <kbd>E</kbd> CHUTE &nbsp; <kbd>T</kbd> TENSORS &nbsp; <kbd>G</kbd> <kbd>Y</kbd> AUTOPILOTS</div><div class="mobile-legend">TAP THRUST TO BURN. HOLD THE ARROWS TO STEER.</div></div><div class="briefing"><div class="briefing-top"><span class="eyebrow">YOUR FLIGHT PLAN</span><span class="serial">MB / 001</span></div><div class="mission-step"><span class="step-num">01</span><div><div class="step-title">Leave Earth behind.</div><div class="step-copy">Tap thrust in bursts, lean into the weather, and dodge the debris. The hull only takes so much.</div></div></div><div class="mission-step"><span class="step-num">02</span><div><div class="step-title">Separate. Descend. Commit.</div><div class="step-copy">Every tap slows your fall a little. Your engine is your only brake.</div></div></div><div class="mission-step"><span class="step-num">03</span><div><div class="step-title">Land. Then drive.</div><div class="step-copy">Pick a site, then drive the rover out, scan the samples to name their minerals, and get back before the oxygen runs out.</div></div></div><div class="mission-step"><span class="step-num">04</span><div><div class="step-title">Dock. Then come home.</div><div class="step-copy">Dock with the command module, fly the fireball through the entry corridor, then ride the storm down to the recovery ship.</div></div></div><div class="site-list">${siteRoster()}</div><div class="site-legend">TIER / SITE / MULTIPLIER / YOUR BEST<br>THE LANDER DEPLOYS EAST OF TRANQUILITY. EVERYTHING ELSE COSTS FUEL TO REACH.</div><div class="difficulty"><div class="difficulty-label">SELECT FLIGHT DIFFICULTY</div><div class="difficulty-options"><button class="difficulty-button ${difficulty==='cadet'?'selected':''}" data-difficulty="cadet" aria-pressed="${difficulty==='cadet'}"><strong>CADET</strong><small>More forgiving landings</small></button><button class="difficulty-button ${difficulty==='pilot'?'selected':''}" data-difficulty="pilot" aria-pressed="${difficulty==='pilot'}"><strong>PILOT</strong><small>Precision required</small></button></div></div><div class="briefing-footer">${best?`PERSONAL BEST: ${best.toLocaleString()} POINTS`:'FLIGHT RECORD: A CLEAN SLATE.'}<br>SITES FOUND: ${found.size} OF ${SITES.length}. ARCADE PHYSICS, REAL CONSEQUENCES.</div></div></div><div class="version"><span>MOONBOUND / PROTOTYPE 2.2</span><span class="version-note">BUILT FOR A STEADY HAND.</span><span>EARTH &rarr; MOON &rarr; EARTH</span></div>`,'welcome');
+ showOverlay(`<div class="welcome"><div><div class="eyebrow">INDEPENDENT FLIGHT PROGRAM / MISSION 001</div><h1>ONE ROCKET.<br>ONE MOON.<br><span>ONE WAY HOME.</span></h1><p class="intro-text">Getting there is only half the mission. Tap your way off Earth through whatever the sky throws at you, put a lander down somewhere on the Moon, drive the rover out and back, dock with the command module, and pull the parachute over the ocean. Late enough to be brave. Not too late.</p><p class="intro-text">Under the hood, every frame is a matrix multiply: the same tensor math that runs AI. Press <kbd>T</kbd> to watch it fly.</p><div class="start-actions"><button class="button-primary" data-action="start">LAUNCH MISSION <span class="arrow" aria-hidden="true">&#8599;</span></button><button class="practice-link" data-action="practice">Practice landing</button><button class="practice-link" data-action="practice-entry">Practice reentry</button></div>${dailyButton()}<div class="log-link"><button class="practice-link" data-action="codex">MISSION LOG: ${progressLine()}</button></div><div class="key-legend"><kbd>&larr;</kbd><kbd>&rarr;</kbd> ROTATE &nbsp; <kbd>SPACE</kbd> THRUST &nbsp; <kbd>E</kbd> CHUTE &nbsp; <kbd>T</kbd> TENSORS &nbsp; <kbd>G</kbd> <kbd>Y</kbd> AUTOPILOTS</div><div class="mobile-legend">TAP THRUST TO BURN. HOLD THE ARROWS TO STEER.</div></div><div class="briefing"><div class="briefing-top"><span class="eyebrow">YOUR FLIGHT PLAN</span><span class="serial">MB / 001</span></div><div class="mission-step"><span class="step-num">01</span><div><div class="step-title">Leave Earth behind.</div><div class="step-copy">Tap thrust in bursts, lean into the weather, and dodge the debris. The hull only takes so much.</div></div></div><div class="mission-step"><span class="step-num">02</span><div><div class="step-title">Separate. Descend. Commit.</div><div class="step-copy">Every tap slows your fall a little. Your engine is your only brake.</div></div></div><div class="mission-step"><span class="step-num">03</span><div><div class="step-title">Land. Then drive.</div><div class="step-copy">Pick a site, then drive the rover out, scan the samples to name their minerals, and get back before the oxygen runs out.</div></div></div><div class="mission-step"><span class="step-num">04</span><div><div class="step-title">Dock. Then come home.</div><div class="step-copy">Dock with the command module, fly the fireball through the entry corridor, then ride the storm down to the recovery ship.</div></div></div><div class="site-list">${siteRoster()}</div><div class="site-legend">TIER / SITE / MULTIPLIER / YOUR BEST<br>THE LANDER DEPLOYS EAST OF TRANQUILITY. EVERYTHING ELSE COSTS FUEL TO REACH.</div><div class="difficulty"><div class="difficulty-label">SELECT FLIGHT DIFFICULTY</div><div class="difficulty-options"><button class="difficulty-button ${difficulty==='cadet'?'selected':''}" data-difficulty="cadet" aria-pressed="${difficulty==='cadet'}"><strong>CADET</strong><small>More forgiving landings</small></button><button class="difficulty-button ${difficulty==='pilot'?'selected':''}" data-difficulty="pilot" aria-pressed="${difficulty==='pilot'}"><strong>PILOT</strong><small>Precision required</small></button></div></div><div class="briefing-footer">${best?`PERSONAL BEST: ${best.toLocaleString()} POINTS`:'FLIGHT RECORD: A CLEAN SLATE.'}<br>SITES FOUND: ${found.size} OF ${SITES.length}. ARCADE PHYSICS, REAL CONSEQUENCES.</div></div></div><div class="version"><span>MOONBOUND / PROTOTYPE 2.3</span><span class="version-note">BUILT FOR A STEADY HAND.</span><span>EARTH &rarr; MOON &rarr; EARTH</span></div>`,'welcome');
 }
 function startLaunch(){
  clearInput();mode='launch';scene='launch';paused=false;fullMission=true;elapsed=0;launchTime=0;transitTime=0;coastReady=false;landingResult=null;crashReason='';particles=[];debris=[];fuelWarning=false;lowWarning=false;
@@ -1080,14 +1080,47 @@ function drawMenu(){
 }
 function launchView(){const scale=Math.max(.13,Math.min(.3,(H-200)/1800));const base=H-(W<=620?180:135);const cameraY=Math.max(0,ship.y-38-(base-42-Math.max(H<530?165:240,H*.4))/scale);return {scale,base,cameraY,x:x=>W*.44+x*scale,y:y=>base-42-(y-38-cameraY)*scale};}
 // Weather layers shared by the two Earth scenes. Clouds are world-space bands; rain, bolts and flashes are screen-space.
+// Cumulus sprites, built once per tone: a pile of soft puffs on a flat base, lit from above, shaded underneath.
+// Drawn from cached images, so a sky full of them costs a few drawImage calls a frame.
+const cloudCache={};
+function cloudSprites(tone){
+ if(cloudCache[tone])return cloudCache[tone];
+ const pal={light:['#d6dee5','#7c8a97'],grey:['#aab5bf','#56636f'],dark:['#78858f','#2b343d']}[tone];
+ let sd=[...tone].reduce((a,c)=>a*31+c.charCodeAt(0),7)>>>0;const rnd=()=>{sd=(Math.imul(sd,1664525)+1013904223)>>>0;return sd/4294967296;};
+ const out=[];
+ for(let v=0;v<6;v++){
+  const w=Math.round(240+rnd()*240),h=Math.round(w*(.36+rnd()*.12)),k=2,c=document.createElement('canvas');c.width=w*k;c.height=h*k;
+  const g=c.getContext('2d');g.scale(k,k);const base=h*.8;
+  for(let i=0;i<26;i++){
+   // Every puff stays inside its image: a clipped puff leaves a hard straight edge on the cloud.
+   const t=.08+.84*rnd(),hump=Math.sin(PI*t),r=Math.min(h*(.14+.3*hump*(.55+.45*rnd())),h*.4),x=clamp(w*t,r+2,w-r-2),y=Math.max(r+2,base-r*(.35+.55*rnd())-hump*h*.12);
+   const gr=g.createRadialGradient(x,y-r*.25,r*.15,x,y,r);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.62,'rgba(255,255,255,.92)');gr.addColorStop(1,'rgba(255,255,255,0)');
+   g.fillStyle=gr;g.beginPath();g.arc(x,y,r,0,TAU);g.fill();
+  }
+  // A flat, soft underside, then light from above: bright tops, darker bellies.
+  g.globalCompositeOperation='destination-out';const cut=g.createLinearGradient(0,base-6,0,base+8);cut.addColorStop(0,'rgba(0,0,0,0)');cut.addColorStop(1,'rgba(0,0,0,1)');g.fillStyle=cut;g.fillRect(0,base-6,w,h);
+  g.globalCompositeOperation='source-atop';const sh=g.createLinearGradient(0,0,0,base);sh.addColorStop(0,pal[0]);sh.addColorStop(.55,pal[0]);sh.addColorStop(1,pal[1]);g.fillStyle=sh;g.fillRect(0,0,w,h);
+  out.push({c,w,h});
+ }
+ return cloudCache[tone]=out;
+}
 function drawCloudBand(y0,y1,alpha,shift){
  // Zoomed in, a band would fill the screen and bury the HUD, so its on-screen thickness is capped.
  {const c=(y0+y1)/2,half=Math.min((y1-y0)/2,H*.12);y0=c-half;y1=c+half;}
- if(y1<-60||y0>H+60||alpha<=0)return;
- const g=ctx.createLinearGradient(0,y0,0,y1);g.addColorStop(0,'rgba(118,132,146,0)');g.addColorStop(.5,`rgba(118,132,146,${alpha})`);g.addColorStop(1,'rgba(118,132,146,0)');
- ctx.fillStyle=g;ctx.fillRect(0,y0,W,y1-y0);
- const mid=(y0+y1)/2,hgt=y1-y0,span=W+360;ctx.fillStyle=`rgba(152,165,178,${alpha*.5})`;
- for(let i=0;i<14;i++){const x=((i*211+shift)%span+span)%span-180;ctx.beginPath();ctx.ellipse(x,mid+Math.sin(i*1.7)*hgt*.18,80+(i%3)*45,hgt*.22,0,0,TAU);ctx.fill();}
+ if(y1<-140||y0>H+140||alpha<=0)return;
+ const level=wx?wx.level:1,tone=level<=1?'light':level===2?'grey':'dark',spr=cloudSprites(tone),mid=(y0+y1)/2,hgt=y1-y0;
+ // A faint haze where the deck sits, never a hard stripe.
+ const hz=ctx.createLinearGradient(0,y0-hgt*.3,0,y1+hgt*.3),hc=tone==='light'?'150,165,180':tone==='grey'?'110,124,138':'70,82,94';
+ hz.addColorStop(0,`rgba(${hc},0)`);hz.addColorStop(.5,`rgba(${hc},${alpha*.22})`);hz.addColorStop(1,`rgba(${hc},0)`);ctx.fillStyle=hz;ctx.fillRect(0,y0-hgt*.3,W,hgt*1.6);
+ const n=Math.round(4+level*1.6),span=W+800,mobile=W<=620;
+ for(let i=0;i<n;i++){
+  const sp=spr[(i*7+Math.round(shift/9973))%spr.length|0]||spr[i%spr.length],depth=.72+((i*37)%11)/22,sc=clamp(hgt/sp.h,.55,1.3)*depth*(mobile?.62:1);
+  const x=((i*(span/n)+((i*131)%97)+shift*depth)%span+span)%span-400,y=mid-sp.h*sc*.62+Math.sin(i*2.3+.7)*hgt*.2;
+  // Clouds drifting behind the instruments at the top fade back, so the readouts stay readable.
+  const behindHud=clamp((y+sp.h*sc*.5-(mobile?150:190))/140,.4,1);
+  ctx.globalAlpha=clamp(alpha*1.55,0,.95)*(.7+.3*depth)*behindHud;ctx.drawImage(sp.c,x,y,sp.w*sc,sp.h*sc);
+ }
+ ctx.globalAlpha=1;
 }
 function drawWeatherFx(project){
  if(!wx)return;
@@ -1112,10 +1145,17 @@ function drawLaunch(){
  }
  // Corridor guides are a visual cue, not invisible failure boundaries.
  const corridorAlpha=.1+clamp(altitude()/1500,0,.13);ctx.strokeStyle=`rgba(160,187,202,${corridorAlpha})`;ctx.setLineDash([3,10]);for(const x of [-CORRIDOR,CORRIDOR]){ctx.beginPath();ctx.moveTo(view.x(x),205);ctx.lineTo(view.x(x),H-130);ctx.stroke();}ctx.setLineDash([]);
+ // Clouds sit behind the rocket and the debris: in a storm you still need to see what is coming.
+ if(wx)for(const alt of [800,1800])drawCloudBand(view.y(38+alt+260),view.y(38+alt-260),wx.cloud*.6,wx.t*wx.windNow*5+alt);
  const y=view.y(ship.y),jx=shake>0&&!reduceMotion?(Math.random()-.5)*shake*9:0,jy=shake>0&&!reduceMotion?(Math.random()-.5)*shake*9:0;if(mode!=='crash')drawRocket(view.x(ship.x)+jx,y+jy,ship.angle,burning(),.95);
  drawDebrisField(view);
  drawParticles(p=>({x:view.x(p.x),y:view.y(p.y)}),s);
- if(wx){for(const alt of [800,1800])drawCloudBand(view.y(38+alt+260),view.y(38+alt-260),wx.cloud*.6,wx.t*wx.windNow*5+alt);drawWeatherFx(p=>({x:view.x(p.x),y:view.y(p.y)}));}
+ if(wx){
+  // Inside a cloud deck, a thin mist goes over everything, thickest at the middle of the deck.
+  const inCloud=Math.max(...[800,1800].map(a=>clamp(1-Math.abs(altitude()-a)/260,0,1)));
+  if(inCloud>0){ctx.fillStyle=`rgba(${wx.level<=1?'150,165,180':wx.level===2?'110,124,138':'70,82,94'},${inCloud*wx.cloud*.22})`;ctx.fillRect(0,0,W,H);}
+  drawWeatherFx(p=>({x:view.x(p.x),y:view.y(p.y)}));
+ }
  const progress=clamp(altitude()/launchTarget,0,1),railX=W-45,railTop=H*.43,railH=Math.min(H*.29,200);
  if(W>620){ctx.strokeStyle='#2b3d4b';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(railX,railTop);ctx.lineTo(railX,railTop+railH);ctx.stroke();for(let i=0;i<=4;i++){const yy=railTop+i*railH/4;ctx.beginPath();ctx.moveTo(railX-6,yy);ctx.lineTo(railX+4,yy);ctx.stroke();}ctx.fillStyle='#f4bb66';ctx.beginPath();ctx.moveTo(railX-13,railTop+railH*(1-progress));ctx.lineTo(railX-20,railTop+railH*(1-progress)-4);ctx.lineTo(railX-20,railTop+railH*(1-progress)+4);ctx.fill();drawLabel(railX-5,railTop-18,launchTarget.toLocaleString()+' M','#849aaa',9,'right');}
  if(!ship.launched&&mode==='launch')drawLabel(view.x(ship.x),y-70,'READY FOR IGNITION','#c6a978',9);
