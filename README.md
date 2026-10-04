@@ -43,6 +43,10 @@ Press `T` (or TENSORS, top right) on any stage and the flight computer shows wha
 
 **Daily mission.** One button on the main menu. The date picks the launch weather, the splashdown weather (wind direction and strength included, so a retry gets the same sky) and a featured landing site worth ×1.5. Bring it home and you get a plain-text score card to copy and share, and your best for the day is kept.
 
+**Launch abort.** A red ABORT button (or `X`) during the climb fires the escape tower, Apollo-style. The capsule is thrown off the pad and out to sea while booster debris comes down around it; the tower drops away at the top of the arc, only then does the chute arm, and you bring the crew down beside the recovery ship. CREW SAVED scores on its own and earns ESCAPE ARTIST. Works from the pad to the top of the climb.
+
+**Easter eggs.** 31 of them, from NASA history (Tranquility Base, the 1202 alarm, Apollo 12's lightning strike, Shepard's golf, the hammer and the feather, Earthrise, Young's jump salute, Cernan's last words, the Apollo 11 plaque) and the films (a monolith in the hidden crater, HAL, Star Wars, Hitchhiker's 42 and Don't Panic, Interstellar, The Martian, Alien, Toy Story, Star Trek, Kerbal), plus the Konami code (infinite lander fuel, scores off) and Sputnik. Each one shows its source when found; the mission log lists them with hints for the rest.
+
 All of it lives in this browser's `localStorage`; nothing leaves the device.
 
 ## The five landing sites
@@ -75,6 +79,7 @@ The checks panel on the right always shows the limits for whichever site you are
 | Your pilot | `Y`, after at least one hand-flown landing. `L` switches one layer / two |
 | Rover science | Stop on a sample, then `1` `2` `3` to pick the mineral |
 | Entry | `LEFT`/`RIGHT` roll the capsule's lift vector |
+| Abort the launch | `X` or the ABORT button |
 | Music | `M` (needs SOUND on) |
 | Pause | `P` or `ESC` |
 | Restart stage | `R` |
@@ -184,6 +189,7 @@ Simulation runs at a fixed 120 Hz and is separate from rendering, so frame rate 
 
 ## History
 
+- **2.4** Orbit now needs the nose up (arriving sideways no longer counts). ABORT and a launch-escape mini-game. 31 Easter eggs. Earth from space redrawn (coastlines, cloud bands, terminator, rim). The main menu never scrolls: it tightens on short screens and scales to fit.
 - **2.3** New clouds: cumulus sprites built from soft puffs with flat undersides and light from above, toned by the weather (pale when breezy, slate in storms), more of them in worse weather, a haze instead of a stripe. They sit behind the rocket and the debris so hazards stay visible, a thin mist covers the screen while you are inside a deck, and clouds behind the instruments fade back. Same renderer over the ocean on the way home.
 - **2.2** Hazard scan: a two-filter convolution over the ground below, drawn as safe and rough points and shown in the tensor panel; new codex entry, How AI sees.
 - **2.1** A generated chiptune score: one key, tempo and four chords per stage, scheduled on the audio clock, with hats and a higher arpeggio as the danger rises (altitude on the descent, heat on entry, oxygen on the EVA). Follows SOUND; `M` mutes the music alone.
