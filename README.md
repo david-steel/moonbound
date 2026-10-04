@@ -29,6 +29,8 @@ Press `T` (or TENSORS, top right) on any stage and the flight computer shows wha
 
 **Surface science.** Samples no longer bag themselves. Stop on one and the spectrometer reads six bands of reflected light, a vector, and you pick which of three minerals has the same shape while the oxygen keeps running. Then the computer shows its cosine similarity for each: AI search finds the closest thing it knows the same way. Minerals per site: mare basalt, orange volcanic glass (Apollo 17's), olivine, anorthosite, KREEP basalt and, at Shackleton and the Hollow, water ice. Across all 15 samples the right answer always has the highest similarity, and some calls are close. Big air off rims and over rilles scores too; plain hops on the flat do not.
 
+**Hazard scan.** With the tensor view on during a descent, the radar strip below you (33 heights, 8 m apart) goes through a convolution layer with two filters: [−1, 0, 1] for slope and [1, −2, 1] for bumps. Points that come out near zero on both are painted green on the ground: flat and level, safe. Every pad reads safe and the slopes around it do not, and over the hidden crater the scan lights up its flat floor. The panel shows the input heights, both kernels and both outputs; the codex entry ties it to how image models see.
+
 **Every stage has its own view.** The Earth ascent adds forces as vectors (thrust + wind + drag + gravity). Docking is a change of frame: a 3×3 homogeneous transform that puts the port at zero. The Earth return shows drag d = k·vy², where the parachute changes one number, k, by about 56 times. The rover shows the slope as a rotation.
 
 ## Progress that sticks
@@ -182,6 +184,7 @@ Simulation runs at a fixed 120 Hz and is separate from rendering, so frame rate 
 
 ## History
 
+- **2.2** Hazard scan: a two-filter convolution over the ground below, drawn as safe and rough points and shown in the tensor panel; new codex entry, How AI sees.
 - **2.1** A generated chiptune score: one key, tempo and four chords per stage, scheduled on the audio clock, with hats and a higher arpeggio as the danger rises (altitude on the descent, heat on entry, oxygen on the EVA). Follows SOUND; `M` mutes the music alone.
 - **2.0** Daily mission with seeded weather, a featured site and a copyable score card; DAILY FLYER patch.
 - **1.9** Mission patches (16), the codex (11 entries unlocked in play), a ghost of your best landing, patch and codex notifications, and a main menu that no longer scrolls under its footer.
