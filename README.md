@@ -47,6 +47,10 @@ Press `T` (or TENSORS, top right) on any stage and the flight computer shows wha
 
 **Easter eggs.** 31 of them, from NASA history (Tranquility Base, the 1202 alarm, Apollo 12's lightning strike, Shepard's golf, the hammer and the feather, Earthrise, Young's jump salute, Cernan's last words, the Apollo 11 plaque) and the films (a monolith in the hidden crater, HAL, Star Wars, Hitchhiker's 42 and Don't Panic, Interstellar, The Martian, Alien, Toy Story, Star Trek, Kerbal), plus the Konami code (infinite lander fuel, scores off) and Sputnik. Each one shows its source when found; the mission log lists them with hints for the rest.
 
+**Mid-course correction.** The coast to the Moon and the coast home are a matrix game. Your velocity is an arrow on a grid and the target is a dashed arrow; three 2x2 matrices are on offer (a rotation, a scale, a shear, a combination). Pick one and the whole grid bends as the matrix is applied, so you see exactly what it does to space. Three rounds: TURN, BURN and BOTH. First-try hits score 200, second tries 100; the points go into the mission total, a perfect coast earns NAVIGATOR, and the codex gains "Matrices move arrows". Skippable.
+
+**Every screen fits.** No screen in the game scrolls. Dialogs are laid out tight, the flight manual and mission log are tabbed, the egg list is paged, and anything still too tall is scaled to the window; the in-flight panels shrink to the space between the instruments and the controls.
+
 All of it lives in this browser's `localStorage`; nothing leaves the device.
 
 ## The five landing sites
@@ -189,6 +193,7 @@ Simulation runs at a fixed 120 Hz and is separate from rendering, so frame rate 
 
 ## History
 
+- **2.5** Rockets break up when flown sideways (over 60 degrees for a second) and orbit needs the nose within 25 degrees. Mid-course correction matrix game on both coasts. Every screen fits its window.
 - **2.4** Orbit now needs the nose up (arriving sideways no longer counts). ABORT and a launch-escape mini-game. 31 Easter eggs. Earth from space redrawn (coastlines, cloud bands, terminator, rim). The main menu never scrolls: it tightens on short screens and scales to fit.
 - **2.3** New clouds: cumulus sprites built from soft puffs with flat undersides and light from above, toned by the weather (pale when breezy, slate in storms), more of them in worse weather, a haze instead of a stripe. They sit behind the rocket and the debris so hazards stay visible, a thin mist covers the screen while you are inside a deck, and clouds behind the instruments fade back. Same renderer over the ocean on the way home.
 - **2.2** Hazard scan: a two-filter convolution over the ground below, drawn as safe and rough points and shown in the tensor panel; new codex entry, How AI sees.
