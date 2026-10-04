@@ -39,6 +39,8 @@ Press `T` (or TENSORS, top right) on any stage and the flight computer shows wha
 
 **Ghost.** Your best hand-flown landing is saved from its flight log and flies beside you, translucent, on every descent. Beat it and yours replaces it.
 
+**Daily mission.** One button on the main menu. The date picks the launch weather, the splashdown weather (wind direction and strength included, so a retry gets the same sky) and a featured landing site worth ×1.5. Bring it home and you get a plain-text score card to copy and share, and your best for the day is kept.
+
 All of it lives in this browser's `localStorage`; nothing leaves the device.
 
 ## The five landing sites
@@ -179,6 +181,7 @@ Simulation runs at a fixed 120 Hz and is separate from rendering, so frame rate 
 
 ## History
 
+- **2.0** Daily mission with seeded weather, a featured site and a copyable score card; DAILY FLYER patch.
 - **1.9** Mission patches (16), the codex (11 entries unlocked in play), a ghost of your best landing, patch and codex notifications, and a main menu that no longer scrolls under its footer.
 - **1.8** Atmospheric entry from 122 km with real lifting-entry equations, bank-angle control, a predicted path, g, heat and blackout; your accuracy sets where the parachute phase starts. Surface science: stop-and-scan spectrometer with cosine-similarity reveal, water ice at the poles, big-air scoring. Two-layer pilot: a backprop-trained network that learns your braking curve, with a live training chart and visible neurons. Practice reentry from the main menu.
 - **1.7** Navigation is a Kalman filter with a visible uncertainty ellipse and radar lock; both autopilots fly on the estimate. Your pilot: a least-squares model of your own flight profile, trained on your hand-flown landings, with wiring that blocks a spurious correlation. Stage-specific tensor views for the ascent (force vectors), docking (change of frame), Earth return (drag coefficient) and the rover (slope rotation).
