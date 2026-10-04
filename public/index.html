@@ -1065,13 +1065,40 @@ function drawMoon(x,y,r,opacity=1){
  const shade=ctx.createRadialGradient(x-r*.55,y-r*.2,r*.2,x-r*.35,y-r*.25,r*1.6);shade.addColorStop(0,'rgba(4,10,18,0)');shade.addColorStop(.53,'rgba(4,10,18,.08)');shade.addColorStop(1,'rgba(4,10,18,.9)');ctx.fillStyle=shade;ctx.fillRect(x-r,y-r,2*r,2*r);ctx.restore();
  ctx.save();ctx.strokeStyle=`rgba(173,196,209,${opacity*.24})`;ctx.lineWidth=.8;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.stroke();ctx.restore();
 }
-function drawEarth(x,y,r,opacity=1){
- ctx.save();ctx.globalAlpha=opacity;const halo=ctx.createRadialGradient(x,y,r*.95,x,y,r*1.17);halo.addColorStop(0,'rgba(82,151,190,.25)');halo.addColorStop(1,'rgba(82,151,190,0)');ctx.fillStyle=halo;ctx.beginPath();ctx.arc(x,y,r*1.17,0,TAU);ctx.fill();ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.clip();
- const ocean=ctx.createLinearGradient(x-r,y-r,x+r,y+r);ocean.addColorStop(0,'#5a91ae');ocean.addColorStop(.4,'#244d68');ocean.addColorStop(1,'#0d2437');ctx.fillStyle=ocean;ctx.fillRect(x-r,y-r,2*r,2*r);
- ctx.fillStyle='#60877f';ctx.beginPath();ctx.moveTo(x-r*.8,y-r*.35);ctx.bezierCurveTo(x-r*.5,y-r*.7,x-r*.2,y-r*.1,x-r*.3,y+r*.1);ctx.bezierCurveTo(x-r*.1,y+r*.2,x-r*.2,y+r*.65,x-r*.4,y+r*.72);ctx.lineTo(x-r*.53,y+r*.22);ctx.lineTo(x-r*.77,y);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(x+r*.05,y-r*.8);ctx.lineTo(x+r*.66,y-r*.57);ctx.lineTo(x+r*.8,y-r*.12);ctx.lineTo(x+r*.46,y);ctx.lineTo(x+r*.2,y+r*.46);ctx.lineTo(x+r*.05,y+r*.18);ctx.lineTo(x+r*.24,y-r*.18);ctx.closePath();ctx.fill();
- for(let i=0;i<5;i++){ctx.strokeStyle=`rgba(220,236,235,${.16+i*.012})`;ctx.lineWidth=r*(.035+i*.004);ctx.beginPath();ctx.ellipse(x+(i-2)*r*.13,y+(i-2)*r*.29,r*.92,r*.18,-.25,0,PI*1.5);ctx.stroke();}
- const shadow=ctx.createLinearGradient(x-r,y-r,x+r*.8,y+r*.4);shadow.addColorStop(0,'rgba(0,8,18,0)');shadow.addColorStop(.55,'rgba(0,8,18,.13)');shadow.addColorStop(1,'rgba(0,8,18,.85)');ctx.fillStyle=shadow;ctx.fillRect(x-r,y-r,2*r,2*r);ctx.restore();
+// Earth from space, painted once per size and cached: organic coastlines, soft cloud bands with a storm spiral,
+// a day-night terminator and a thin blue rim of atmosphere.
+const earthCache={};
+function earthSprite(r){
+ r=Math.max(8,Math.round(r));if(earthCache[r])return earthCache[r];
+ const pad=Math.ceil(r*.22),size=2*(r+pad),k=r>120?1.5:2,c=document.createElement('canvas');c.width=c.height=Math.ceil(size*k);
+ const g=c.getContext('2d');g.scale(k,k);const x=size/2,y=size/2;
+ let sd=20260703;const rnd=()=>{sd=(Math.imul(sd,1664525)+1013904223)>>>0;return sd/4294967296;};
+ const halo=g.createRadialGradient(x,y,r*.96,x,y,r*1.2);halo.addColorStop(0,'rgba(110,175,215,.32)');halo.addColorStop(1,'rgba(110,175,215,0)');g.fillStyle=halo;g.beginPath();g.arc(x,y,r*1.2,0,TAU);g.fill();
+ g.save();g.beginPath();g.arc(x,y,r,0,TAU);g.clip();
+ const ocean=g.createRadialGradient(x-r*.35,y-r*.35,r*.1,x,y,r*1.05);ocean.addColorStop(0,'#3f7ea3');ocean.addColorStop(.6,'#1d4a68');ocean.addColorStop(1,'#0c2236');g.fillStyle=ocean;g.fillRect(x-r,y-r,2*r,2*r);
+ // Continents: wobbly closed curves, smoothed through their midpoints.
+ const lands=[{cx:-.48,cy:-.12,rx:.27,ry:.48,rot:.35},{cx:.28,cy:-.4,rx:.38,ry:.22,rot:-.15},{cx:.3,cy:.3,rx:.16,ry:.26,rot:.5},{cx:.74,cy:.08,rx:.1,ry:.15,rot:.2}];
+ for(const L of lands){
+  const ph=[rnd()*TAU,rnd()*TAU,rnd()*TAU],pts=[];
+  for(let i=0;i<32;i++){const a=i/32*TAU,m=1+.2*Math.sin(3*a+ph[0])+.12*Math.sin(5*a+ph[1])+.06*Math.sin(9*a+ph[2]),px=Math.cos(a)*L.rx*m,py=Math.sin(a)*L.ry*m;pts.push([x+r*(L.cx+px*Math.cos(L.rot)-py*Math.sin(L.rot)),y+r*(L.cy+px*Math.sin(L.rot)+py*Math.cos(L.rot))]);}
+  const lg=g.createLinearGradient(x+r*(L.cx-L.rx),y+r*(L.cy-L.ry),x+r*(L.cx+L.rx),y+r*(L.cy+L.ry));lg.addColorStop(0,'#5d8761');lg.addColorStop(.6,'#6f8a5c');lg.addColorStop(1,'#a39467');
+  g.fillStyle=lg;g.beginPath();const mid=(p,q)=>[(p[0]+q[0])/2,(p[1]+q[1])/2];let m0=mid(pts[31],pts[0]);g.moveTo(m0[0],m0[1]);
+  for(let i=0;i<32;i++){const p=pts[i],m=mid(p,pts[(i+1)%32]);g.quadraticCurveTo(p[0],p[1],m[0],m[1]);}g.fill();
+ }
+ // Ice caps.
+ for(const [cy,w] of [[-1,.42],[1,.5]]){const ig=g.createRadialGradient(x,y+cy*r,0,x,y+cy*r,r*w);ig.addColorStop(0,'rgba(236,243,247,.85)');ig.addColorStop(.55,'rgba(236,243,247,.45)');ig.addColorStop(1,'rgba(236,243,247,0)');g.fillStyle=ig;g.fillRect(x-r,y+cy*r-r*w,2*r,2*r*w);}
+ // Clouds: soft puffs strung along three wavy bands, and one storm spiral.
+ // Each puff is stretched sideways, so the bands read as streaks of weather, not spots.
+ const puff=(px,py,pr,a,st=2.2)=>{g.save();g.translate(px,py);g.scale(st,1);const cg=g.createRadialGradient(0,0,0,0,0,pr);cg.addColorStop(0,`rgba(246,250,252,${a})`);cg.addColorStop(.5,`rgba(246,250,252,${a*.6})`);cg.addColorStop(1,'rgba(246,250,252,0)');g.fillStyle=cg;g.beginPath();g.arc(0,0,pr,0,TAU);g.fill();g.restore();};
+ for(const band of [-.62,-.18,.36,.74]){const ph=rnd()*TAU,amp=.05+rnd()*.05;for(let i=0;i<70;i++){const u=-1.1+rnd()*2.2,v=band+Math.sin(u*2.4+ph)*amp+(rnd()-.5)*.08;puff(x+u*r,y+v*r,r*(.02+rnd()*.045),.3+rnd()*.35,1.8+rnd()*1.6);}}
+ {const sx=x+r*.1,sy=y+r*.05;for(let i=0;i<36;i++){const t=i/36,ang=t*TAU*1.6,rad=r*.015+t*r*.11;puff(sx+Math.cos(ang)*rad,sy+Math.sin(ang)*rad*.75,r*(.02+t*.025),.55*(1-t*.6),1.4);}}
+ // Night side, then the rim of atmosphere on the lit limb.
+ const night=g.createLinearGradient(x-r*.9,y-r*.9,x+r*.9,y+r*.6);night.addColorStop(0,'rgba(0,6,14,0)');night.addColorStop(.52,'rgba(0,6,14,.08)');night.addColorStop(.78,'rgba(0,6,14,.6)');night.addColorStop(1,'rgba(0,6,14,.9)');g.fillStyle=night;g.fillRect(x-r,y-r,2*r,2*r);
+ const rim=g.createRadialGradient(x,y,r*.84,x,y,r);rim.addColorStop(0,'rgba(140,200,240,0)');rim.addColorStop(1,'rgba(140,200,240,.35)');g.fillStyle=rim;g.fillRect(x-r,y-r,2*r,2*r);
+ g.restore();
+ return earthCache[r]={c,size};
 }
+function drawEarth(x,y,r,opacity=1){const s=earthSprite(r);ctx.save();ctx.globalAlpha=opacity;ctx.drawImage(s.c,x-s.size/2,y-s.size/2,s.size,s.size);ctx.restore();}
 function drawMenu(){
  drawStars();const r=Math.min(W*.24,H*.34);drawMoon(W*.77,H*.34,r,.75);
  ctx.save();ctx.strokeStyle='rgba(149,170,187,.17)';ctx.lineWidth=1;ctx.setLineDash([3,8]);ctx.beginPath();ctx.ellipse(W*.77,H*.34,r*1.45,r*.65,-.58,0,TAU);ctx.stroke();ctx.setLineDash([]);ctx.restore();
